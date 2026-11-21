@@ -67,7 +67,7 @@ Run from the backend directory:
 python -m unittest discover -s tests -v
 ```
 
-The tests cover XML/JSON record flattening, alias mapping, numeric/null handling, age-bucket sums, total consistency diagnostics, field-map validation, and credential-safe HTTP error messages.
+The tests cover XML/JSON record flattening, alias mapping, numeric/null handling, age-bucket sums, total consistency diagnostics, field-map validation, credential-safe HTTP error messages, SQLite schema initialization, snapshot persistence, idempotency, unresolved-record handling, and append-only snapshot behavior.
 
 ## Important
 
