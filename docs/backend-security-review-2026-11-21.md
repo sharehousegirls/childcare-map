@@ -13,11 +13,11 @@ Small API-adapter hardening and data-quality diagnostic changes. No live API con
 
 ## Verification
 
-- **PASS — 13 tests:** ran `python -m unittest discover -s tests -v` in a temporary isolated harness with the provider source and test file reconstructed from GitHub connector output. `httpx` was available.
+- **PASS — 13 tests:** ran `python -m unittest discover -s tests -v` in a temporary isolated harness. The provider and test files were fetched from GitHub and their Git blob SHAs were verified against the repository before execution; `httpx` was available.
 - **NOT RUN — repository checkout:** direct test execution against a clone of the repository was not possible in this container because GitHub hostname resolution failed.
 - **NOT CONFIRMED — GitHub Actions:** the latest commit status/workflow-run lookup returned no status checks or workflow runs.
 
-The isolated test result is useful, but it is not a substitute for the repository's CI result. Source was reconstructed in the isolated harness, so direct checkout verification remains pending.
+The isolated run used byte-identical provider and test files, but it is not a substitute for running tests in a repository checkout or confirming the CI result.
 
 ## Next
 
