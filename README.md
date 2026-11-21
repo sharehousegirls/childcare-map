@@ -46,6 +46,7 @@ backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니�
 - Childcare FAQ (region granularity/coordinates): https://info.childcare.go.kr/info_html5/cera/community/faqboard/FaqBoardSlPL.jsp
 - Security review and test evidence: docs/backend-security-review-2026-11-21.md
 - Draft data model: docs/data-model-draft.md
+- Current status, blockers, verification and next priorities: docs/project-status.md
 
 ## Next milestones
 1. Apply for development API access for nationwide waitlist dataset 15101154; review the existing Daegu application separately.
