@@ -41,6 +41,24 @@ Normalized fields include facility_id, name, type, status, address, sido, sigung
 - Waitlist totals are application counts and may not represent unique children across facilities.
 - `wait_total_consistent` reports whether the provider total equals the sum of age buckets when both are complete; null means a comparison was not possible. It does not rewrite the provider's reported total.
 
+## SQLite snapshot storage (scaffold)
+
+`app/storage.py` adds a file-backed SQLite repository for normalized records. It is independent of the unverified API adapter and is **not connected to `/api/facilities`**.
+
+Tables created by `initialize_database(path)`:
+- `facility`: latest provider-sourced identity/metadata keyed by provider facility ID.
+- `facility_snapshot`: capacity, enrollment, age waitlist buckets, provider total, derived total, consistency flag, collection time, source date and quality flags.
+- `ingestion_run`: batch fingerprint and received/stored/flagged/unresolved counts.
+- `unresolved_record`: normalized audit rows for missing IDs and duplicate rows; raw provider payload is not retained.
+
+`ingest_snapshot_batch(path, records, source=..., source_data_date=..., collected_at=..., run_id=...)` accepts already-normalized records. It uses a transaction, keeps explicit zero separate from unknown/null, derives an age total only when all buckets are present, preserves the reported total, and flags mismatches/invalid counts. Snapshot rows are append-only (updates blocked by a trigger; deletes remain available for future retention policy).
+
+Idempotency: the same `run_id` and batch fingerprint returns the existing summary; reusing a `run_id` with different content raises an error. Missing facility IDs and duplicate rows are retained for review instead of silently discarded.
+
+Use a file-backed SQLite path; `:memory:` is rejected because the functions open separate connections. This scaffold still lacks migrations/versioning, failed-run recording/retries, backup/retention policy, API integration, and production concurrency/load review.
+
+Storage tests are in `tests/test_storage.py`; run the same test command below.
+
 ## Tests
 
 Run from the backend directory:
