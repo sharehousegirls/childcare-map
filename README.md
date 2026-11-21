@@ -1,21 +1,20 @@
 # 어린이집 지도 (Childcare Map)
 
 지역별 어린이집 입소 대기 정보 비교 서비스.
-
 ## 현재 상태
 - 반응형 정적 웹 프로토타입: 지역 카드, 시설 검색, 유형/대기 0 필터
 - 기존 화면은 **가상 데모 데이터**를 사용합니다. 실제 데이터 연결 성공 전에는 실제 현황으로 간주하지 마세요.
 - FastAPI backend scaffold가 `backend/`에 추가되었습니다.
 - Frontend는 backend `/api/facilities` 응답이 정상이고 `source=official_api`일 때 실제 데이터로 전환합니다. 연결 실패 시 가상 데이터로 돌아가며 화면 상단 상태 표시로 구분합니다.
-
+- Backend API errors are sanitized to avoid exposing service keys in request URLs; field mapping configuration is validated.
+- 10 backend unit tests were added. Isolated local verification passed, but direct repository-checkout execution and latest GitHub Actions status are not confirmed; see the security review.
 ## Frontend 실행
 - 단순히 `index.html`을 `file://`로 열면 backend fetch가 브라우저 보안/CORS에 의해 제한될 수 있습니다.
 - VS Code Live Server 등으로 `index.html`을 localhost에서 실행하세요.
-
 ## Backend 설정
 `backend/README.md` 참조.
 1. Python 3.11+ 설치 후 backend 디렉터리에서 가상환경 생성
-2. `pip install -r requirements.txt`
+2. `pip install -r backend/requirements.txt`
 3. `.env.example`을 `.env`로 복사
 4. 공식 API 키, endpoint, 필수 query parameter와 응답 field mapping을 확인 후 입력
 5. `uvicorn app.main:app --reload --port 8000`
@@ -36,6 +35,7 @@
 - Childcare API policy: https://info.childcare.go.kr/info_html5/oais/introduction/Policy.jsp
 - Childcare API development guide: https://info.childcare.go.kr/info_html5/oais/guide/Development.jsp
 - Childcare FAQ (region granularity/coordinates): https://info.childcare.go.kr/info_html5/cera/community/faqboard/FaqBoardSlPL.jsp
+- Security review and test evidence: `docs/backend-security-review-2026-11-21.md`
 
 ## Next milestones
 1. Apply for development API access for nationwide waitlist dataset 15101154; review the existing Daegu application separately.
