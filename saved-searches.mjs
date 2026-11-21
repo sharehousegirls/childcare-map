@@ -27,18 +27,26 @@ function normalizeSavedSearch(value) {
   return { id, name, region, query, type, zeroWait: value.zeroWait === true, savedAt };
 }
 
-export function readSavedSearches(storage) {
-  const target = resolveStorage(storage);
-  if (!target) return [];
+function readStoredItems(target) {
   try {
     const raw = target.getItem(SAVED_SEARCHES_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.map(normalizeSavedSearch).filter(Boolean).slice(0, MAX_SAVED_SEARCHES);
+    if (!raw) return { ok: true, items: [] };
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      return { ok: true, items: [] };
+    }
+    if (!Array.isArray(parsed)) return { ok: true, items: [] };
+    return { ok: true, items: parsed.map(normalizeSavedSearch).filter(Boolean).slice(0, MAX_SAVED_SEARCHES) };
   } catch {
-    return [];
+    return { ok: false, items: [] };
   }
+}
+
+export function readSavedSearches(storage) {
+  const target = resolveStorage(storage);
+  return target ? readStoredItems(target).items : [];
 }
 
 function sameFilters(left, right) {
@@ -50,7 +58,9 @@ export function saveSavedSearch(value, storage) {
   if (!target) return { ok: false, reason: "storage-unavailable", items: [] };
   const item = normalizeSavedSearch(value);
   if (!item) return { ok: false, reason: "invalid", items: readSavedSearches(target) };
-  const current = readSavedSearches(target);
+  const stored = readStoredItems(target);
+  if (!stored.ok) return { ok: false, reason: "storage-error", items: [] };
+  const current = stored.items;
   if (current.some(existing => existing.name === item.name && sameFilters(existing, item))) {
     return { ok: false, reason: "duplicate", items: current };
   }
@@ -67,7 +77,9 @@ export function saveSavedSearch(value, storage) {
 export function removeSavedSearch(id, storage) {
   const target = resolveStorage(storage);
   if (!target) return { ok: false, reason: "storage-unavailable", items: [] };
-  const current = readSavedSearches(target);
+  const stored = readStoredItems(target);
+  if (!stored.ok) return { ok: false, reason: "storage-error", items: [] };
+  const current = stored.items;
   const items = current.filter(item => item.id !== id);
   if (items.length === current.length) return { ok: false, reason: "not-found", items: current };
   try {

@@ -28,5 +28,5 @@ Adds browser-local saved filters to the static prototype to support repeat visit
 
 ## Verification
 - Node built-in test suite covers persistence round-trip, duplicate handling, corrupt storage, invalid items, cap, deletion, and storage errors.
-- GitHub Actions runs backend and saved-search tests.
+- GitHub Actions run #57 successfully ran backend tests and the saved-search test step for commit e3dd6039132e545e2512f4a4162f41d7a2ad277a: https://github.com/sharehousegirls/childcare-map/actions/runs/44957889342.\n- An isolated local harness passed all 8 saved-search tests.\n- JavaScript syntax-check steps are added in this follow-up CI update; result pending.
 - Local repository checkout/browser interaction was not available in this run; CI result is pending after commit.

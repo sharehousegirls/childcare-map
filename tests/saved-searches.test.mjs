@@ -90,6 +90,17 @@ test("storage access errors are handled without throwing", () => {
   };
   assert.deepEqual(readSavedSearches(broken), []);
   assert.equal(saveSavedSearch(sample(), broken).reason, "storage-error");
-  assert.equal(removeSavedSearch("search-1", broken).reason, "not-found");
+  assert.equal(removeSavedSearch("search-1", broken).reason, "storage-error");
   assert.deepEqual(readSavedSearches(), []);
+});
+
+test("read failure does not overwrite saved data when writes appear available", () => {
+  let writes = 0;
+  const brokenRead = {
+    getItem() { throw new Error("read blocked"); },
+    setItem() { writes++; }
+  };
+  assert.equal(saveSavedSearch(sample(), brokenRead).reason, "storage-error");
+  assert.equal(removeSavedSearch("search-1", brokenRead).reason, "storage-error");
+  assert.equal(writes, 0);
 });
