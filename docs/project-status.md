@@ -32,7 +32,7 @@
 
 ## Verification
 - **PASS (reported/evidence documented):** 15 backend unit tests in an isolated harness using source/test blob hashes verified against the repository; GitHub Actions passed for commit ec14fb6a938820cb1185ada6e3e26101fa3201e4. See docs/backend-security-review-2026-11-21.md.
-- **PASS (isolated local copy):** 11 SQLite storage unit tests and Python `compileall`; this did not run against a direct repository checkout.
+- **PASS (isolated local copy):** 11 SQLite storage unit tests and Python `compileall`; this did not run against a direct repository checkout. GitHub Actions verification of the new repository files is pending.
 - **NOT RUN:** direct repository checkout test run in this environment.
 - **NOT RUN:** browser interaction, accessibility, responsive manual test, frontend unit tests.
 - **BLOCKED:** live API validation, nationwide data completeness, real map/geospatial validation, end-to-end integration.
