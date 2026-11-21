@@ -19,7 +19,9 @@ Status: **partially implemented**. The SQLite facility/snapshot/ingestion-run/un
 - `unresolved_record`: keeps normalized rows with missing IDs or later duplicate IDs for review; raw provider payload is not saved.
 - Same run ID + same fingerprint is idempotent; same run ID + different content is rejected.
 - Snapshot updates are blocked by an append-only trigger. Deletes remain possible for a future verified retention policy.
-- 11 storage tests pass in an isolated local copy; direct checkout/CI verification for the new files is pending.
+- **PASS:** 11 storage tests and `compileall` in an isolated local copy.
+- **PASS:** GitHub Actions run #48 passed 26 repository tests for commit `396e30762bb3776eadeddd1715b0574bf0049ce4`.
+- **NOT RUN:** direct local repository checkout test run.
 
 Not implemented: canonical region hierarchy, internal facility IDs, source dataset registry, versioned region assignment, database migrations, failed-run/retry auditing, retention/backup, integration with provider/API routes, and production concurrency/load review.
 
