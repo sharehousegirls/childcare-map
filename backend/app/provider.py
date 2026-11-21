@@ -85,6 +85,22 @@ def _get_value(record: dict, field: str, field_map: dict) -> Any:
             return record[candidate]
     return None
 
+def _validate_field_map(field_map: Any) -> dict:
+    if not isinstance(field_map, dict):
+        raise ProviderError("API_FIELD_MAP must be a JSON object.")
+    for normalized, provider_field in field_map.items():
+        if normalized not in FIELD_ALIASES or not isinstance(provider_field, str) or not provider_field.strip():
+            raise ProviderError("API_FIELD_MAP must map known normalized fields to non-empty provider field names.")
+    return field_map
+
+def _safe_http_error(exc: httpx.HTTPError) -> str:
+    # Never return the raw HTTP exception: it may contain the request URL and API key.
+    if isinstance(exc, httpx.HTTPStatusError):
+        return f"Official API returned HTTP {exc.response.status_code}."
+    if isinstance(exc, httpx.TimeoutException):
+        return "Official API request timed out."
+    return "Official API connection failed. Verify endpoint and network configuration."
+
 def _number(value, floating=False):
     if value in (None, "", "-", "--"):
         return None
@@ -108,12 +124,14 @@ async def get_facilities() -> list[dict]:
     api_key = os.getenv("API_SERVICE_KEY", "").strip()
     if not base_url or not api_key:
         raise ProviderNotConfigured("Official API is not configured. Set API_BASE_URL and API_SERVICE_KEY in backend/.env after obtaining the API key.")
-    key_param = os.getenv("API_KEY_PARAM", "serviceKey")
+    key_param = os.getenv("API_KEY_PARAM", "serviceKey").strip()
+    if not key_param:
+        raise ProviderError("API_KEY_PARAM must be a non-empty parameter name.")
     try:
         extra = json.loads(os.getenv("API_EXTRA_PARAMS", "{}"))
-        field_map = json.loads(os.getenv("API_FIELD_MAP", "{}"))
-        if not isinstance(extra, dict) or not isinstance(field_map, dict):
-            raise ValueError("Configuration values must be JSON objects")
+        field_map = _validate_field_map(json.loads(os.getenv("API_FIELD_MAP", "{}")))
+        if not isinstance(extra, dict):
+            raise ValueError("API_EXTRA_PARAMS must be a JSON object")
     except ValueError as exc:
         raise ProviderError(f"Invalid environment JSON configuration: {exc}")
     params = dict(extra)
@@ -123,7 +141,8 @@ async def get_facilities() -> list[dict]:
             response = await client.get(base_url, params=params)
             response.raise_for_status()
     except httpx.HTTPError as exc:
-        raise ProviderError(f"Official API request failed: {exc}")
+        # Sanitize: request URL may contain the service key.
+        raise ProviderError(_safe_http_error(exc)) from None
     try:
         ctype = response.headers.get("content-type", "").lower()
         if "json" in ctype or response.text.lstrip().startswith(("{", "[")):
