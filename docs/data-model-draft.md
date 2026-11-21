@@ -1,6 +1,6 @@
 # Data model draft — 2026-11-22
 
-Status: **design only**. This is a proposed model, not implemented storage. The official API response, stable identifiers, region codes and service-specific reuse terms remain unverified.
+Status: **partially implemented**. The SQLite facility/snapshot/ingestion-run/unresolved-record subset exists in `backend/app/storage.py`. Canonical region codes, region mapping, user features, migrations and API integration remain design-only. The official API response, stable identifiers, region codes and service-specific reuse terms remain unverified.
 
 ## Design goals
 - Preserve provider values and provenance; keep derived calculations separate.
@@ -10,6 +10,18 @@ Status: **design only**. This is a proposed model, not implemented storage. The 
 - Version region mapping explicitly.
 - Support free-first return-value features (saved regions, facilities, comparisons, filters, history) without requiring accounts in the first prototype.
 - Never predict admission dates.
+
+## Implemented subset (2026-11-22)
+
+- `facility`: provider facility ID is currently the primary key; latest metadata is upserted.
+- `facility_snapshot`: stores dated counts, reported/derived total and consistency diagnostic; unique per facility/run.
+- `ingestion_run`: stores source, batch fingerprint and received/stored/flagged/unresolved counts.
+- `unresolved_record`: keeps normalized rows with missing IDs or later duplicate IDs for review; raw provider payload is not saved.
+- Same run ID + same fingerprint is idempotent; same run ID + different content is rejected.
+- Snapshot updates are blocked by an append-only trigger. Deletes remain possible for a future verified retention policy.
+- 11 storage tests pass in an isolated local copy; direct checkout/CI verification for the new files is pending.
+
+Not implemented: canonical region hierarchy, internal facility IDs, source dataset registry, versioned region assignment, database migrations, failed-run/retry auditing, retention/backup, integration with provider/API routes, and production concurrency/load review.
 
 ## Proposed entities
 
