@@ -13,7 +13,7 @@ Adds browser-local saved filters to the static prototype to support repeat visit
 ## Storage and safety
 - Versioned localStorage key: childcare-map:saved-searches:v1.
 - Validate persisted records and ignore malformed entries.
-- Treat unavailable/quota-restricted storage as a recoverable UI error; never block facility search.
+- Treat unavailable/quota-restricted storage as a recoverable UI error; never block facility search. If reads fail, do not overwrite stored data based on an assumed empty list.
 - Saved names and descriptions are rendered with DOM textContent, not HTML injection.
 - Search settings are not a claim of real data. The demo/live status remains controlled by the existing data source indicator.
 
@@ -28,5 +28,8 @@ Adds browser-local saved filters to the static prototype to support repeat visit
 
 ## Verification
 - Node built-in test suite covers persistence round-trip, duplicate handling, corrupt storage, invalid items, cap, deletion, and storage errors.
-- GitHub Actions run #57 successfully ran backend tests and the saved-search test step for commit e3dd6039132e545e2512f4a4162f41d7a2ad277a: https://github.com/sharehousegirls/childcare-map/actions/runs/44957889342.\n- An isolated local harness passed all 8 saved-search tests.\n- JavaScript syntax-check steps are added in this follow-up CI update; result pending.
-- Local repository checkout/browser interaction was not available in this run; CI result is pending after commit.
+- GitHub Actions run #57 successfully ran backend tests and the saved-search test step for commit e3dd6039132e545e2512f4a4162f41d7a2ad277a (8 saved-search tests at that point): https://github.com/sharehousegirls/childcare-map/actions/runs/44957889342.
+- Run #58 succeeded for backend tests, JavaScript syntax checks, and the updated saved-search suite: https://github.com/sharehousegirls/childcare-map/actions/runs/44958036482.
+- An isolated local harness passed all 9 saved-search tests after read-error protection was added.
+- Read failures now return a storage error without attempting to overwrite the saved list; a regression test verifies this.
+- Local repository checkout and browser interaction were not available in this run; CI verifies the syntax and storage module, not DOM behavior.

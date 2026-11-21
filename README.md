@@ -22,7 +22,16 @@
 - 브라우저 데이터 삭제 또는 저장소 제한 시 저장 내용이 사라지거나 저장되지 않을 수 있습니다.
 - 저장 조건은 데모/실제 데이터 상태와 무관하게 필터만 기억합니다. 실제 데이터의 정확성이나 가용성을 보장하지 않습니다.
 
-## Frontend 검증\n저장 검색 모듈 및 앱 스크립트 문법 확인:\n\n    node --check app.js\n    node --check saved-searches.mjs\n    node --test tests/saved-searches.test.mjs\n\n## Backend 설정
+## Frontend 검증
+저장 검색 모듈 및 앱 스크립트 문법 확인:
+
+    node --check app.js
+    node --check saved-searches.mjs
+    node --test tests/saved-searches.test.mjs
+
+CI 최신 확인: GitHub Actions run #58에서 Backend 테스트, Frontend JavaScript 문법 확인, 저장 검색 테스트 단계가 모두 성공했습니다. https://github.com/sharehousegirls/childcare-map/actions/runs/44958036482
+
+## Backend 설정
 backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니다.
 1. Python 3.11+ 설치
 2. cd backend
