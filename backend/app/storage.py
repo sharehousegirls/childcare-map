@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS ingestion_run (
     unresolved_count INTEGER NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS facility (
-    provider_facility_id TEXT PRIMARY PRIMARY KEY,
+    provider_facility_id TEXT PRIMARY KEY,
     name TEXT,
     type TEXT,
     status TEXT,
