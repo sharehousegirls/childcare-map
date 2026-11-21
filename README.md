@@ -6,6 +6,7 @@
 - 반응형 정적 웹 프로토타입: 지역 카드, 시설 검색, 유형/대기 0 필터
 - 기존 화면은 **가상 데모 데이터**를 사용합니다. 실제 데이터 연결 성공 전에는 실제 현황으로 간주하지 마세요.
 - FastAPI backend scaffold가 backend/에 추가되었습니다.
+- SQLite 스냅샷 저장 기반(`backend/app/storage.py`)이 추가됐습니다. 시설 메타데이터, append-only 스냅샷, 수집 배치 요약, 검토 대상 레코드를 저장하지만 아직 API와 연결하지 않았습니다.
 - Frontend는 backend /api/facilities 응답이 정상이고 source=official_api일 때 실제 데이터로 전환합니다. 연결 실패 시 가상 데이터로 돌아가며 화면 상단 상태 표시로 구분합니다.
 - Backend API errors are sanitized to avoid exposing service keys in request URLs; field mapping configuration is validated.
 - 15 backend unit tests passed in an isolated harness using the exact provider and test blobs from commit ec14fb6a938820cb1185ada6e3e26101fa3201e4 (Git blob SHAs matched); GitHub Actions also passed for that commit. Direct repository-checkout execution remains unconfirmed because GitHub DNS is unavailable in this environment; see the security review.
@@ -45,7 +46,8 @@ backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니�
 - Childcare API overview: https://info.childcare.go.kr/info_html5/oais/introduction/Intro.jsp
 - Childcare FAQ (region granularity/coordinates): https://info.childcare.go.kr/info_html5/cera/community/faqboard/FaqBoardSlPL.jsp
 - Security review and test evidence: docs/backend-security-review-2026-11-21.md
-- Draft data model: docs/data-model-draft.md
+- Draft/implemented data model: docs/data-model-draft.md
+- SQLite storage scaffold and limitations: backend/README.md
 - Current status, blockers, verification and next priorities: docs/project-status.md
 
 ## Next milestones
@@ -53,7 +55,7 @@ backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니�
 2. Obtain official service guide/sample and verify URL, request parameters, response schema, pagination, coordinate system, error envelope and row limit.
 3. Validate source terms, data date, facility IDs and waitlist totals.
 4. Establish canonical region/facility identifiers and versioned region mapping; see draft model.
-5. Design snapshot/history and idempotent ingestion.
+5. Integrate the SQLite snapshot-storage scaffold with verified API ingestion, then add migrations and failure/retry audit.
 6. Nationwide ingestion, quality checks, map and regional/facility views.
 7. Saved regions/facilities/filters/comparisons and historical trends.
 8. SEO, accessibility, security and deploy-readiness review (no deployment without user approval).
