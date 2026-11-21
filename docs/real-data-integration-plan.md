@@ -41,3 +41,23 @@ Facility code/name/type/status, address, capacity/enrollment, coordinates, age-b
 - [ ] Source and date are shown; date is not guessed when absent.
 - [ ] Terms/reuse permission are documented before public display or redistribution.
 - [ ] Unit tests run and results recorded before declaring the connection successful.
+
+
+## Source finding update — 2026-11-21
+
+### Waitlist candidate identified
+Official data.go.kr catalog: **한국사회보장정보원_어린이집별 기본정보 조회 (15101154)**, https://www.data.go.kr/data/15101154/openapi.do. Catalog fields include age-based waitlist counts (0–5, 6+) and total, plus facility/location/capacity/enrollment/date. Metadata says XML, real-time, free and 이용허락범위 제한 없음. Schema and actual response remain untested.
+
+### Existing Daegu application
+**한국사회보장정보원_대구광역시 어린이집 정보조회 (15101186)**, https://www.data.go.kr/data/15101186/openapi.do. Catalog describes basic facility fields (name/code/address/contact/homepage/capacity), not waitlist counts. Application submitted by user on 2026-11-21; review/key pending. Keep this as a possible facility metadata source, not the waitlist feed.
+
+### Regional aggregate comparator
+**인천광역시 남동구_어린이집 입소대기현황 (15119081)**, https://www.data.go.kr/data/15119081/fileData.do. Annual CSV with regional facility/capacity/enrollment and child/application waitlist aggregates including/excluding enrolled children. Not facility-level or nationwide.
+
+### Freshness, license, and spatial caveats
+- 15101154/15101186 catalog metadata lists real-time updates and unrestricted reuse, but confirm service-specific terms, attribution, caching/redistribution and commercial-use conditions before public use.
+- Real-time catalog cadence is not a row-level freshness guarantee; use source data-date and record collection timestamp separately.
+- Official FAQ says portal regional type/count query is city/county/district only, legal-dong/admin-dong can differ, and facility coordinates are EPSG:5181/TM. Validate fields and transform coordinates to WGS84 for map use as needed.
+
+### Required user action
+Apply for development access to nationwide waitlist API 15101154. Existing Daegu-only application is not sufficient to establish waitlist fields. API credentials must remain in local backend environment or secret storage, never in chat/email/repository.
