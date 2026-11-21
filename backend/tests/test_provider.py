@@ -1,8 +1,13 @@
 import unittest
 import sys
 from pathlib import Path
+import httpx
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from app.provider import _number, _flatten_records, _get_value, _sum_age_waits
+from app.provider import (
+    _number, _flatten_records, _get_value, _sum_age_waits,
+    _validate_field_map, _safe_http_error, ProviderError,
+)
 
 class ProviderNormalizationTests(unittest.TestCase):
     def test_flatten_json_items(self):
@@ -39,6 +44,28 @@ class ProviderNormalizationTests(unittest.TestCase):
     def test_age_sum_requires_all_buckets(self):
         self.assertEqual(_sum_age_waits([1, 2, 0]), 3)
         self.assertIsNone(_sum_age_waits([1, None, 0]))
+
+    def test_field_map_validation(self):
+        self.assertEqual(_validate_field_map({"name": "CRNAME"}), {"name": "CRNAME"})
+        for invalid in ({"unknown_field": "X"}, {"name": ""}, {"name": ["CRNAME"]}):
+            with self.subTest(invalid=invalid):
+                with self.assertRaises(ProviderError):
+                    _validate_field_map(invalid)
+
+    def test_http_status_error_does_not_expose_key(self):
+        request = httpx.Request("GET", "https://api.example.test/data?serviceKey=SECRET_KEY")
+        response = httpx.Response(403, request=request)
+        exc = httpx.HTTPStatusError("request failed", request=request, response=response)
+        message = _safe_http_error(exc)
+        self.assertEqual(message, "Official API returned HTTP 403.")
+        self.assertNotIn("SECRET_KEY", message)
+
+    def test_timeout_error_is_sanitized(self):
+        request = httpx.Request("GET", "https://api.example.test/data?serviceKey=SECRET_KEY")
+        exc = httpx.ReadTimeout("timed out", request=request)
+        message = _safe_http_error(exc)
+        self.assertEqual(message, "Official API request timed out.")
+        self.assertNotIn("SECRET_KEY", message)
 
 if __name__ == "__main__":
     unittest.main()
