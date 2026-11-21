@@ -6,7 +6,7 @@ import httpx
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.provider import (
     _number, _flatten_records, _get_value, _sum_age_waits,
-    _validate_field_map, _safe_http_error, ProviderError,
+    _validate_field_map, _safe_http_error, _wait_total_consistent, ProviderError,
 )
 
 class ProviderNormalizationTests(unittest.TestCase):
@@ -44,6 +44,16 @@ class ProviderNormalizationTests(unittest.TestCase):
     def test_age_sum_requires_all_buckets(self):
         self.assertEqual(_sum_age_waits([1, 2, 0]), 3)
         self.assertIsNone(_sum_age_waits([1, None, 0]))
+
+    def test_total_consistency_when_equal(self):
+        self.assertTrue(_wait_total_consistent(12, 12))
+
+    def test_total_consistency_when_mismatch(self):
+        self.assertFalse(_wait_total_consistent(12, 10))
+
+    def test_total_consistency_unknown_when_incomplete(self):
+        self.assertIsNone(_wait_total_consistent(None, 12))
+        self.assertIsNone(_wait_total_consistent(12, None))
 
     def test_field_map_validation(self):
         self.assertEqual(_validate_field_map({"name": "CRNAME"}), {"name": "CRNAME"})
