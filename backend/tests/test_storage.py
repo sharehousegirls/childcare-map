@@ -1,9 +1,9 @@
 import json
 import sqlite3
-from contextlib import contextmanager
 import sys
 import tempfile
 import unittest
+from contextlib import contextmanager
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -75,7 +75,7 @@ class SnapshotStorageTests(unittest.TestCase):
             self.assertEqual(snapshot["wait_0"], 0)
             self.assertIsNone(snapshot["wait_1"])
             self.assertIsNone(snapshot["wait_total_reported"])
-            self.assertIsNone(snapshot["wait_total_derived")
+            self.assertIsNone(snapshot["wait_total_derived"])
 
     def test_missing_id_record_is_retained_for_review(self):
         result = ingest_snapshot_batch(self.db_path, [self.record(facility_id=" ")], source="test", run_id="run-3")
