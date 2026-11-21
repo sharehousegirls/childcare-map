@@ -9,7 +9,7 @@
 - SQLite 스냅샷 저장 기반(`backend/app/storage.py`)이 추가됐습니다. 시설 메타데이터, append-only 스냅샷, 수집 배치 요약, 검토 대상 레코드를 저장하지만 아직 API와 연결하지 않았습니다.
 - Frontend는 backend /api/facilities 응답이 정상이고 source=official_api일 때 실제 데이터로 전환합니다. 연결 실패 시 가상 데이터로 돌아가며 화면 상단 상태 표시로 구분합니다.
 - Backend API errors are sanitized to avoid exposing service keys in request URLs; field mapping configuration is validated.
-- 15 backend unit tests passed in an isolated harness using the exact provider and test blobs from commit ec14fb6a938820cb1185ada6e3e26101fa3201e4 (Git blob SHAs matched); GitHub Actions also passed for that commit. Direct repository-checkout execution remains unconfirmed because GitHub DNS is unavailable in this environment; see the security review.
+- 15 backend unit tests passed in an isolated harness using the exact provider and test blobs from commit ec14fb6a938820cb1185ada6e3e26101fa3201e4 (Git blob SHAs matched); GitHub Actions also passed for that commit. Direct local checkout execution remains unconfirmed because GitHub DNS is unavailable in this environment; however, the repository's GitHub Actions run #48 passed all 26 tests for commit `396e30762bb3776eadeddd1715b0574bf0049ce4`: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967. See the security review.
 
 ## Frontend 실행
 - 단순히 index.html을 file://로 열면 backend fetch가 브라우저 보안/CORS에 의해 제한될 수 있습니다.
