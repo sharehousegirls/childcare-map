@@ -21,37 +21,35 @@
 5. `uvicorn app.main:app --reload --port 8000`
 6. `http://127.0.0.1:8000/health` 및 `/api/facilities` 확인
 
-## Data integration status
-- 공식 어린이집정보공개포털 Open API를 데이터 소스로 조사했습니다.
-- API 개발계정 신청/심의 및 인증키 발급이 필요합니다.
-- 정확한 endpoint/요청 parameters/response field mapping은 공식 문서와 샘플 응답으로 확인해야 합니다.
-- 인증키는 frontend 코드에 넣거나 GitHub에 commit하지 않습니다.
-- 대기 값이 누락된 시설을 대기 0으로 간주하지 않습니다.
+## Data sources and status
+- **Nationwide waitlist candidate:** SSIS `한국사회보장정보원_어린이집별 기본정보 조회` (15101154). Official catalog lists age waitlist buckets 0–5, 6+, and total: https://www.data.go.kr/data/15101154/openapi.do. XML, real-time metadata, and unrestricted reuse are listed; request schema/sample and service-specific terms remain unverified.
+- **Existing Daegu application:** `한국사회보장정보원_대구광역시 어린이집 정보조회` (15101186), submitted for development account on 2026-11-21. Catalog lists facility metadata (name/code/address/contact/homepage/capacity), not waitlist counts: https://www.data.go.kr/data/15101186/openapi.do. Review/credentials pending.
+- **Regional aggregate comparator:** Incheon Namdong waitlist dataset 15119081 is annual district-level aggregate, not facility-level/nationwide: https://www.data.go.kr/data/15119081/fileData.do.
+- Credentials must stay server-side and never be committed.
+- Missing waitlist values are unknown, not zero. Waitlist/application counts are not necessarily unique children; no admission-date prediction.
+- Verify service-specific reuse/attribution/commercial terms before public display or commercialization.
+
+## Official references
+- Nationwide waitlist candidate: https://www.data.go.kr/data/15101154/openapi.do
+- Daegu facility metadata: https://www.data.go.kr/data/15101186/openapi.do
+- Incheon Namdong aggregate: https://www.data.go.kr/data/15119081/fileData.do
+- Childcare API policy: https://info.childcare.go.kr/info_html5/oais/introduction/Policy.jsp
+- Childcare API development guide: https://info.childcare.go.kr/info_html5/oais/guide/Development.jsp
+- Childcare FAQ (region granularity/coordinates): https://info.childcare.go.kr/info_html5/cera/community/faqboard/FaqBoardSlPL.jsp
 
 ## Next milestones
-1. 개발 API access 신청 및 key 발급
-2. 공식 endpoint, parameters, sample payload 확보
-3. field mapping 확정 및 API collector 검증
-4. 실제 데이터 연결 테스트
-5. DB snapshot/history 및 행정구역 매핑
-6. 전국 자동 수집, 품질검증, 지도/지역 상세 기능
-7. SEO 및 배포 준비
+1. Apply for development API access for nationwide waitlist dataset 15101154; review the existing Daegu application separately.
+2. Obtain official service guide/sample and verify URL, request parameters, response schema, pagination, coordinate system, error envelope and row limit.
+3. Validate source terms, data date, facility IDs and waitlist totals.
+4. Connect real data only after validation.
+5. DB snapshot/history and administrative-region mapping.
+6. Nationwide ingestion, quality checks, map and regional/facility views.
+7. SEO and deploy-readiness review (no deployment without user approval).
 
-## 원칙
-- 무료 서비스로 시작, 초기 광고 없음
-- Lock-in First: 저장한 지역, 비교, 변화 추적, 데이터 이력으로 재방문 가치 강화
-- 데이터 출처와 기준일 표시
-- 신고/위반 이력은 모든 기능 완료 후 별도 검토
-- 사용자 승인 없이 배포하지 않음
-
-
-## API application status (2026-11-21)
-- Daegu-only development API application submitted; approval is pending.
-- Credentials, actual response sample, and field mapping are not yet available.
-- No live data is connected; demo figures remain fictional.
-
-
-## Verified source update (2026-11-21)
-- Nationwide waitlist candidate: SSIS `한국사회보장정보원_어린이집별 기본정보 조회` (15101154) officially lists age waitlist buckets 0–5, 6+, and total: https://www.data.go.kr/data/15101154/openapi.do. XML, real-time metadata, and unrestricted reuse are listed, but request schema/sample and service-specific terms remain unverified.
-- The existing Daegu application (15101186) describes facility metadata (name/code/address/contact/homepage/capacity), not waitlist fields: https://www.data.go.kr/data/15101186/openapi.do.
-- User action required: apply for nationwide waitlist API development access. No live data is connected.
+## Project principles
+- Free first; no ads initially.
+- Lock-in first: saved regions, comparisons, snapshots/history and filters should create return value.
+- Source and date labels, data quality, and clear unknown values.
+- No admission-date predictions.
+- Defer violation/complaint/administrative history until all other features are complete and ask for review then.
+- Do not deploy without user approval.
