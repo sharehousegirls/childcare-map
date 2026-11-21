@@ -48,6 +48,7 @@ backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니�
 - Security review and test evidence: docs/backend-security-review-2026-11-21.md
 - Draft/implemented data model: docs/data-model-draft.md
 - SQLite storage scaffold and limitations: backend/README.md
+- Snapshot-storage implementation notes: docs/storage-implementation-2026-11-22.md
 - Current status, blockers, verification and next priorities: docs/project-status.md
 
 ## Next milestones
