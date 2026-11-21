@@ -119,6 +119,12 @@ def _number(value, floating=False):
 def _sum_age_waits(age_values):
     return sum(age_values) if all(value is not None for value in age_values) else None
 
+def _wait_total_consistent(provided_total, age_sum):
+    """Compare the provider's total with a complete age-bucket sum; unknown stays None."""
+    if provided_total is None or age_sum is None:
+        return None
+    return provided_total == age_sum
+
 async def get_facilities() -> list[dict]:
     base_url = os.getenv("API_BASE_URL", "").strip()
     api_key = os.getenv("API_SERVICE_KEY", "").strip()
@@ -160,9 +166,12 @@ async def get_facilities() -> list[dict]:
         for field in NUMERIC_FIELDS:
             row[field] = _number(row[field], floating=field in {"latitude", "longitude"})
         age_values = [row[f"wait_{age}"] for age in range(6)] + [row["wait_6_plus"]]
-        if row["wait_total"] is None and all(v is not None for v in age_values):
-            row["wait_total"] = sum(age_values)
-        row["wait_age_sum"] = _sum_age_waits(age_values)
+        age_sum = _sum_age_waits(age_values)
+        provided_total = row["wait_total"]
+        if row["wait_total"] is None and age_sum is not None:
+            row["wait_total"] = age_sum
+        row["wait_age_sum"] = age_sum
+        row["wait_total_consistent"] = _wait_total_consistent(provided_total, age_sum)
         if row.get("facility_id") or row.get("name"):
             normalized.append(row)
     return normalized
