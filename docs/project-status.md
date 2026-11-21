@@ -32,10 +32,12 @@
 
 ## Verification
 - **PASS (reported/evidence documented):** 15 backend unit tests in an isolated harness using source/test blob hashes verified against the repository; GitHub Actions passed for commit ec14fb6a938820cb1185ada6e3e26101fa3201e4. See docs/backend-security-review-2026-11-21.md.
-- **PASS (isolated local copy):** 11 SQLite storage unit tests and Python `compileall`; this did not run against a direct repository checkout. GitHub Actions verification of the new repository files is pending.
-- **NOT RUN:** direct repository checkout test run in this environment.
+- **PASS (isolated local copy):** 11 SQLite storage unit tests and Python `compileall`; this did not run against a direct repository checkout. GitHub Actions run #48 passed for commit `396e30762bb3776eadeddd1715b0574bf0049ce4` (26 tests).
+- **PASS — GitHub Actions run #48:** 26 repository tests passed for commit `396e30762bb3776eadeddd1715b0574bf0049ce4` (workflow: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967).
+- **NOT RUN:** direct local repository checkout test run in this environment.
 - **NOT RUN:** browser interaction, accessibility, responsive manual test, frontend unit tests.
 - **BLOCKED:** live API validation, nationwide data completeness, real map/geospatial validation, end-to-end integration.
+- **WARN:** GitHub Actions reports Node 20 deprecation notices for checkout/setup-python actions; run is successful, but workflow action maintenance should be scheduled.
 - **NOT RUN:** deployment; requires owner approval.
 
 ## Next priorities
