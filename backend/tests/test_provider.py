@@ -1,4 +1,7 @@
 import unittest
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.provider import _number, _flatten_records, _get_value, _sum_age_waits
 
 class ProviderNormalizationTests(unittest.TestCase):
