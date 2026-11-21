@@ -4,11 +4,21 @@ This backend is intentionally not connected yet. The official provider's endpoin
 
 ## Local setup
 
+Run the commands from the repository root, then enter `backend`:
+
 1. Install Python 3.11+.
-2. From this directory, create a virtual environment: `python -m venv .venv`, activate it, then `pip install -r backend/requirements.txt`.
-3. Copy `.env.example` to `.env` and fill the official API endpoint, key, query parameters, and field mapping after verifying the API docs.
-4. Run `uvicorn app.main:app --reload --port 8000`.
-5. Check `http://127.0.0.1:8000/health` and `http://127.0.0.1:8000/api/facilities`.
+2. `cd backend`
+3. Create a virtual environment: `python -m venv .venv`.
+4. Activate it:
+   - Windows PowerShell: `.\.venv\Scripts\Activate.ps1`
+   - macOS/Linux: `source .venv/bin/activate`
+5. Install dependencies: `pip install -r requirements.txt`.
+6. Copy `.env.example` to `.env`:
+   - Windows PowerShell: `Copy-Item .env.example .env`
+   - macOS/Linux: `cp .env.example .env`
+7. Fill the official API endpoint, key, query parameters, and field mapping only after verifying the API docs.
+8. Run `uvicorn app.main:app --reload --port 8000`.
+9. Check `http://127.0.0.1:8000/health` and `http://127.0.0.1:8000/api/facilities`.
 
 ## Environment variables
 
