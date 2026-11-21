@@ -42,7 +42,7 @@ Annual CSV with regional facility/capacity/enrollment and waitlist child/applica
 - FastAPI backend scaffold with configurable endpoint, server-side key handling, JSON/XML parser, normalized field mapping, health/data routes.
 - Frontend prefers configured official API and otherwise clearly labels fictional demo values.
 - Backend normalization tests and GitHub Actions workflow exist.
-- Backend exposes \`wait_total_consistent\` as a nullable quality diagnostic for comparing an official total against a complete age-bucket sum; it does not alter the reported total.
+- Backend exposes `wait_total_consistent` as a nullable quality diagnostic for comparing an official total against a complete age-bucket sum; it does not alter the reported total.
 - Documentation distinguishes the nationwide waitlist candidate from the submitted Daegu facility-metadata application.
 - No credentials stored; live API connection is not complete.
 
