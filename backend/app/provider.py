@@ -1,5 +1,6 @@
 """Configurable official API adapter. Verify endpoint/schema before configuring."""
 import json
+import math
 import os
 import xml.etree.ElementTree as ET
 from typing import Any
@@ -89,9 +90,18 @@ def _number(value, floating=False):
         return None
     try:
         n = float(str(value).replace(",", "").strip())
-        return n if floating else int(n)
+        if not math.isfinite(n):
+            return None
+        if floating:
+            return n
+        if n < 0 or not n.is_integer():
+            return None
+        return int(n)
     except (TypeError, ValueError):
         return None
+
+def _sum_age_waits(age_values):
+    return sum(age_values) if all(value is not None for value in age_values) else None
 
 async def get_facilities() -> list[dict]:
     base_url = os.getenv("API_BASE_URL", "").strip()
@@ -133,7 +143,7 @@ async def get_facilities() -> list[dict]:
         age_values = [row[f"wait_{age}"] for age in range(6)] + [row["wait_6_plus"]]
         if row["wait_total"] is None and all(v is not None for v in age_values):
             row["wait_total"] = sum(age_values)
-        row["wait_age_sum"] = sum(v for v in age_values if v is not None)
+        row["wait_age_sum"] = _sum_age_waits(age_values)
         if row.get("facility_id") or row.get("name"):
             normalized.append(row)
     return normalized

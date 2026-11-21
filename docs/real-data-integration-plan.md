@@ -23,3 +23,21 @@ Facility code/name/type/status, address, capacity/enrollment, coordinates, age-b
 3. Capture a small sample response (up to development account limit) and configure mappings.
 4. Test response handling and validate fields, missing values, IDs, waitlist sums, timestamps.
 5. Replace demo mode only after successful source validation; then plan production account approval.
+
+
+## Application and validation status (2026-11-21)
+- Development API application submitted for Daegu only; review/approval pending. Credentials have not been issued.
+- The application screen lists REST/XML and an API URL, but this is not yet confirmed by a successful request. Do not configure the provider or infer the response schema from the application form alone.
+- The official service specification file shown on the application screen must be reviewed, along with a sample response, after access is approved.
+- Before connecting, confirm: exact operation URL and required parameters; pagination and 50-row development limit; error envelope/status codes; facility ID stability; missing-value semantics; data-date semantics; terms and redistribution/commercial-use permission.
+
+## Acceptance checklist for first API test
+- [ ] Key remains only in local backend environment or approved secret storage; never in browser or repository.
+- [ ] One successful request with a redacted sample response saved for mapping review.
+- [ ] Provider errors and empty/error payloads are distinguished from valid empty datasets.
+- [ ] Normalized records have stable IDs or are explicitly flagged when IDs are missing.
+- [ ] Waitlist values are non-negative integers; blanks remain null; total is derived from age buckets only when every bucket is present.
+- [ ] Coordinates and administrative region fields are validated before map display.
+- [ ] Source and date are shown; date is not guessed when absent.
+- [ ] Terms/reuse permission are documented before public display or redistribution.
+- [ ] Unit tests run and results recorded before declaring the connection successful.

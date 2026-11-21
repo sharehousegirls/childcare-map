@@ -43,3 +43,9 @@
 - 데이터 출처와 기준일 표시
 - 신고/위반 이력은 모든 기능 완료 후 별도 검토
 - 사용자 승인 없이 배포하지 않음
+
+
+## API application status (2026-11-21)
+- Daegu-only development API application submitted; approval is pending.
+- Credentials, actual response sample, and field mapping are not yet available.
+- No live data is connected; demo figures remain fictional.
