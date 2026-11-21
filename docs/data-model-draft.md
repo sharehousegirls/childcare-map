@@ -106,9 +106,9 @@ Acceptance: save/unsave, reload persistence, stale-ID handling, version migratio
 1. Schema gate: operation, parameters, response envelope, pagination, ID stability and null semantics confirmed.
 2. Rights gate: API-specific terms, attribution, caching, public display, redistribution and commercial/advertising use confirmed.
 3. Quality gate: sample validates IDs, numeric ranges, age buckets/total, dates, geography and CRS.
-4. Storage gate: migrations, indexes, retention/backup and idempotent snapshot ingestion tested.
+4. Storage gate: versioned migrations, indexes, retention/backup and idempotent snapshot ingestion tested. Current scaffold covers batch/idempotency only; migrations, retention, backup and API integration remain open.
 5. UI gate: source/date labels, coverage, unknown values and stale state verified.
 6. Release gate: accessibility, responsive layout, security, tests and deploy-readiness review completed; deployment requires owner approval.
 
 ## Next bounded work
-Implement the region hierarchy/selector from verified official administrative codes and provider fields; do not hardcode an unverified code list. In parallel, obtain and validate the official API spec/sample and terms. Then define migrations and the snapshot-ingestion contract before connecting live data.
+Implement the region hierarchy/selector from verified official administrative codes and provider fields; do not hardcode an unverified code list. In parallel, obtain and validate the official API spec/sample and terms. Add schema migrations and ingestion failure/retry audit, then connect the snapshot-storage scaffold only after all API gates pass.
