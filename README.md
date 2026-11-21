@@ -6,14 +6,21 @@
 - 반응형 정적 웹 프로토타입: 지역 카드, 시설 검색, 유형/대기 0 필터
 - 기존 화면은 **가상 데모 데이터**를 사용합니다. 실제 데이터 연결 성공 전에는 실제 현황으로 간주하지 마세요.
 - FastAPI backend scaffold가 backend/에 추가되었습니다.
-- SQLite 스냅샷 저장 기반(`backend/app/storage.py`)이 추가됐습니다. 시설 메타데이터, append-only 스냅샷, 수집 배치 요약, 검토 대상 레코드를 저장하지만 아직 API와 연결하지 않았습니다.
+- SQLite 스냅샷 저장 기반(backend/app/storage.py)이 추가됐습니다. 시설 메타데이터, append-only 스냅샷, 수집 배치 요약, 검토 대상 레코드를 저장하지만 아직 API와 연결하지 않았습니다.
+- 브라우저에서 검색 조건 저장/불러오기/삭제 기능을 제공합니다. 저장 데이터는 해당 브라우저의 localStorage에만 보관됩니다.
 - Frontend는 backend /api/facilities 응답이 정상이고 source=official_api일 때 실제 데이터로 전환합니다. 연결 실패 시 가상 데이터로 돌아가며 화면 상단 상태 표시로 구분합니다.
 - Backend API errors are sanitized to avoid exposing service keys in request URLs; field mapping configuration is validated.
-- 15 backend unit tests passed in an isolated harness using the exact provider and test blobs from commit ec14fb6a938820cb1185ada6e3e26101fa3201e4 (Git blob SHAs matched); GitHub Actions also passed for that commit. Direct local checkout execution remains unconfirmed because GitHub DNS is unavailable in this environment; however, the repository's GitHub Actions run #48 passed all 26 tests for commit `396e30762bb3776eadeddd1715b0574bf0049ce4`: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967. See the security review.
+- 15 backend unit tests passed in an isolated harness using the exact provider and test blobs from commit ec14fb6a938820cb1181ada6e3e26101fa3201e4 (Git blob SHAs matched); GitHub Actions also passed for that commit. Direct local checkout execution remains unconfirmed because GitHub DNS is unavailable in this environment; however, the repository's GitHub Actions run #48 passed all 26 tests for commit 396e30762bb3776eadeddd1715b0574bf0049ce4: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967. See the security review.
 
 ## Frontend 실행
 - 단순히 index.html을 file://로 열면 backend fetch가 브라우저 보안/CORS에 의해 제한될 수 있습니다.
 - VS Code Live Server 등으로 index.html을 localhost에서 실행하세요.
+
+## 검색 조건 저장
+- 현재 선택 지역, 시설명 검색어, 시설 유형, 대기 0명 필터를 저장/불러오기/삭제할 수 있습니다.
+- 최대 20개까지 브라우저 localStorage에 저장하며 계정/서버 동기화는 제공하지 않습니다.
+- 브라우저 데이터 삭제 또는 저장소 제한 시 저장 내용이 사라지거나 저장되지 않을 수 있습니다.
+- 저장 조건은 데모/실제 데이터 상태와 무관하게 필터만 기억합니다. 실제 데이터의 정확성이나 가용성을 보장하지 않습니다.
 
 ## Backend 설정
 backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니다.
@@ -49,6 +56,7 @@ backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니�
 - Draft/implemented data model: docs/data-model-draft.md
 - SQLite storage scaffold and limitations: backend/README.md
 - Snapshot-storage implementation notes: docs/storage-implementation-2026-11-22.md
+- Saved-search feature notes: docs/saved-search-implementation-2026-11-22.md
 - Current status, blockers, verification and next priorities: docs/project-status.md
 
 ## Next milestones

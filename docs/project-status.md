@@ -1,17 +1,18 @@
 # Project status — 2026-11-22
 
 ## Current phase
-**Pre-live validation and storage foundation.** Live API connection remains gated on verified official schema, credentials, quality, and service-specific reuse terms.
+**Prototype feature expansion.** Live API connection remains gated on verified official schema, credentials, quality, and service-specific reuse terms.
 
 ## Completed foundation
 - Responsive static prototype: region cards, facility search, type filter, explicit zero-wait filter.
+- Browser-local saved searches: store, restore and delete region/search/type/zero-wait filters (up to 20, no account or server sync).
 - FastAPI adapter scaffold with server-side credential configuration, XML/JSON parsing, normalized fields, health and facility endpoints.
 - Provider error sanitization and field-map validation.
 - Waitlist-total consistency diagnostic; missing/duplicate facility-ID flags (batch-level only).
 - Backend unit-test evidence and CI evidence documented in the security review.
 - Official source inventory and integration plan.
 - Draft relational model for region hierarchy, facility identity, snapshots, ingestion-run audit, region mapping provenance, and browser-local saved features.
-- File-backed SQLite snapshot-storage scaffold: facility metadata, append-only snapshots, ingestion-run summaries, and unresolved-record review table; idempotent batch handling and quality flags. Not yet wired to the API route
+- File-backed SQLite snapshot-storage scaffold: facility metadata, append-only snapshots, ingestion-run summaries, and unresolved-record review table; idempotent batch handling and quality flags. Not yet wired to the API route.
 
 ## Blockers / not yet verified
 - Daegu facility-metadata development API application is pending; it does not itself provide the waitlist fields.
@@ -25,17 +26,18 @@
 - Demo values are fictional and must not be interpreted as current real waitlist data.
 - No actual nationwide facility/waitlist ingestion.
 - No implemented canonical region hierarchy or dong-level mapping.
-- SQLite snapshot storage exists as an isolated scaffold, but it is not integrated with API ingestion or exposed through routes; no region hierarchy, real map, facility detail page, persistent saved features, comparisons or trend UI yet.
+- SQLite snapshot storage exists as an isolated scaffold, but it is not integrated with API ingestion or exposed through routes; no region hierarchy, real map, facility detail page, persistent saved facilities, server-backed comparisons or trend UI yet.
+- Saved searches are browser-local only; up to 20. They do not sync across devices/accounts, and browser storage can be cleared or unavailable.
 - Storage schema has no versioned migrations, failed-run/retry recording, retention/backup policy or production concurrency/load review.
 - Automated data refresh, SEO, production hardening and deployment are not ready.
 - Complaint/violation/administrative-history feature remains deferred until all other scope is complete and owner review is requested.
 
 ## Verification
-- **PASS (reported/evidence documented):** 15 backend unit tests in an isolated harness using source/test blob hashes verified against the repository; GitHub Actions passed for commit ec14fb6a938820cb1185ada6e3e26101fa3201e4. See docs/backend-security-review-2026-11-21.md.
-- **PASS (isolated local copy):** 11 SQLite storage unit tests and Python `compileall`; local tests were not run against a repository checkout.
-- **PASS — GitHub Actions run #48:** 26 repository tests passed against the repository checkout for commit `396e30762bb3776eadeddd1715b0574bf0049ce4` (workflow: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967).
+- **PASS (reported/evidence documented):** 15 backend unit tests in an isolated harness using source/test blob hashes verified against the repository; GitHub Actions passed for commit ec14fb6a938820cb1181ada6e3e26101fa3201e4. See docs/backend-security-review-2026-11-21.md.
+- **PASS (isolated local copy):** 11 SQLite storage unit tests and Python compileall; local tests were not run against a repository checkout.
+- **PASS — GitHub Actions run #48:** 26 repository tests passed against the repository checkout for commit 396e30762bb3776eadeddd1715b0574bf0049ce4 (workflow: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967).
 - **NOT RUN:** direct local repository checkout test run in this environment.
-- **NOT RUN:** browser interaction, accessibility, responsive manual test, frontend unit tests.
+- **NOT RUN:** browser interaction, accessibility, responsive manual test, frontend unit tests (prior to saved-search feature).
 - **BLOCKED:** live API validation, nationwide data completeness, real map/geospatial validation, end-to-end integration.
 - **WARN:** GitHub Actions reports Node 20 deprecation notices for checkout/setup-python actions; run is successful, but workflow action maintenance should be scheduled.
 - **NOT RUN:** deployment; requires owner approval.
@@ -51,7 +53,7 @@
 
 ## Acceptance rules
 - Missing is not zero; zero-wait requires explicit zero.
-- Waitlist application counts are not necessarily unique children across facilities.
+- Waitlist application counts are not necessarily unique children.
 - No admission-date prediction.
 - Show source, record date, collection time, coverage and quality flags.
 - Keep demo and live states unmistakably distinct.

@@ -32,9 +32,21 @@
     <section id="facilities" class="section">
       <div class="section-heading"><div><span class="eyebrow">FACILITY EXPLORER</span><h2>어린이집 둘러보기</h2></div></div>
       <div class="filters">
-        <input id="facilitySearch" type="search" placeholder="시설명 검색" aria-label="시설명 검색">
+        <input id="facilitySearch" type="search" maxlength="100" placeholder="시설명 검색" aria-label="시설명 검색">
         <select id="typeFilter" aria-label="시설 유형"><option value="all">모든 유형</option><option>국공립</option><option>민간</option><option>가정</option><option>직장</option></select>
         <label class="toggle"><input id="zeroFilter" type="checkbox"> 대기 0명만</label>
+      </div>
+      <div class="saved-search-panel" aria-labelledby="savedSearchHeading">
+        <div class="saved-search-heading">
+          <div><h3 id="savedSearchHeading">검색 조건 저장</h3><p>현재 지역·검색어·유형·대기 조건을 이 브라우저에 최대 20개 저장합니다.</p></div>
+          <form id="savedSearchForm" class="saved-search-form">
+            <label class="sr-only" for="savedSearchName">저장 이름 (선택)</label>
+            <input id="savedSearchName" type="text" maxlength="60" placeholder="저장 이름 (선택)">
+            <button type="submit">현재 조건 저장</button>
+          </form>
+        </div>
+        <p id="savedSearchStatus" class="saved-search-status" role="status" aria-live="polite"></p>
+        <div id="savedSearchList" class="saved-search-list"></div>
       </div>
       <div class="facility-list" id="facilityList"></div>
     </section>
@@ -45,6 +57,6 @@
     </section>
   </main>
   <footer><span>어린이집 지도 · 초기 데모</span><span>데이터 검증 후 정식 공개 예정</span></footer>
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

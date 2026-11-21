@@ -1,12 +1,13 @@
-name: Backend unit tests
+name: Backend and frontend tests
 
 on:
   push:
   pull_request:
 
 jobs:
-  backend-tests:
+  tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -14,5 +15,10 @@ jobs:
           python-version: "3.11"
       - name: Install backend requirements
         run: pip install -r backend/requirements.txt
-      - name: Run unit tests
+      - name: Run backend unit tests
         run: python -m unittest discover -s backend/tests -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run frontend saved-search tests
+        run: node --test tests/saved-searches.test.mjs
