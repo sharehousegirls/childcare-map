@@ -25,7 +25,7 @@ Annual CSV with regional facility/capacity/enrollment and waitlist child/applica
 
 - Official portal guidance: development account limited to 50 rows; operating account requires separate application/review and anticipated traffic. Credentials are account/service-specific.
 - Catalog pages for 15101154 and 15101186 list real-time update metadata and unrestricted reuse. Confirm service-specific terms, attribution, caching/redistribution and commercial-use conditions before public use.
-- Real-time metadata is not a row-level freshness guarantee. Use source data-date and collection timestamp separately.
+- Real-time metadata is not a row-level freshness guarantee. Use source data-date and collection timestamp separately; never fabricate either.
 - Official FAQ says portal regional type/count lookup is city/county/district only, legal-dong/admin-dong may differ, and facility coordinates are EPSG:5181/TM. Validate exact fields and transform to WGS84 before map use as needed.
 - Dong summaries require validated address/coordinate-to-boundary mapping with documented boundary source.
 
@@ -42,14 +42,15 @@ Annual CSV with regional facility/capacity/enrollment and waitlist child/applica
 - FastAPI backend scaffold with configurable endpoint, server-side key handling, JSON/XML parser, normalized field mapping, health/data routes.
 - Frontend prefers configured official API and otherwise clearly labels fictional demo values.
 - Backend normalization tests and GitHub Actions workflow exist.
-- Documentation now distinguishes the nationwide waitlist candidate from the submitted Daegu facility-metadata application.
+- Backend exposes \`wait_total_consistent\` as a nullable quality diagnostic for comparing an official total against a complete age-bucket sum; it does not alter the reported total.
+- Documentation distinguishes the nationwide waitlist candidate from the submitted Daegu facility-metadata application.
 - No credentials stored; live API connection is not complete.
 
 ## Next actions
 
 1. User applies for development access to nationwide waitlist API 15101154; keep the Daegu application for metadata if useful.
 2. After approval, obtain official guide and a redacted sample; confirm URL, parameters, response/error schema and development 50-row cap.
-3. Test parsing and validate IDs, nulls, duplicate facilities, age buckets/total, coordinates and dates.
+3. Test parsing and validate IDs, nulls, duplicate facilities, age buckets/total consistency, coordinates and dates.
 4. Record service-specific license/terms and attribution before public display or redistribution.
 5. Establish canonical facility and administrative-region IDs; document legal-dong/admin-dong mapping and coordinate transformation.
 6. Design snapshot/history storage, then connect live data only after schema, quality and reuse gates pass.
@@ -62,7 +63,7 @@ Annual CSV with regional facility/capacity/enrollment and waitlist child/applica
 - [ ] Provider errors and valid empty results distinguished.
 - [ ] Stable facility IDs or explicit missing-ID flags.
 - [ ] Waitlist values are non-negative integers; blanks remain null; age-sum derived only when all buckets are present.
-- [ ] Compare waitlist total with age buckets; document discrepancies rather than silently overwrite.
+- [ ] Compare waitlist total with age buckets; retain the official total and expose consistency diagnostics rather than silently overwrite.
 - [ ] Coordinates and administrative fields validated; coordinate system confirmed and transformed as needed.
 - [ ] Source, record date, and collection timestamp shown separately.
 - [ ] Service-specific reuse terms documented before public display/redistribution.
