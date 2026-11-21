@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from .provider import get_facilities, ProviderNotConfigured, ProviderError
@@ -15,7 +16,8 @@ app.add_middleware(
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "data_source_configured": bool(__import__('os')..getenv('API_BASE_URL') and __import__('os').getenv('API_SERVICE_KEY'))}
+    configured = bool(os.getenv("API_BASE_URL") and os.getenv("API_SERVICE_KEY"))
+    return {"status": "ok", "data_source_configured": configured}
 
 
 @app.get("/api/facilities")
