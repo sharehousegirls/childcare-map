@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="지역별 어린이집 입소 대기 현황을 비교하는 데이터 지도 서비스 데모">
+  <title>어린이집 지도 | 지역별 입소 대기 현황</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">🏡</span><div><strong>어린이집 지도</strong><small>지역 선택을 위한 데이터</small></div></div>
+    <nav><a href="#regions">지역 비교</a><a href="#facilities">시설 목록</a><a href="#about">서비스 소개</a></nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">CHILDCARE DATA · DEMO</span>
+        <h1>우리 동네 어린이집,<br><em>대기 현황부터</em> 비교해보세요.</h1>
+        <p>지역별 대기 규모와 시설 유형을 한눈에 살펴보는 초기 서비스 데모입니다.</p>
+      </div>
+      <div class="search-panel">
+        <label for="regionSelect">지역 선택</label>
+        <select id="regionSelect"><option value="all">전체 데모 지역</option></select>
+        <div class="stats" id="summaryStats"></div>
+      </div>
+    </section>
+    <section id="regions" class="section">
+      <div class="section-heading"><div><span class="eyebrow">REGIONAL SNAPSHOT</span><h2>지역별 비교</h2></div><span class="demo-note">※ 예시 데이터 · 실제 공공데이터 아님</span></div>
+      <div class="region-grid" id="regionCards"></div>
+    </section>
+    <section id="facilities" class="section">
+      <div class="section-heading"><div><span class="eyebrow">FACILITY EXPLORER</span><h2>어린이집 둘러보기</h2></div></div>
+      <div class="filters">
+        <input id="facilitySearch" type="search" placeholder="시설명 검색" aria-label="시설명 검색">
+        <select id="typeFilter" aria-label="시설 유형"><option value="all">모든 유형</option><option>국공립</option><option>민간</option><option>가정</option><option>직장</option></select>
+        <label class="toggle"><input id="zeroFilter" type="checkbox"> 대기 0명만</label>
+      </div>
+      <div class="facility-list" id="facilityList"></div>
+    </section>
+    <section id="about" class="about section">
+      <h2>이 서비스는 아직 개발 중입니다.</h2>
+      <p>현재 화면은 디자인과 탐색 기능을 확인하기 위한 프로토타입입니다. 표기된 수치는 모두 가상의 예시이며, 실제 입소 대기 현황이나 특정 시설의 운영 상태를 나타내지 않습니다.</p>
+      <p>정식 버전에서는 공공 출처 데이터를 검증하고, 업데이트 날짜와 출처를 함께 표시할 예정입니다.</p>
+    </section>
+  </main>
+  <footer><span>어린이집 지도 · 초기 데모</span><span>데이터 검증 후 정식 공개 예정</span></footer>
+  <script src="app.js"></script>
+</body>
+</html>
