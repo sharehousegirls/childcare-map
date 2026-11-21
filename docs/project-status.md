@@ -32,8 +32,8 @@
 
 ## Verification
 - **PASS (reported/evidence documented):** 15 backend unit tests in an isolated harness using source/test blob hashes verified against the repository; GitHub Actions passed for commit ec14fb6a938820cb1185ada6e3e26101fa3201e4. See docs/backend-security-review-2026-11-21.md.
-- **PASS (isolated local copy):** 11 SQLite storage unit tests and Python `compileall`; this did not run against a direct repository checkout. GitHub Actions run #48 passed for commit `396e30762bb3776eadeddd1715b0574bf0049ce4` (26 tests).
-- **PASS — GitHub Actions run #48:** 26 repository tests passed for commit `396e30762bb3776eadeddd1715b0574bf0049ce4` (workflow: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967).
+- **PASS (isolated local copy):** 11 SQLite storage unit tests and Python `compileall`; local tests were not run against a repository checkout.
+- **PASS — GitHub Actions run #48:** 26 repository tests passed against the repository checkout for commit `396e30762bb3776eadeddd1715b0574bf0049ce4 (workflow: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967).
 - **NOT RUN:** direct local repository checkout test run in this environment.
 - **NOT RUN:** browser interaction, accessibility, responsive manual test, frontend unit tests.
 - **BLOCKED:** live API validation, nationwide data completeness, real map/geospatial validation, end-to-end integration.
@@ -43,7 +43,7 @@
 ## Next priorities
 1. Obtain nationwide waitlist API access, official specification, redacted response, and complete reuse/attribution review.
 2. Implement canonical province/district region hierarchy using verified codes; do not guess codes or claim dong-level coverage.
-3. Add schema versioning/migrations and ingestion failure/retry audit; connect the tested snapshot-storage scaffold only after API/schema/rights gates pass.
+3. Add schema versioning/migrations and ingestion failure/retry audit; connect the snapshot-storage scaffold only after API/schema/rights gates pass.
 4. Add real map, facility detail, region comparison and filtering against validated data.
 5. Add saved regions/facilities/searches, comparisons, snapshot history and trends.
 6. Add automated refresh/recovery, SEO, accessibility, operational/security review.
