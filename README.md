@@ -49,3 +49,9 @@
 - Daegu-only development API application submitted; approval is pending.
 - Credentials, actual response sample, and field mapping are not yet available.
 - No live data is connected; demo figures remain fictional.
+
+
+## Verified source update (2026-11-21)
+- Nationwide waitlist candidate: SSIS `한국사회보장정보원_어린이집별 기본정보 조회` (15101154) officially lists age waitlist buckets 0–5, 6+, and total: https://www.data.go.kr/data/15101154/openapi.do. XML, real-time metadata, and unrestricted reuse are listed, but request schema/sample and service-specific terms remain unverified.
+- The existing Daegu application (15101186) describes facility metadata (name/code/address/contact/homepage/capacity), not waitlist fields: https://www.data.go.kr/data/15101186/openapi.do.
+- User action required: apply for nationwide waitlist API development access. No live data is connected.
