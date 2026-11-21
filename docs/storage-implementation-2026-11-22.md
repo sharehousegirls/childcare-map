@@ -23,7 +23,7 @@ Implemented `backend/app/storage.py` without connecting it to the live provider 
 - PASS: 11 storage unit tests in an isolated local copy.
 - PASS: Python `compileall` on the isolated storage module/tests.
 - NOT RUN: direct repository checkout tests and browser/E2E tests.
-- CI for the new commit is the next verification gate.
+- PASS: GitHub Actions run #48 passed the full repository suite (26 tests) for commit `396e30762bb3776eadeddd1715b0574bf0049ce4`.
 
 ## Limitations / follow-up
 - Storage is not wired to the API adapter or `/api/facilities`.
