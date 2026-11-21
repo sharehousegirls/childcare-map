@@ -22,3 +22,12 @@ The isolated run used byte-identical provider and test files, but it is not a su
 ## Next
 
 Review CI status when it becomes available. Continue with data-source/API-schema validation; do not configure live API access until the official endpoint, parameters, response schema, and service-specific reuse terms are verified.
+
+
+## Follow-up — facility identifier quality (2026-11-22)
+
+- Added trimming/normalization for facility IDs and two diagnostics: `facility_id_missing` and `facility_id_duplicate`.
+- Duplicate detection is limited to the current returned response batch. Rows are retained and flagged; this is not nationwide or cross-page deduplication.
+- **PASS — 15 tests:** the exact provider and test blob contents from commit `ec14fb6a938820cb1185ada6e3e26101fa3201e4` were recreated in an isolated harness; Git blob hashes matched the repository blobs before execution.
+- **PASS — GitHub Actions:** run 29 for commit `ec14fb6a938820cb1185ada6e3e26101fa3201e4` completed successfully: https://github.com/sharehousegirls/childcare-map/actions/runs/44925318895
+- **NOT RUN — repository checkout:** direct clone/checkout remains blocked by GitHub DNS resolution in this environment.
