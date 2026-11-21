@@ -57,6 +57,7 @@ Annual CSV with regional facility/capacity/enrollment and waitlist child/applica
 7. Apply for operating access when tests and traffic estimates are ready; deploy only with user approval.
 
 ## First API test acceptance checklist
+- [ ] Confirm stable facility identifiers; normalized rows flag missing IDs and duplicates within the returned batch, while preserving rows for review.
 
 - [ ] Key only in local backend environment or approved secret storage; never in frontend or repository.
 - [ ] One successful request; redacted sample saved for review.

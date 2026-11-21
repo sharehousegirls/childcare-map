@@ -3,6 +3,7 @@ import json
 import math
 import os
 import xml.etree.ElementTree as ET
+from collections import Counter
 from typing import Any
 import httpx
 
@@ -125,6 +126,19 @@ def _wait_total_consistent(provided_total, age_sum):
         return None
     return provided_total == age_sum
 
+def _mark_facility_id_quality(rows: list[dict]) -> list[dict]:
+    """Normalize IDs and flag missing/duplicate IDs within this response batch."""
+    for row in rows:
+        raw_id = row.get("facility_id")
+        normalized_id = str(raw_id).strip() if raw_id is not None else ""
+        row["facility_id"] = normalized_id or None
+    counts = Counter(row["facility_id"] for row in rows if row["facility_id"])
+    for row in rows:
+        facility_id = row["facility_id"]
+        row["facility_id_missing"] = not bool(facility_id)
+        row["facility_id_duplicate"] = bool(facility_id and counts[facility_id] > 1)
+    return rows
+
 async def get_facilities() -> list[dict]:
     base_url = os.getenv("API_BASE_URL", "").strip()
     api_key = os.getenv("API_SERVICE_KEY", "").strip()
@@ -174,4 +188,4 @@ async def get_facilities() -> list[dict]:
         row["wait_total_consistent"] = _wait_total_consistent(provided_total, age_sum)
         if row.get("facility_id") or row.get("name"):
             normalized.append(row)
-    return normalized
+    return _mark_facility_id_quality(normalized)

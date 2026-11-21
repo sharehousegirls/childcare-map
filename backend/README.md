@@ -30,6 +30,8 @@ Run the commands from the repository root, then enter `backend`:
 
 Normalized fields include facility_id, name, type, status, address, sido, sigungu, capacity, enrolled, latitude, longitude, wait_0..wait_5, wait_6_plus, wait_total, data_date. The adapter also exposes `wait_age_sum` and `wait_total_consistent` as quality diagnostics: the latter is true/false only when the provider total and all age buckets are available, otherwise null. A derived total from age buckets is not treated as an independently verified provider total.
 
+- Facility IDs are trimmed; `facility_id_missing` flags blank IDs and `facility_id_duplicate` flags repeated IDs in the current response batch. Rows are retained for review rather than silently deduplicated. This batch-level check does not replace cross-page or nationwide deduplication.
+
 ## Security and data quality
 
 - Request failures are sanitized before they are returned by the backend; raw HTTP exceptions can contain query URLs and service keys.

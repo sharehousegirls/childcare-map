@@ -2,11 +2,11 @@ import unittest
 import sys
 from pathlib import Path
 import httpx
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.provider import (
     _number, _flatten_records, _get_value, _sum_age_waits,
-    _validate_field_map, _safe_http_error, _wait_total_consistent, ProviderError,
+    _validate_field_map, _safe_http_error, _wait_total_consistent,
+    _mark_facility_id_quality, ProviderError,
 )
 
 class ProviderNormalizationTests(unittest.TestCase):
@@ -76,6 +76,21 @@ class ProviderNormalizationTests(unittest.TestCase):
         message = _safe_http_error(exc)
         self.assertEqual(message, "Official API request timed out.")
         self.assertNotIn("SECRET_KEY", message)
+
+    def test_facility_ids_trimmed_and_duplicates_flagged(self):
+        rows = [{"facility_id": " A001 "}, {"facility_id": "A001"}, {"facility_id": "B002"}]
+        result = _mark_facility_id_quality(rows)
+        self.assertEqual([row["facility_id"] for row in result], ["A001", "A001", "B002"])
+        self.assertEqual([row["facility_id_duplicate"] for row in result], [True, True, False])
+        self.assertEqual([row["facility_id_missing"] for row in result], [False, False, False])
+
+    def test_missing_facility_id_flagged_without_dropping_named_row(self):
+        rows = [{"facility_id": None, "name": "Unnamed code facility"}, {"facility_id": " "}]
+        result = _mark_facility_id_quality(rows)
+        self.assertEqual(result[0]["facility_id"], None)
+        self.assertTrue(result[0]["facility_id_missing"])
+        self.assertFalse(result[0]["facility_id_duplicate"])
+        self.assertTrue(result[1]["facility_id_missing"])
 
 if __name__ == "__main__":
     unittest.main()
