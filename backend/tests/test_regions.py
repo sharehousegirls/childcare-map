@@ -135,6 +135,26 @@ class RegionValidationTests(unittest.TestCase):
         with self.assertRaises(RegionValidationError):
             validate_region_records({"region_id": "S1"})
 
+    def test_cycle_detection_handles_deep_malformed_hierarchy_without_recursion(self):
+        count = 1500
+        records = [
+            {
+                "region_id": f"R{index:04d}",
+                "name": f"Region {index}",
+                "region_type": "sigungu",
+                "parent_region_id": f"R{(index - 1) % count:04d}",
+                "source_system": "deep-test",
+                "source_code": f"C{index:04d}",
+                "is_active": True,
+            }
+            for index in range(count)
+        ]
+        with self.assertRaises(RegionValidationError) as context:
+            validate_region_records(records)
+        issue_codes = {issue["code"] for issue in context.exception.issues}
+        self.assertIn("parent_cycle", issue_codes)
+        self.assertIn("invalid_parent_type", issue_codes)
+
 
 if __name__ == "__main__":
     unittest.main()
