@@ -46,6 +46,8 @@ backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니�
 ## Data sources and status
 - **Nationwide waitlist candidate:** SSIS 한국사회보장정보원_어린이집별 기본정보 조회 (15101154). Official catalog lists age waitlist buckets 0–5, 6+ and total: https://www.data.go.kr/data/15101154/openapi.do. XML, real-time metadata, and unrestricted reuse are listed; request schema/sample and service-specific terms remain unverified.
 - **Existing Daegu application:** 한국사회보장정보원_대구광역시 어린이집 정보조회 (15101186), submitted for development account on 2026-11-21. Catalog lists facility metadata (name/code/address/contact/homepage/capacity), not waitlist counts: https://www.data.go.kr/data/15101186/openapi.do. Review/credentials pending.
+- **Administrative region codes:** MOIS provides current administrative/legal-dong code archives and change notices; the code validator is only a scaffold. See `docs/region-code-validation-2026-11-22.md`.
+- **MOIS legal-dong code API:** dataset 15077871 is legal-dong data, not administrative-dong: https://www.data.go.kr/data/15077871/openapi.do.
 - **Regional aggregate comparator:** Incheon Namdong waitlist dataset 15119081 is annual district-level aggregate, not facility-level/nationwide: https://www.data.go.kr/data/15119081/fileData.do.
 - Catalog-level unrestricted reuse is not blanket commercial clearance. Verify service-specific API terms, attribution, caching, redistribution, and commercial/advertising conditions before launch or monetization. Portal API policy limits development account to 50 rows and separately reviews operation access.
 - Credentials must stay server-side and never be committed.
@@ -61,6 +63,10 @@ backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니�
 - Childcare API development guide: https://info.childcare.go.kr/info_html5/oais/guide/Development.jsp
 - Childcare API overview: https://info.childcare.go.kr/info_html5/oais/introduction/Intro.jsp
 - Childcare FAQ (region granularity/coordinates): https://info.childcare.go.kr/info_html5/cera/community/faqboard/FaqBoardSlPL.jsp
+- MOIS administrative/legal-dong changes (current source starting point): https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000052&nttId=131063
+- MOIS code-change board: https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardList.do?bbsId=BBSMSTR_000000000052
+- Statistics Korea/SIGIS administrative-region classification guide: https://sgis.mods.go.kr/html/attachFiles/%ED%95%9C%EA%B5%AD%ED%96%89%EC%A0%95%EA%B5%AC%EC%97%AD%EB%B6%84%EB%A5%98%20%ED%95%B4%EC%84%A4%EC%84%9C%282021.12.28.%29.pdf
+- Region validator implementation and source review: `docs/region-code-validation-2026-11-22.md`
 - Security review and test evidence: docs/backend-security-review-2026-11-21.md
 - Draft/implemented data model: docs/data-model-draft.md
 - SQLite storage scaffold and limitations: backend/README.md
@@ -72,7 +78,7 @@ backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니�
 1. Apply for development API access for nationwide waitlist dataset 15101154; review the existing Daegu application separately.
 2. Obtain official service guide/sample and verify URL, request parameters, response schema, pagination, coordinate system, error envelope and row limit.
 3. Validate source terms, data date, facility IDs and waitlist totals.
-4. Establish canonical region/facility identifiers and versioned region mapping; see draft model.
+4. Validate current MOIS region-code files, establish canonical identifiers, and implement a separate versioned M:N administrative-dong/legal-dong crosswalk; see `docs/region-code-validation-2026-11-22.md`.
 5. Integrate the SQLite snapshot-storage scaffold with verified API ingestion, then add migrations and failure/retry audit.
 6. Nationwide ingestion, quality checks, map and regional/facility views.
 7. Saved regions/facilities/filters/comparisons and historical trends.
