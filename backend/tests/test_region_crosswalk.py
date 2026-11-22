@@ -152,6 +152,15 @@ class RegionCrosswalkTests(unittest.TestCase):
         result = validate_region_crosswalk(rows, fixture_regions())
         self.assertEqual(len(result), 2)
 
+    def test_open_ended_period_overlaps_later_period(self):
+        rows = [
+            crosswalk_row(start="2026-01-01", end=None),
+            crosswalk_row(start="2027-01-01", end="2027-12-31"),
+        ]
+        with self.assertRaises(RegionCrosswalkValidationError) as ctx:
+            validate_region_crosswalk(rows, fixture_regions())
+        self.assertIn("crosswalk_period_overlap", {issue["code"] for issue in ctx.exception.issues})
+
 
 if __name__ == "__main__":
     unittest.main()
