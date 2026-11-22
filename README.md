@@ -129,3 +129,10 @@ Review note and acceptance criteria: `docs/region-granularity-coordinate-review-
 ## API source-date and collection-time metadata
 
 The backend `GET /api/facilities` response includes additive `meta` fields for the UTC collection timestamp, provider source-date coverage, distinct source dates, and whether records have mixed dates. The UI displays source-date status and collection time separately. This timestamp is not a freshness guarantee; the official API's update frequency and date semantics still require verification. See `docs/api-freshness-metadata-2026-11-22.md`.
+
+
+## Versioned region crosswalk validation scaffold
+
+A backend-only validator now checks normalized legal-dong to administrative-dong links, allowing many-to-many relationships while enforcing region-type references, source provenance, strict effective dates and non-overlapping periods per pair/version. It is synthetic-data-only and does not import official rows or validate spatial boundaries.
+
+See [crosswalk validation notes](docs/region-crosswalk-validation-2026-11-23.md).

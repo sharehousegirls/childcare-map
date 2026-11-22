@@ -1,4 +1,4 @@
-# Project status — 2026-11-22
+# Project status — 2026-11-23
 
 ## Current phase
 **Data-source and geography validation.** Live API connection remains gated on verified official schema, credentials, quality, and service-specific reuse terms.
@@ -16,6 +16,7 @@
 - Draft relational model for region hierarchy, facility identity, snapshots, ingestion-run audit, region mapping provenance, and browser-local saved features.
 - File-backed SQLite snapshot-storage scaffold: facility metadata, append-only snapshots, ingestion-run summaries, and unresolved-record review table; idempotent batch handling and quality flags. Not yet wired to the API route.
 - Initial normalized region validator/tree builder in `backend/app/regions.py`; supports separate administrative/legal dong types and checks duplicates, parent links, cycles and active-status contradictions. Cycle detection and deterministic tree sorting are iterative to avoid recursion-depth failures on malformed input. Synthetic fixtures only; no official code data imported.
+- Versioned legal-dong → administrative-dong crosswalk validator scaffold in `backend/app/region_crosswalk.py`; supports M:N relationships, region type/reference checks, HTTPS provenance, strict effective dates and non-overlapping periods per pair/version. Synthetic rows only; no official crosswalk or spatial mapping imported.
 - Region source manifest validator in `backend/app/region_manifest.py` records source/version/date/digest/attribution and reuse review; it provides separate public-redistribution and commercial-use gates. SHA-256 verification streams local files in 1 MiB chunks. The gate is not yet wired to an importer.
 
 - Regional aggregation is extracted into `regional-summary.mjs`: missing wait counts stay null, partial totals/coverage are explicit, zero-wait counts only explicit zero, and live region labels are province-first.
@@ -34,7 +35,7 @@
 ## Known limitations
 - Demo values are fictional and must not be interpreted as current real waitlist data.
 - No actual nationwide facility/waitlist ingestion.
-- No official canonical region hierarchy imported or dong-level mapping implemented. Dong-level waitlist statistics must be derived only from uniquely identified facility rows and verified spatial mapping; the portal FAQ does not document a direct dong-level query for its regional facility-type/count query. The initial validator is not wired into the API or UI and its simplified parent rules must be checked against current source files.
+- No official canonical region hierarchy imported or dong-level mapping implemented. Dong-level waitlist statistics must be derived only from uniquely identified facility rows and verified spatial mapping; the portal FAQ does not document a direct dong-level query for its regional facility-type/count query. Region and crosswalk validators are not wired into API/UI. Crosswalk validation does not prove geographic relationships.
 - SQLite snapshot storage exists as an isolated scaffold, but it is not integrated with API ingestion or exposed through routes; no region hierarchy, real map, facility detail page, persistent saved facilities, server-backed comparisons or trend UI yet.
 - Saved searches are browser-local only; up to 20. They do not sync across devices/accounts, and browser storage can be cleared or unavailable.
 - Saved regions are also browser-local and currently store region-name strings from the current option list; they are not canonical official IDs and may become stale after region-code/name changes. No migration or cross-device sync yet.
@@ -45,7 +46,7 @@
 
 ## Next priorities
 - Import current official region-code files only after source/reuse review; preserve stable codes and keep administrative/legal-dong records separate.
-- Implement and test the versioned M:N administrative-dong/legal-dong crosswalk and unresolved mapping review.
+- Import the current official region codes and crosswalk only after source layout and reuse review; map them to the new M:N crosswalk validator and retain unresolved cases for manual review.
 - Validate facility coordinates and EPSG:5181 transformation using a redacted official sample before map rendering.
 - Prototype derived dong aggregation with deduplication, mapping coverage, null handling, and explicit UI labeling; do not claim a direct official dong query.
 
@@ -109,3 +110,12 @@
 - **NOT RUN:** direct local checkout test run, manual browser interaction, mobile viewport, and screen-reader checks. The dynamic data-status element now uses `role=status` and `aria-live=polite`; manual assistive-technology verification is still pending.
 - No provider freshness SLA is inferred from collection time. Source date format and semantics remain pending official API schema/sample.
 - Implementation note: `docs/api-freshness-metadata-2026-11-22.md`.
+
+
+## 2026-11-23 incremental milestone — crosswalk validation scaffold
+
+- Added a backend-only normalized crosswalk validator for legal-dong → administrative-dong M:N links.
+- Enforces source/target region types and IDs, provenance URL, version label, strict inclusive dates, and non-overlapping intervals for each pair/version.
+- Added synthetic unit tests covering M:N, missing/invalid references, dates, overlaps, URL credentials, immutability, and deterministic sorting.
+- No official region-code data was downloaded or imported. No live API, map, spatial crosswalk, or deployment was connected.
+- **Repository CI status at preparation: NOT RUN.** Record the exact run and test count after the commit-triggered workflow completes.

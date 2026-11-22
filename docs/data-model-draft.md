@@ -120,3 +120,10 @@ Acceptance: save/unsave, reload persistence, stale-ID handling, version migratio
 
 ## Next bounded work
 Validate the initial region model against the current official MOIS code archives, then implement the canonical region loader/selector and separate versioned M:N dong crosswalk; do not hardcode an unverified code list. In parallel, obtain and validate the official API spec/sample and terms. Add schema migrations and ingestion failure/retry audit, then connect the snapshot-storage scaffold only after all API gates pass.
+
+
+## Versioned legal-dong / administrative-dong crosswalk validation (2026-11-23)
+
+A separate validation scaffold in backend/app/region_crosswalk.py accepts M:N links between validated legal-dong and administrative-dong IDs. Each row carries a source version, inclusive effective period, source system, and HTTPS provenance reference. Overlapping periods for the same pair/version are rejected; gaps and non-overlapping periods are allowed.
+
+This validates normalized structure only. It is not a geographic crosswalk, does not prove boundary equivalence, does not perform facility assignment, and does not import official codes. See docs/region-crosswalk-validation-2026-11-23.md.
