@@ -108,3 +108,10 @@ Implementation and manifest example: `docs/region-source-manifest-2026-11-22.md`
 - No admission-date predictions.
 - Defer violation/complaint/administrative history until all other features are complete and ask for review then.
 - Do not deploy without user approval.
+
+## 관심 시설 저장
+- 시설 카드에서 고유 ID가 확인된 시설을 관심 시설로 저장하고, 목록에서 정확한 ID로 다시 찾거나 삭제할 수 있습니다.
+- 최대 50개까지 브라우저 `localStorage`에 저장하며 계정/서버/기기 동기화는 제공하지 않습니다.
+- 현재 데모 시설에는 명시적인 가상 ID를 사용합니다. 실 API 데이터에 시설 ID가 없으면 저장 버튼이 비활성화됩니다.
+- 저장된 시설을 불러올 때 ID가 현재 데이터에서 확인되지 않으면 이름이 비슷한 시설로 임의 대체하지 않습니다.
+- 구현: `saved-facilities.mjs`; 테스트: `tests/saved-facilities.test.mjs`

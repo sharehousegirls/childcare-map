@@ -1,6 +1,7 @@
 import { readSavedSearches, saveSavedSearch, removeSavedSearch } from "./saved-searches.mjs";
 import { readSavedRegions, saveSavedRegion, removeSavedRegion } from "./saved-regions.mjs";
 import { buildRegions } from "./regional-summary.mjs";
+import { readSavedFacilities, saveSavedFacility, removeSavedFacility } from "./saved-facilities.mjs";
 
 // Live backend is preferred when configured; otherwise clearly labeled fictional demo.
 const DEMO_REGIONS=[
@@ -11,23 +12,25 @@ const DEMO_REGIONS=[
 {name:"천안시 서북구",district:"충청남도",facilities:49,waiting:352,zero:13,avg:7.2},
 {name:"청주시 흥덕구",district:"충청북도",facilities:45,waiting:290,zero:15,avg:6.4}];
 const DEMO_FACILITIES=[
-{name:"햇살 국공립 어린이집",region:"안성시",type:"국공립",address:"경기도 안성시 (예시 주소)",waiting:0,capacity:80,enrolled:72},
-{name:"푸른숲 어린이집",region:"안성시",type:"민간",address:"경기도 안성시 (예시 주소)",waiting:12,capacity:45,enrolled:43},
-{name:"별빛 어린이집",region:"대구 수성구",type:"가정",address:"대구 수성구 (예시 주소)",waiting:3,capacity:20,enrolled:18},
-{name:"꿈나무 직장 어린이집",region:"대구 수성구",type:"직장",address:"대구 수성구 (예시 주소)",waiting:0,capacity:60,enrolled:55},
-{name:"한마음 어린이집",region:"대구 달서구",type:"민간",address:"대구 달서구 (예시 주소)",waiting:17,capacity:55,enrolled:52},
-{name:"아이숲 어린이집",region:"대구 달서구",type:"국공립",address:"대구 달서구 (예시 주소)",waiting:6,capacity:70,enrolled:68},
-{name:"영통 행복 어린이집",region:"수원시 영통구",type:"국공립",address:"수원시 영통구 (예시 주소)",waiting:0,capacity:90,enrolled:84},
-{name:"새싹 어린이집",region:"천안시 서북구",type:"가정",address:"천안시 서북구 (예시 주소)",waiting:4,capacity:20,enrolled:19},
-{name:"청주 꿈 어린이집",region:"청주시 흥덕구",type:"민간",address:"청주시 흥덕구 (예시 주소)",waiting:9,capacity:50,enrolled:46}];
+{facilityId:"demo-ansung-sunshine",name:"햇살 국공립 어린이집",region:"안성시",type:"국공립",address:"경기도 안성시 (예시 주소)",waiting:0,capacity:80,enrolled:72},
+{facilityId:"demo-ansung-greenforest",name:"푸른숲 어린이집",region:"안성시",type:"민간",address:"경기도 안성시 (예시 주소)",waiting:12,capacity:45,enrolled:43},
+{facilityId:"demo-suseong-starlight",name:"별빛 어린이집",region:"대구 수성구",type:"가정",address:"대구 수성구 (예시 주소)",waiting:3,capacity:20,enrolled:18},
+{facilityId:"demo-suseong-dreamwork",name:"꿈나무 직장 어린이집",region:"대구 수성구",type:"직장",address:"대구 수성구 (예시 주소)",waiting:0,capacity:60,enrolled:55},
+{facilityId:"demo-dalseo-hanmaum",name:"한마음 어린이집",region:"대구 달서구",type:"민간",address:"대구 달서구 (예시 주소)",waiting:17,capacity:55,enrolled:52},
+{facilityId:"demo-dalseo-forest",name:"아이숲 어린이집",region:"대구 달서구",type:"국공립",address:"대구 달서구 (예시 주소)",waiting:6,capacity:70,enrolled:68},
+{facilityId:"demo-yeongtong-happy",name:"영통 행복 어린이집",region:"수원시 영통구",type:"국공립",address:"수원시 영통구 (예시 주소)",waiting:0,capacity:90,enrolled:84},
+{facilityId:"demo-cheonan-sprout",name:"새싹 어린이집",region:"천안시 서북구",type:"가정",address:"천안시 서북구 (예시 주소)",waiting:4,capacity:20,enrolled:19},
+{facilityId:"demo-heungdeok-dream",name:"청주 꿈 어린이집",region:"청주시 흥덕구",type:"민간",address:"청주시 흥덕구 (예시 주소)",waiting:9,capacity:50,enrolled:46}];
 let regions=DEMO_REGIONS,facilities=DEMO_FACILITIES,liveData=false,liveError="";
 const regionSelect=document.querySelector("#regionSelect"),regionCards=document.querySelector("#regionCards"),facilityList=document.querySelector("#facilityList"),statusEl=document.querySelector("#dataStatus");
 const facilitySearch=document.querySelector("#facilitySearch"),typeFilter=document.querySelector("#typeFilter"),zeroFilter=document.querySelector("#zeroFilter");
 const savedSearchForm=document.querySelector("#savedSearchForm"),savedSearchName=document.querySelector("#savedSearchName"),savedSearchStatus=document.querySelector("#savedSearchStatus"),savedSearchList=document.querySelector("#savedSearchList");
 const saveRegionButton=document.querySelector("#saveRegionButton"),savedRegionStatus=document.querySelector("#savedRegionStatus"),savedRegionList=document.querySelector("#savedRegionList");
+const savedFacilityStatus=document.querySelector("#savedFacilityStatus"),savedFacilityList=document.querySelector("#savedFacilityList");
+let focusedFacilityId=null;
 function num(v){if(v==null||v==="")return null;const n=Number(String(v).replace(/,/g,""));return Number.isFinite(n)?n:null;}
 function escapeHtml(value){return String(value??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");}
-function mapApiRows(rows){return rows.map(r=>{const ages=[r.wait_0,r.wait_1,r.wait_2,r.wait_3,r.wait_4,r.wait_5,r.wait_6_plus].map(num);let waiting=num(r.wait_total);if(waiting===null&&ages.every(v=>v!==null))waiting=ages.reduce((a,b)=>a+b,0);return{name:String(r.name||"이름 미확인 시설"),region:[r.sido,r.sigungu].filter(Boolean).map(String).join(" ")||"지역 미분류",sido:String(r.sido||""),type:String(r.type||"유형 미확인"),address:String(r.address||"주소 미확인"),waiting,capacity:num(r.capacity),enrolled:num(r.enrolled),facilityId:r.facility_id,latitude:num(r.latitude),longitude:num(r.longitude),dataDate:r.data_date==null?"":String(r.data_date)};});}
+function mapApiRows(rows){return rows.map(r=>{const ages=[r.wait_0,r.wait_1,r.wait_2,r.wait_3,r.wait_4,r.wait_5,r.wait_6_plus].map(num);let waiting=num(r.wait_total);if(waiting===null&&ages.every(v=>v!==null))waiting=ages.reduce((a,b)=>a+b,0);return{name:String(r.name||"이름 미확인 시설"),region:[r.sido,r.sigungu].filter(Boolean).map(String).join(" ")||"지역 미분류",sido:String(r.sido||""),type:String(r.type||"유형 미확인"),address:String(r.address||"주소 미확인"),waiting,capacity:num(r.capacity),enrolled:num(r.enrolled),facilityId:r.facility_id==null?null:String(r.facility_id).trim()||null,latitude:num(r.latitude),longitude:num(r.longitude),dataDate:r.data_date==null?"":String(r.data_date)};});}
 function populateRegions(){regionSelect.innerHTML='<option value="all">전체 지역</option>';regions.forEach(r=>{const o=document.createElement("option");o.value=r.name;o.textContent=r.name;regionSelect.append(o);});}
 function selectedRegion(){return regionSelect.value;}
 function renderSummary(){
@@ -62,8 +65,36 @@ function renderRegions(){
       +'</div><div class="bar"><i style="width:'+Math.min(100,(r.avg||0)/max*100)+'%"></i></div></article>';
   }).join("");
 }
-function renderFacilities(){let rows=facilities.filter(f=>selectedRegion()==="all"||f.region===selectedRegion());const q=facilitySearch.value.trim().toLowerCase(),type=typeFilter.value,zero=zeroFilter.checked;if(q)rows=rows.filter(f=>String(f.name||"").toLowerCase().includes(q));if(type!=="all")rows=rows.filter(f=>f.type===type);if(zero)rows=rows.filter(f=>f.waiting===0);facilityList.innerHTML=rows.length?rows.map(f=>'<article class="facility-card"><div><h3>'+escapeHtml(f.name)+'</h3><p>'+escapeHtml(f.region)+' · '+escapeHtml(f.type)+'<br>'+escapeHtml(f.address)+'<br>'+(f.capacity!=null?'정원 '+f.capacity+'명':'정원 정보 없음')+(f.enrolled!=null?' · 현원 '+f.enrolled+'명':'')+'</p></div><span class="facility-badge '+(f.waiting===0?'zero':'')+'">'+(f.waiting==null?'대기 확인 불가':(liveData?'대기 '+f.waiting+'건':'대기 '+f.waiting+'명 (예시)'))+'</span></article>').join(""):'<div class="empty">조건에 맞는 시설이 없습니다.</div>';}
-function render(){const dates=[...new Set(facilities.map(f=>f.dataDate).filter(Boolean))];statusEl.textContent=liveData?"실제 API 데이터 연결 · "+(dates.length===1?"기준일 "+dates[0]:dates.length>1?"시설별 기준일 혼재":"기준일 미확인"):"가상 데모 데이터 · 실제 현황 아님";statusEl.className="data-status "+(liveData?"live":"demo");if(liveError&&!liveData)statusEl.title="Backend 연결 오류: "+liveError;renderSummary();renderRegions();renderFacilities();}
+function renderFacilities(){
+  let rows=facilities.filter(f=>selectedRegion()==="all"||f.region===selectedRegion());
+  const q=facilitySearch.value.trim().toLowerCase(),type=typeFilter.value,zero=zeroFilter.checked;
+  if(focusedFacilityId)rows=rows.filter(f=>String(f.facilityId||"")===focusedFacilityId);
+  if(q)rows=rows.filter(f=>String(f.name||"").toLowerCase().includes(q));
+  if(type!=="all")rows=rows.filter(f=>f.type===type);
+  if(zero)rows=rows.filter(f=>f.waiting===0);
+  facilityList.replaceChildren();
+  if(!rows.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="조건에 맞는 시설이 없습니다.";facilityList.append(empty);return;}
+  const saved=readSavedFacilities();
+  rows.forEach(f=>{
+    const card=document.createElement("article");card.className="facility-card";
+    if(f.facilityId)card.dataset.facilityId=String(f.facilityId);
+    const details=document.createElement("div");details.className="facility-details";
+    const heading=document.createElement("h3");heading.textContent=f.name||"이름 미확인 시설";
+    const lines=[String(f.region||"지역 미확인")+" · "+String(f.type||"유형 미확인"),String(f.address||"주소 미확인")];
+    if(f.capacity!=null)lines.push("정원 "+Number(f.capacity).toLocaleString()+"명");
+    if(f.enrolled!=null)lines.push("현원 "+Number(f.enrolled).toLocaleString()+"명");
+    const info=document.createElement("p");info.textContent=lines.join("\n");details.append(heading,info);
+    const badge=document.createElement("span");badge.className="facility-badge"+(f.waiting===0?" zero":"");
+    badge.textContent=f.waiting==null?"대기 확인 불가":(liveData?"대기 "+Number(f.waiting).toLocaleString()+"건":"대기 "+Number(f.waiting).toLocaleString()+"명 (예시)");
+    const save=document.createElement("button");save.type="button";save.className="saved-facility-save";
+    const facilityId=typeof f.facilityId==="string"?f.facilityId.trim():"";
+    const isSaved=facilityId&&saved.some(item=>item.facilityId===facilityId);
+    save.textContent=isSaved?"저장됨":"관심 시설 저장";save.disabled=!facilityId||Boolean(isSaved);
+    save.setAttribute("aria-label",isSaved?heading.textContent+" 관심 시설 저장됨":heading.textContent+" 관심 시설 저장");
+    if(facilityId)save.dataset.saveFacility=facilityId;else save.title="시설 고유 ID가 없어 저장할 수 없습니다.";
+    card.append(details,badge,save);facilityList.append(card);
+  });
+}function render(){const dates=[...new Set(facilities.map(f=>f.dataDate).filter(Boolean))];statusEl.textContent=liveData?"실제 API 데이터 연결 · "+(dates.length===1?"기준일 "+dates[0]:dates.length>1?"시설별 기준일 혼재":"기준일 미확인"):"가상 데모 데이터 · 실제 현황 아님";statusEl.className="data-status "+(liveData?"live":"demo");if(liveError&&!liveData)statusEl.title="Backend 연결 오류: "+liveError;renderSummary();renderRegions();renderFacilities();}
 async function tryLoadLive(){try{const res=await fetch("http://127.0.0.1:8000/api/facilities");if(!res.ok)throw Error("Backend HTTP "+res.status);const data=await res.json();if(data.source!=="official_api"||!Array.isArray(data.facilities))throw Error("Unexpected API payload");const mapped=mapApiRows(data.facilities);if(!mapped.length)throw Error("No usable facility records");facilities=mapped;regions=buildRegions(mapped);liveData=true;liveError="";}catch(e){liveData=false;liveError=e.message||String(e);facilities=DEMO_FACILITIES;regions=DEMO_REGIONS;}populateRegions();render();}
 function showSavedSearchStatus(message,isError=false){savedSearchStatus.textContent=message;savedSearchStatus.className="saved-search-status"+(isError?" error":"");}
 function savedSearchDescription(item){return [item.region==="all"?"전체 지역":item.region,item.query||"시설명 전체",item.type==="all"?"전체 유형":item.type,item.zeroWait?"대기 0명":"전체 대기"].join(" · ");}
@@ -78,4 +109,40 @@ function renderSavedRegions(){savedRegionList.replaceChildren();const items=read
 function applySavedRegion(item){const exists=[...regionSelect.options].some(option=>option.value===item.region);if(!exists){showSavedRegionStatus("저장된 지역을 현재 데이터에서 찾을 수 없습니다.",true);return;}regionSelect.value=item.region;render();showSavedRegionStatus("저장된 관심 지역을 선택했습니다.");}
 saveRegionButton.addEventListener("click",()=>{const region=selectedRegion();if(region==="all"){showSavedRegionStatus("전체 지역은 저장할 수 없습니다. 개별 지역을 선택하세요.",true);return;}const result=saveSavedRegion({id:createSavedRegionId(),region,savedAt:new Date().toISOString()});if(result.ok){renderSavedRegions();showSavedRegionStatus("관심 지역을 저장했습니다.");}else{const messages={duplicate:"이미 저장된 관심 지역입니다.","duplicate-id":"저장 식별자가 중복되었습니다. 다시 시도하세요.",limit:"저장 한도(20개)에 도달했습니다. 기존 지역을 삭제한 후 저장하세요.","storage-unavailable":"브라우저 저장 기능을 사용할 수 없습니다.","storage-error":"브라우저 저장 공간에 기록하지 못했습니다.",invalid:"지역 정보를 확인해주세요."};showSavedRegionStatus(messages[result.reason]||"저장하지 못했습니다.",true);}});
 savedRegionList.addEventListener("click",event=>{const loadButton=event.target.closest("button[data-load-saved-region]");if(loadButton){const item=readSavedRegions().find(entry=>entry.id===loadButton.dataset.loadSavedRegion);if(item)applySavedRegion(item);return;}const deleteButton=event.target.closest("button[data-delete-saved-region]");if(deleteButton){const result=removeSavedRegion(deleteButton.dataset.deleteSavedRegion);renderSavedRegions();showSavedRegionStatus(result.ok?"관심 지역을 삭제했습니다.":"관심 지역을 삭제하지 못했습니다.",!result.ok);}});
-regionSelect.addEventListener("change",render);facilitySearch.addEventListener("input",renderFacilities);typeFilter.addEventListener("change",renderFacilities);zeroFilter.addEventListener("change",renderFacilities);populateRegions();render();renderSavedSearches();renderSavedRegions();tryLoadLive();
+function showSavedFacilityStatus(message,isError=false){savedFacilityStatus.textContent=message;savedFacilityStatus.className="saved-facility-status"+(isError?" error":"");}
+function renderSavedFacilities(){
+  savedFacilityList.replaceChildren();const items=readSavedFacilities();
+  if(!items.length){const empty=document.createElement("p");empty.className="saved-facility-empty";empty.textContent="저장된 관심 시설이 없습니다.";savedFacilityList.append(empty);return;}
+  items.forEach(item=>{
+    const row=document.createElement("article");row.className="saved-facility-item";
+    const info=document.createElement("div");info.className="saved-facility-info";
+    const name=document.createElement("strong");name.textContent=item.name;
+    const meta=document.createElement("small");meta.textContent=[item.region,item.type].filter(Boolean).join(" · ");
+    info.append(name,meta);if(item.address){const address=document.createElement("small");address.textContent=item.address;info.append(address);}
+    const actions=document.createElement("div");actions.className="saved-facility-actions";
+    const load=document.createElement("button");load.type="button";load.className="saved-facility-load";load.textContent="시설 찾기";load.dataset.loadSavedFacility=item.facilityId;load.setAttribute("aria-label",item.name+" 시설 찾기");
+    const remove=document.createElement("button");remove.type="button";remove.className="saved-facility-delete";remove.textContent="삭제";remove.dataset.deleteSavedFacility=item.facilityId;remove.setAttribute("aria-label",item.name+" 관심 시설 삭제");
+    actions.append(load,remove);row.append(info,actions);savedFacilityList.append(row);
+  });
+}
+function applySavedFacility(item){
+  const current=facilities.find(f=>String(f.facilityId||"")===item.facilityId);
+  if(!current){showSavedFacilityStatus("저장된 시설을 현재 데이터에서 찾을 수 없습니다. 데이터가 갱신되었을 수 있습니다.",true);return;}
+  const regionExists=[...regionSelect.options].some(option=>option.value===current.region);
+  if(!regionExists){showSavedFacilityStatus("저장된 시설의 지역을 현재 데이터에서 찾을 수 없습니다.",true);return;}
+  regionSelect.value=current.region;facilitySearch.value=current.name||item.name;typeFilter.value="all";zeroFilter.checked=false;focusedFacilityId=item.facilityId;render();
+  const card=[...facilityList.querySelectorAll("article[data-facility-id]")].find(element=>element.dataset.facilityId===item.facilityId);
+  card?.scrollIntoView({behavior:"smooth",block:"start"});showSavedFacilityStatus("저장된 시설을 목록에서 찾았습니다.");
+}
+facilityList.addEventListener("click",event=>{
+  const button=event.target.closest("button[data-save-facility]");if(!button)return;
+  const facility=facilities.find(f=>String(f.facilityId||"")===button.dataset.saveFacility);if(!facility)return;
+  const result=saveSavedFacility({facilityId:facility.facilityId,name:facility.name,region:facility.region,type:facility.type,address:facility.address,savedAt:new Date().toISOString()});
+  if(result.ok){renderFacilities();renderSavedFacilities();showSavedFacilityStatus("관심 시설을 저장했습니다.");}
+  else{const messages={duplicate:"이미 저장된 관심 시설입니다.",limit:"저장 한도(50개)에 도달했습니다. 기존 시설을 삭제한 후 저장하세요.","storage-unavailable":"브라우저 저장 기능을 사용할 수 없습니다.","storage-error":"브라우저 저장 공간에 기록하지 못했습니다.",invalid:"시설 정보를 확인해주세요."};showSavedFacilityStatus(messages[result.reason]||"저장하지 못했습니다.",true);}
+});
+savedFacilityList.addEventListener("click",event=>{
+  const loadButton=event.target.closest("button[data-load-saved-facility]");if(loadButton){const item=readSavedFacilities().find(entry=>entry.facilityId===loadButton.dataset.loadSavedFacility);if(item)applySavedFacility(item);return;}
+  const deleteButton=event.target.closest("button[data-delete-saved-facility]");if(deleteButton){const result=removeSavedFacility(deleteButton.dataset.deleteSavedFacility);renderSavedFacilities();renderFacilities();showSavedFacilityStatus(result.ok?"관심 시설을 삭제했습니다.":"관심 시설을 삭제하지 못했습니다.",!result.ok);}
+});
+regionSelect.addEventListener("change",()=>{focusedFacilityId=null;render();});facilitySearch.addEventListener("input",()=>{focusedFacilityId=null;renderFacilities();});typeFilter.addEventListener("change",()=>{focusedFacilityId=null;renderFacilities();});zeroFilter.addEventListener("change",()=>{focusedFacilityId=null;renderFacilities();});populateRegions();render();renderSavedSearches();renderSavedRegions();renderSavedFacilities();tryLoadLive();
