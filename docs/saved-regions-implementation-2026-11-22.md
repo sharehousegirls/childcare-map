@@ -7,7 +7,7 @@ Added browser-local save/select/delete for an individual region using the existi
 ## Files
 
 - `saved-regions.mjs`: storage normalization, duplicate-region prevention, maximum of 20 entries, safe handling of malformed JSON and browser storage errors.
-- `tests/saved-regions.test.mjs`: ten module tests.
+- `tests/saved-regions.test.mjs`: eleven module tests.
 - `index.html`, `app.js`, `styles.css`: accessible status area, region save button/list, load/delete actions, responsive layout.
 - `.github/workflows/backend-tests.yml`: checks the module syntax and runs all `tests/*.test.mjs` files.
 
@@ -34,9 +34,9 @@ The “all regions” selector value is not saveable. Duplicate region labels ar
 
 ## Verification
 
-- **PASS (isolated local Node harness):** 10/10 tests; module syntax check.
+- **PASS (isolated local Node harness):** 11/11 tests; module syntax check. Duplicate region IDs are rejected and malformed stored entries with duplicate IDs are skipped.
 - **NOT RUN:** browser manual interaction, mobile viewport, screen-reader check.
-- **CI:** GitHub Actions validation pending for integrated UI changes at time of writing.
+- **CI:** GitHub Actions validation for the initial integrated UI commits passed; the later duplicate-ID hardening commits are pending at time of writing.
 
 ## Limitations and migration
 
