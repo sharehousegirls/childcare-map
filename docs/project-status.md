@@ -6,6 +6,7 @@
 ## Completed foundation
 - Responsive static prototype: region cards, facility search, type filter, explicit zero-wait filter.
 - Browser-local saved searches: store, restore and delete region/search/type/zero-wait filters (up to 20, no account or server sync).
+- Browser-local saved regions: store, select and delete individual region labels (up to 20; duplicate region labels prevented). Current saved values are display names, not official stable region codes.
 - FastAPI adapter scaffold with server-side credential configuration, XML/JSON parsing, normalized fields, health and facility endpoints.
 - Provider error sanitization and field-map validation.
 - Waitlist-total consistency diagnostic; missing/duplicate facility-ID flags (batch-level only).
@@ -29,6 +30,7 @@
 - No official canonical region hierarchy imported or dong-level mapping implemented. The initial validator is not wired into the API or UI and its simplified parent rules must be checked against current source files.
 - SQLite snapshot storage exists as an isolated scaffold, but it is not integrated with API ingestion or exposed through routes; no region hierarchy, real map, facility detail page, persistent saved facilities, server-backed comparisons or trend UI yet.
 - Saved searches are browser-local only; up to 20. They do not sync across devices/accounts, and browser storage can be cleared or unavailable.
+- Saved regions are also browser-local and currently store region-name strings from the current option list; they are not canonical official IDs and may become stale after region-code/name changes. No migration or cross-device sync yet.
 - Storage schema has no versioned migrations, failed-run/retry recording, retention/backup policy or production concurrency/load review.
 - Automated data refresh, SEO, production hardening and deployment are not ready.
 - Complaint/violation/administrative-history feature remains deferred until all other scope is complete and owner review is requested.
@@ -42,6 +44,7 @@
 - **PASS (isolated local harness):** 9 saved-search module tests passed after adding read-error protection; direct repository checkout was unavailable.
 - **PASS — GitHub Actions run #58:** backend unit tests, app.js/saved-searches.mjs syntax checks, and frontend saved-search test steps succeeded for commit 79339ad982c108143eae8623cc97b3ac05a54e0e (https://github.com/sharehousegirls/childcare-map/actions/runs/44958036482).
 - **PASS — GitHub Actions run #82:** 45 backend tests passed; frontend JavaScript syntax checks and 9 saved-search tests also succeeded. The new 1,500-node malformed-cycle test passed. https://github.com/sharehousegirls/childcare-map/actions/runs/44976683017
+- **PASS (isolated local Node harness):** 10 saved-region module tests and `node --check saved-regions.mjs`; GitHub Actions for the integrated UI/module changes is pending at the time of this status edit. Direct browser interaction remains NOT RUN.
 - **FAIL — Runs #80/#81:** iterative cycle-detection refactor exposed a tree-sort queue bug (`dict.sort`); corrected in commit `647460e9fe2c0d17adc9c9a379f5960b32678b54` and verified by run #82.
 - **FAIL — Run #73:** a temporary malformed test-file edit caused a Python syntax error; corrected in commit `eb116b5555b6ef70192302c54b8609eddfa0b658`, verified by run #74.
 - **NOT RUN:** browser interaction, accessibility, responsive manual test.
@@ -55,7 +58,7 @@
 3. Implement a separate versioned M:N administrative-dong/legal-dong crosswalk using boundary/jurisdiction evidence; never join by name alone.
 4. Add schema versioning/migrations and ingestion failure/retry audit; connect the snapshot-storage scaffold only after API/schema/rights gates pass.
 5. Add real map, facility detail, region comparison and filtering against validated data.
-6. Add saved regions/facilities/searches, comparisons, snapshot history and trends.
+6. Saved regions and searches are browser-local; extend to canonical region IDs after official code import. Continue with saved facilities, comparisons, snapshot history and trends.
 7. Add automated refresh/recovery, SEO, accessibility, operational/security review.
 8. Conduct deploy-readiness review; deploy only with owner approval.
 
