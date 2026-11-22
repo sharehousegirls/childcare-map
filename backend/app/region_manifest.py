@@ -115,7 +115,7 @@ def validate_region_source_manifest(manifest: Any) -> dict[str, Any]:
     source_url = _https_url(_text(manifest.get("source_url"), "source_url", issues), "source_url", issues)
     terms_url = _https_url(_text(manifest.get("terms_url"), "terms_url", issues), "terms_url", issues)
     file_name = _text(manifest.get("file_name"), "file_name", issues, max_length=255)
-    if file_name and (file_name in {".", ".."} or "/" in file_name or "\\' in file_name):
+    if file_name and (file_name in {".", ".."} or "/" in file_name or chr(92) in file_name):
         issues.append("file_name_must_be_basename")
     digest = _text(manifest.get("sha256"), "sha256", issues, max_length=64)
     if digest and not SHA256_RE.fullmatch(digest):
