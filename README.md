@@ -39,7 +39,7 @@
     node --check saved-facilities.mjs
     node --test tests/*.test.mjs
 
-**PASS — GitHub Actions run #114:** 68 backend tests, 40 frontend tests (8 regional summary, 11 saved-region, 9 saved-search, 12 saved-facility), and JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45013742067
+**PASS — GitHub Actions run #130 (latest):** 73 backend tests, 40 frontend tests (8 regional summary, 11 saved-region, 9 saved-search, 12 saved-facility), and all JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45033836799
 
 관심 지역 기능 상세: `docs/saved-regions-implementation-2026-11-22.md`
 
