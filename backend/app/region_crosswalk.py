@@ -83,12 +83,19 @@ def _date(
 def _https_reference(value: str, row_index: int, issues: list[dict[str, Any]]) -> str | None:
     try:
         parsed = urlparse(value)
+        hostname = parsed.hostname
+        port = parsed.port
     except ValueError:
         parsed = None
+        hostname = None
+        port = None
     if (
         parsed is None
         or parsed.scheme != "https"
-        or not parsed.hostname
+        or not hostname
+        or any(char.isspace() for char in hostname)
+        or "\\" in hostname
+        or (port is not None and not 1 <= port <= 65535)
         or parsed.username is not None
         or parsed.password is not None
     ):
@@ -96,7 +103,7 @@ def _https_reference(value: str, row_index: int, issues: list[dict[str, Any]]) -
             _issue(
                 "source_reference_invalid_url",
                 row_index,
-                "source_reference must be an HTTPS URL without credentials.",
+                "source_reference must be a valid HTTPS URL without credentials.",
             )
         )
         return None
