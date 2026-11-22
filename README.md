@@ -54,6 +54,12 @@ backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니�
 8. uvicorn app.main:app --reload --port 8000
 9. http://127.0.0.1:8000/health 및 /api/facilities 확인
 
+## Region source manifest
+
+`backend/app/region_manifest.py` validates source provenance, archive metadata, dates, HTTPS source/terms URLs, SHA-256 format, and reuse-review flags before a future region-code importer can proceed. It exposes separate public-import and commercial-use gates; pending review or unknown permission never unlocks either gate. The local SHA-256 verifier streams files in 1 MiB chunks. It does not download or parse the official archive, and it does not replace a human reuse-terms review.
+
+Implementation and manifest example: `docs/region-source-manifest-2026-11-22.md`.
+
 ## Data sources and status
 - **Nationwide waitlist candidate:** SSIS 한국사회보장정보원_어린이집별 기본정보 조회 (15101154). Official catalog lists age waitlist buckets 0–5, 6+ and total: https://www.data.go.kr/data/15101154/openapi.do. XML, real-time metadata, and unrestricted reuse are listed; request schema/sample and service-specific terms remain unverified.
 - **Existing Daegu application:** 한국사회보장정보원_대구광역시 어린이집 정보조회 (15101186), submitted for development account on 2026-11-21. Catalog lists facility metadata (name/code/address/contact/homepage/capacity), not waitlist counts: https://www.data.go.kr/data/15101186/openapi.do. Review/credentials pending.
