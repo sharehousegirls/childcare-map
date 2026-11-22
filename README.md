@@ -61,6 +61,13 @@ backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니�
 
 Implementation and manifest example: `docs/region-source-manifest-2026-11-22.md`.
 
+## Region granularity and coordinate constraints
+
+The Childcare Information Disclosure Portal FAQ (reviewed 2026-11-22) says its regional facility type/count query supports 시·군·구, not dong-level query (FAQ 12). This is scoped to that query and does not rule out deriving dong aggregates from facility-level records; any such aggregation requires validated facility coordinates, a reviewed/versioned boundary source, deduplication, and coverage disclosure. The FAQ reports EPSG:5181 TM coordinates for its childcare map data (FAQ 13), so verify the exact API field/CRS and transform before mapping. It also warns that legal-dong and administrative-dong lookup may differ (FAQ 10).
+
+Official FAQ: https://info.childcare.go.kr/info_html5/cera/community/faqboard/FaqBoardSlPL.jsp  
+Review note and acceptance criteria: `docs/region-granularity-coordinate-review-2026-11-22.md`
+
 ## Data sources and status
 - **Nationwide waitlist candidate:** SSIS 한국사회보장정보원_어린이집별 기본정보 조회 (15101154). Official catalog lists age waitlist buckets 0–5, 6+ and total: https://www.data.go.kr/data/15101154/openapi.do. XML, real-time metadata, and unrestricted reuse are listed; request schema/sample and service-specific terms remain unverified.
 - **Existing Daegu application:** 한국사회보장정보원_대구광역시 어린이집 정보조회 (15101186), submitted for development account on 2026-11-21. Catalog lists facility metadata (name/code/address/contact/homepage/capacity), not waitlist counts: https://www.data.go.kr/data/15101186/openapi.do. Review/credentials pending.
