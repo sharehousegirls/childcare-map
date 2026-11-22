@@ -44,7 +44,9 @@
 - **PASS (isolated local harness):** 9 saved-search module tests passed after adding read-error protection; direct repository checkout was unavailable.
 - **PASS — GitHub Actions run #58:** backend unit tests, app.js/saved-searches.mjs syntax checks, and frontend saved-search test steps succeeded for commit 79339ad982c108143eae8623cc97b3ac05a54e0e (https://github.com/sharehousegirls/childcare-map/actions/runs/44958036482).
 - **PASS — GitHub Actions run #82:** 45 backend tests passed; frontend JavaScript syntax checks and 9 saved-search tests also succeeded. The new 1,500-node malformed-cycle test passed. https://github.com/sharehousegirls/childcare-map/actions/runs/44976683017
-- **PASS (isolated local Node harness):** 11 saved-region module tests and `node --check saved-regions.mjs`; GitHub Actions for the integrated UI/module changes is pending at the time of this status edit. Direct browser interaction remains NOT RUN.
+- **PASS (isolated local Node harness):** 11 saved-region module tests and `node --check saved-regions.mjs`.
+- **PASS — GitHub Actions run #98:** 45 backend tests, JavaScript syntax checks, 9 saved-search tests, and 11 saved-region tests passed for code commit `1d8825a5560e9100774494d0234bf53bbacd6657`. https://github.com/sharehousegirls/childcare-map/actions/runs/44985738434
+- **NOT RUN:** direct browser interaction, mobile viewport, screen-reader check.
 - **FAIL — Runs #80/#81:** iterative cycle-detection refactor exposed a tree-sort queue bug (`dict.sort`); corrected in commit `647460e9fe2c0d17adc9c9a379f5960b32678b54` and verified by run #82.
 - **FAIL — Run #73:** a temporary malformed test-file edit caused a Python syntax error; corrected in commit `eb116b5555b6ef70192302c54b8609eddfa0b658`, verified by run #74.
 - **NOT RUN:** browser interaction, accessibility, responsive manual test.
