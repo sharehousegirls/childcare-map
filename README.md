@@ -38,7 +38,7 @@
     node --check regional-summary.mjs
     node --test tests/*.test.mjs
 
-CI evidence is tracked in `docs/project-status.md`; each pushed commit triggers the repository workflow.
+**PASS — GitHub Actions run #105:** 45 backend tests, 28 frontend tests (8 regional-summary, 11 saved-region, 9 saved-search), and JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/44995019954
 
 관심 지역 기능 상세: `docs/saved-regions-implementation-2026-11-22.md`
 

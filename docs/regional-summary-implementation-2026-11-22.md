@@ -29,6 +29,11 @@ Regional cards show confirmed wait totals, average per facility with known wait 
 6. Aggregation does not mutate input rows.
 7. The pure module is covered by Node tests and included in CI syntax checks.
 
+## Test status
+
+- **PASS — GitHub Actions run #105:** 8 regional aggregation tests passed; the workflow also passed 45 backend tests, 9 saved-search tests, 11 saved-region tests, and JavaScript syntax checks. https://github.com/sharehousegirls/childcare-map/actions/runs/44995019954
+- **NOT RUN:** manual browser interaction, mobile viewport, screen-reader/accessibility validation.
+
 ## Limitations
 
 - The module is not a source-schema validator and does not confirm the official data source or facility-level completeness.

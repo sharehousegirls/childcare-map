@@ -38,6 +38,7 @@
 - Complaint/violation/administrative-history feature remains deferred until all other scope is complete and owner review is requested.
 
 ## Verification
+- **PASS — GitHub Actions run #105:** 45 backend tests, 28 frontend tests (8 regional summary, 11 saved-region, 9 saved-search), and all four JavaScript syntax checks passed for commit `437384c3f430a7498f7ba7f091a993dd52a0d8bc`. https://github.com/sharehousegirls/childcare-map/actions/runs/44995019954
 - **PASS (reported/evidence documented):** 15 backend unit tests in an isolated harness using source/test blob hashes verified against the repository; GitHub Actions passed for commit ec14fb6a938820cb1181ada6e3e26101fa3201e4. See docs/backend-security-review-2026-11-21.md.
 - **PASS (isolated local copy):** 11 SQLite storage unit tests and Python compileall; local tests were not run against a repository checkout.
 - **PASS — GitHub Actions run #48:** 26 repository tests passed against the repository checkout for commit 396e30762bb3776eadeddd1715b0574bf0049ce4 (workflow: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967).
@@ -56,7 +57,6 @@
 - **WARN:** GitHub Actions reports Node 20 deprecation notices for checkout/setup-python actions; run is successful, but workflow action maintenance should be scheduled.
 - **NOT RUN:** deployment; requires owner approval.
 
-- Regional aggregation has a new Node test suite; CI evidence for this change is pending.
 
 ## Next priorities
 1. Obtain nationwide waitlist API access, official specification, redacted response, and complete reuse/attribution review.
