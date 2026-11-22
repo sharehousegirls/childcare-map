@@ -6,7 +6,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.regions import RegionValidationError, build_region_tree, validate_region_records
 
-
 def fixture_regions():
     return [
         {"region_id": "S1", "name": "서울", "region_type": "sido", "source_system": "test-admin", "source_code": "00011", "is_active": True},
@@ -17,7 +16,6 @@ def fixture_regions():
         {"region_id": "M1", "name": "청운면", "region_type": "myeon", "parent_region_id": "G1", "source_system": "test-admin", "source_code": "M-01", "is_active": True},
         {"region_id": "R1", "name": "청운리", "region_type": "ri", "parent_region_id": "E1", "source_system": "test-legal", "source_code": "R-01", "is_active": True},
     ]
-
 
 class RegionValidationTests(unittest.TestCase):
     def test_valid_hierarchy_with_distinct_dong_systems(self):
@@ -119,6 +117,6 @@ class RegionValidationTests(unittest.TestCase):
         with self.assertRaises(RegionValidationError):
             validate_region_records({"region_id": "S1"})
 
-
 if __name__ == "__main__":
     unittest.main()
+\n    def test_same_code_is_allowed_across_source_systems(self):\n        records = fixture_regions()\n        records[2]["source_code"] = records[3]["source_code"]\n        self.assertEqual(len(validate_region_records(records)), 7)\n\n    def test_tree_is_independent_of_input_order(self):\n        records = fixture_regions()\n        self.assertEqual(build_region_tree(records), build_region_tree(list(reversed(records))))\n\n    def test_non_boolean_active_status_rejected(self):\n        records = fixture_regions()\n        records[1]["is_active"] = "active"\n        with self.assertRaises(RegionValidationError) as context:\n            validate_region_records(records)\n        self.assertIn("invalid_is_active", {issue["code"] for issue in context.exception.issues})\n
