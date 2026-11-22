@@ -168,7 +168,8 @@ def build_region_tree(records: Any) -> list[dict[str, Any]]:
     order = {region_type: index for index, region_type in enumerate(REGION_TYPE_ORDER)}
     pending = list(roots)
     while pending:
-        items = pending.pop()
-        items.sort(key=lambda item: (order[item["region_type"]], item["name"], item["region_id"]))
-        pending.extend(item["children"] for item in items)
+        node = pending.pop()
+        children = node["children"]
+        children.sort(key=lambda item: (order[item["region_type"]], item["name"], item["region_id"]))
+        pending.extend(children)
     return roots
