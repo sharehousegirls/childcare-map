@@ -13,6 +13,7 @@
 - Official source inventory and integration plan.
 - Draft relational model for region hierarchy, facility identity, snapshots, ingestion-run audit, region mapping provenance, and browser-local saved features.
 - File-backed SQLite snapshot-storage scaffold: facility metadata, append-only snapshots, ingestion-run summaries, and unresolved-record review table; idempotent batch handling and quality flags. Not yet wired to the API route.
+- Initial normalized region validator/tree builder in `backend/app/regions.py`; supports separate administrative/legal dong types and checks duplicates, parent links, cycles and active-status contradictions. Synthetic fixtures only; no official code data imported.
 
 ## Blockers / not yet verified
 - Daegu facility-metadata development API application is pending; it does not itself provide the waitlist fields.
@@ -20,12 +21,12 @@
 - Credentials are not available; no live request has been made.
 - Official API endpoint, operation, request parameters, pagination, response/error envelope, exact field names, ID stability, null semantics and row limit need the service specification and a redacted sample.
 - Service-specific attribution, caching, display, redistribution, commercial and advertising conditions are not cleared.
-- Region codes/boundaries, legal-dong vs administrative-dong mapping, coordinate CRS and axis order require source validation.
+- Current official administrative/legal-region code files have not been imported or validated. The normalized validator uses a deliberately simplified parent contract; administrative-dong/legal-dong crosswalk is M:N and not implemented. Coordinate CRS and axis order require source validation.
 
 ## Known limitations
 - Demo values are fictional and must not be interpreted as current real waitlist data.
 - No actual nationwide facility/waitlist ingestion.
-- No implemented canonical region hierarchy or dong-level mapping.
+- No official canonical region hierarchy imported or dong-level mapping implemented. The initial validator is not wired into the API or UI and its simplified parent rules must be checked against current source files.
 - SQLite snapshot storage exists as an isolated scaffold, but it is not integrated with API ingestion or exposed through routes; no region hierarchy, real map, facility detail page, persistent saved facilities, server-backed comparisons or trend UI yet.
 - Saved searches are browser-local only; up to 20. They do not sync across devices/accounts, and browser storage can be cleared or unavailable.
 - Storage schema has no versioned migrations, failed-run/retry recording, retention/backup policy or production concurrency/load review.
@@ -47,12 +48,13 @@
 
 ## Next priorities
 1. Obtain nationwide waitlist API access, official specification, redacted response, and complete reuse/attribution review.
-2. Implement canonical province/district region hierarchy using verified codes; do not guess codes or claim dong-level coverage.
-3. Add schema versioning/migrations and ingestion failure/retry audit; connect the snapshot-storage scaffold only after API/schema/rights gates pass.
-4. Add real map, facility detail, region comparison and filtering against validated data.
-5. Add saved regions/facilities/searches, comparisons, snapshot history and trends.
-6. Add automated refresh/recovery, SEO, accessibility, operational/security review.
-7. Conduct deploy-readiness review; deploy only with owner approval.
+2. Download/version the current MOIS administrative and legal-dong code files, validate status/parent fields, and confirm the simplified region rules against the full official data; do not import unverified codes.
+3. Implement a separate versioned M:N administrative-dong/legal-dong crosswalk using boundary/jurisdiction evidence; never join by name alone.
+4. Add schema versioning/migrations and ingestion failure/retry audit; connect the snapshot-storage scaffold only after API/schema/rights gates pass.
+5. Add real map, facility detail, region comparison and filtering against validated data.
+6. Add saved regions/facilities/searches, comparisons, snapshot history and trends.
+7. Add automated refresh/recovery, SEO, accessibility, operational/security review.
+8. Conduct deploy-readiness review; deploy only with owner approval.
 
 ## Acceptance rules
 - Missing is not zero; zero-wait requires explicit zero.
