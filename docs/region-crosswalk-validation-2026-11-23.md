@@ -23,7 +23,7 @@ Source region records are passed through the existing region validator. Codes an
 - Aggregates malformed row and reference issues.
 - Rejects missing IDs, unknown IDs, and incorrect source/target region types.
 - Rejects malformed dates and end dates earlier than start dates.
-- Rejects non-HTTPS provenance URLs and URLs containing credentials.
+- Rejects non-HTTPS provenance URLs, URLs containing credentials, malformed ports, out-of-range ports, and hostnames containing whitespace or backslashes.
 - Permits multiple legal regions to map to one administrative region and one legal region to map to multiple administrative regions.
 - Within a crosswalk version, the same legal/admin pair cannot have overlapping inclusive effective periods; non-overlapping intervals are allowed.
 - Returns normalized rows in deterministic order and does not mutate input.
@@ -59,3 +59,9 @@ Code review found and corrected an issue where overlap diagnostics could report 
 3. Review attribution, redistribution and commercial-use terms for the exact archive.
 4. Map official rows into this normalized contract and validate; retain unresolved cases.
 5. Separately validate geographic boundaries, facility coordinate CRS/axis order, spatial assignment and coverage before dong-level waitlist aggregation.
+
+### Provenance URL hardening — 2026-11-23
+
+- The HTTPS provenance validator now rejects hostnames containing whitespace or backslashes and rejects malformed/out-of-range ports. It still blocks credentials and non-HTTPS URLs.
+- Added tests for a hostname containing whitespace and port 99999.
+- **CI status at documentation edit:** runs #141 (validator code) and #142 (new tests) were in progress; no PASS claim is made until their conclusions are confirmed.
