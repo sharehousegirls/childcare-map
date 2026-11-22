@@ -110,6 +110,20 @@ class RegionCrosswalkTests(unittest.TestCase):
             validate_region_crosswalk([row], fixture_regions())
         self.assertIn("source_reference_invalid_url", {issue["code"] for issue in ctx.exception.issues})
 
+    def test_source_reference_rejects_whitespace_in_hostname(self):
+        row = crosswalk_row()
+        row["source_reference"] = "https://bad host/mois/codes"
+        with self.assertRaises(RegionCrosswalkValidationError) as ctx:
+            validate_region_crosswalk([row], fixture_regions())
+        self.assertIn("source_reference_invalid_url", {issue["code"] for issue in ctx.exception.issues})
+
+    def test_source_reference_rejects_out_of_range_port(self):
+        row = crosswalk_row()
+        row["source_reference"] = "https://mois.go.kr:99999/codes"
+        with self.assertRaises(RegionCrosswalkValidationError) as ctx:
+            validate_region_crosswalk([row], fixture_regions())
+        self.assertIn("source_reference_invalid_url", {issue["code"] for issue in ctx.exception.issues})
+
     def test_rows_are_not_mutated(self):
         rows = [crosswalk_row("L2", "D2"), crosswalk_row("L1", "D1")]
         before = copy.deepcopy(rows)
