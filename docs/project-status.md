@@ -7,6 +7,7 @@
 - Responsive static prototype: region cards, facility search, type filter, explicit zero-wait filter.
 - Browser-local saved searches: store, restore and delete region/search/type/zero-wait filters (up to 20, no account or server sync).
 - Browser-local saved regions: store, select and delete individual region labels (up to 20; duplicate region labels prevented). Current saved values are display names, not official stable region codes.
+- Browser-local saved facilities: save/load/delete by exact facility ID (up to 50). Demo IDs are fictional; records without IDs cannot be saved.
 - FastAPI adapter scaffold with server-side credential configuration, XML/JSON parsing, normalized fields, health and facility endpoints.
 - Provider error sanitization and field-map validation.
 - Waitlist-total consistency diagnostic; missing/duplicate facility-ID flags (batch-level only).
@@ -34,6 +35,7 @@
 - SQLite snapshot storage exists as an isolated scaffold, but it is not integrated with API ingestion or exposed through routes; no region hierarchy, real map, facility detail page, persistent saved facilities, server-backed comparisons or trend UI yet.
 - Saved searches are browser-local only; up to 20. They do not sync across devices/accounts, and browser storage can be cleared or unavailable.
 - Saved regions are also browser-local and currently store region-name strings from the current option list; they are not canonical official IDs and may become stale after region-code/name changes. No migration or cross-device sync yet.
+- Saved facilities are browser-local, capped at 50 and matched by exact ID; source-ID changes can make bookmarks stale. No account or device sync.
 - Storage schema has no versioned migrations, failed-run/retry recording, retention/backup policy or production concurrency/load review.
 - Automated data refresh, SEO, production hardening and deployment are not ready.
 - Complaint/violation/administrative-history feature remains deferred until all other scope is complete and owner review is requested.
@@ -67,7 +69,7 @@
 3. Implement a separate versioned M:N administrative-dong/legal-dong crosswalk using boundary/jurisdiction evidence; never join by name alone.
 4. Add schema versioning/migrations and ingestion failure/retry audit; connect the snapshot-storage scaffold only after API/schema/rights gates pass.
 5. Add real map, facility detail, region comparison and filtering against validated data.
-6. Saved regions and searches are browser-local; extend to canonical region IDs after official code import. Continue with saved facilities, comparisons, snapshot history and trends.
+6. Saved regions, searches and facilities are browser-local; extend to canonical region IDs after official code import. Continue with comparisons, snapshot history and trends.
 7. Add automated refresh/recovery, SEO, accessibility, operational/security review.
 8. Conduct deploy-readiness review; deploy only with owner approval.
 
@@ -79,3 +81,10 @@
 - Keep demo and live states unmistakably distinct.
 - Never commit credentials or expose them in logs/errors.
 - Verify source terms before public redistribution or commercial use.
+
+
+## Saved facilities — 2026-11-22
+- **PASS — commit `f0a12d30`, GitHub Actions run #114:** 68 backend tests, 40 frontend tests (8 regional summary, 11 saved regions, 9 saved searches, 12 saved facilities), and 5 JavaScript syntax checks succeeded.
+- **PASS — isolated Node 22 harness:** 12 saved-facility unit tests also ran independently before commit.
+- **NOT RUN:** manual browser interaction, responsive viewport and screen-reader checks.
+- Facility card buttons save by dataset ID, load by exact ID (no name-only fallback), and delete. Browser-local only, 50-item cap.

@@ -36,9 +36,10 @@
     node --check saved-searches.mjs
     node --check saved-regions.mjs
     node --check regional-summary.mjs
+    node --check saved-facilities.mjs
     node --test tests/*.test.mjs
 
-**PASS — GitHub Actions run #109:** 68 backend tests (including 23 region-source-manifest tests), 28 frontend tests (8 regional summary, 11 saved-region, 9 saved-search), and JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45004001134
+**PASS — GitHub Actions run #114:** 68 backend tests, 40 frontend tests (8 regional summary, 11 saved-region, 9 saved-search, 12 saved-facility), and JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45013742067
 
 관심 지역 기능 상세: `docs/saved-regions-implementation-2026-11-22.md`
 
@@ -115,3 +116,5 @@ Implementation and manifest example: `docs/region-source-manifest-2026-11-22.md`
 - 현재 데모 시설에는 명시적인 가상 ID를 사용합니다. 실 API 데이터에 시설 ID가 없으면 저장 버튼이 비활성화됩니다.
 - 저장된 시설을 불러올 때 ID가 현재 데이터에서 확인되지 않으면 이름이 비슷한 시설로 임의 대체하지 않습니다.
 - 구현: `saved-facilities.mjs`; 테스트: `tests/saved-facilities.test.mjs`
+
+관심 시설 기능 상세: `docs/saved-facilities-implementation-2026-11-22.md`
