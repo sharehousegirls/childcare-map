@@ -130,3 +130,11 @@
 - **PASS — GitHub Actions run #138:** 92 backend tests, 40 frontend tests, JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45067435394
 - **PASS — GitHub Actions run #139:** README verification-note update also passed the full CI workflow. https://github.com/sharehousegirls/childcare-map/actions/runs/45067529233
 - **NOT RUN:** direct local repository checkout tests; manual browser and assistive-technology review remain outstanding.
+
+
+## 2026-11-23 incremental milestone — crosswalk provenance URL hardening
+- Tightened the HTTPS provenance validator to reject hostnames containing whitespace/backslashes and malformed or out-of-range ports, in addition to credentials and non-HTTPS schemes.
+- Added two regression tests for whitespace in hostnames and port 99999.
+- **PASS — GitHub Actions run #141:** validator change passed the existing suite. https://github.com/sharehousegirls/childcare-map/actions/runs/45079211694
+- **PASS — GitHub Actions run #142:** 94 backend tests, 40 frontend tests, and JavaScript syntax checks passed with the new regression tests. https://github.com/sharehousegirls/childcare-map/actions/runs/45079217801
+- Direct local checkout tests and manual browser/accessibility checks remain **NOT RUN**.
