@@ -1,7 +1,7 @@
 # Project status — 2026-11-22
 
 ## Current phase
-**Prototype feature expansion.** Live API connection remains gated on verified official schema, credentials, quality, and service-specific reuse terms.
+**Data-source and geography validation.** Live API connection remains gated on verified official schema, credentials, quality, and service-specific reuse terms.
 
 ## Completed foundation
 - Responsive static prototype: region cards, facility search, type filter, explicit zero-wait filter.
@@ -26,12 +26,15 @@
 - Credentials are not available; no live request has been made.
 - Official API endpoint, operation, request parameters, pagination, response/error envelope, exact field names, ID stability, null semantics and row limit need the service specification and a redacted sample.
 - Service-specific attribution, caching, display, redistribution, commercial and advertising conditions are not cleared.
-- Current official administrative/legal-region code files have not been imported or validated. The normalized validator uses a deliberately simplified parent contract; administrative-dong/legal-dong crosswalk is M:N and not implemented. Coordinate CRS and axis order require source validation.
+- Current official administrative/legal-region code files have not been imported or validated.
+- The Childcare Portal FAQ (Q12) confirms its regional facility-type/count query is limited to 시·군·구, not dong. This does not conclusively rule out a derived dong aggregation from facility-level rows; validated coordinates, boundaries, deduplication, and coverage are required.
+- The Portal FAQ (Q13) reports EPSG:5181 TM coordinates for the childcare map data it describes; exact feed CRS and axis order still require confirmation. FAQ Q10 notes legal-dong/administrative-dong lookup mismatches.
+- Reviewed geography constraints and derived-dong acceptance criteria in `docs/region-granularity-coordinate-review-2026-11-22.md`. The normalized validator uses a deliberately simplified parent contract; administrative-dong/legal-dong crosswalk is M:N and not implemented. Coordinate CRS and axis order require source validation.
 
 ## Known limitations
 - Demo values are fictional and must not be interpreted as current real waitlist data.
 - No actual nationwide facility/waitlist ingestion.
-- No official canonical region hierarchy imported or dong-level mapping implemented. The initial validator is not wired into the API or UI and its simplified parent rules must be checked against current source files.
+- No official canonical region hierarchy imported or dong-level mapping implemented. Dong-level waitlist statistics must be derived only from uniquely identified facility rows and verified spatial mapping; the portal FAQ does not document a direct dong-level query for its regional facility-type/count query. The initial validator is not wired into the API or UI and its simplified parent rules must be checked against current source files.
 - SQLite snapshot storage exists as an isolated scaffold, but it is not integrated with API ingestion or exposed through routes; no region hierarchy, real map, facility detail page, persistent saved facilities, server-backed comparisons or trend UI yet.
 - Saved searches are browser-local only; up to 20. They do not sync across devices/accounts, and browser storage can be cleared or unavailable.
 - Saved regions are also browser-local and currently store region-name strings from the current option list; they are not canonical official IDs and may become stale after region-code/name changes. No migration or cross-device sync yet.
@@ -39,6 +42,12 @@
 - Storage schema has no versioned migrations, failed-run/retry recording, retention/backup policy or production concurrency/load review.
 - Automated data refresh, SEO, production hardening and deployment are not ready.
 - Complaint/violation/administrative-history feature remains deferred until all other scope is complete and owner review is requested.
+
+## Next priorities
+- Import current official region-code files only after source/reuse review; preserve stable codes and keep administrative/legal-dong records separate.
+- Implement and test the versioned M:N administrative-dong/legal-dong crosswalk and unresolved mapping review.
+- Validate facility coordinates and EPSG:5181 transformation using a redacted official sample before map rendering.
+- Prototype derived dong aggregation with deduplication, mapping coverage, null handling, and explicit UI labeling; do not claim a direct official dong query.
 
 ## Verification
 - **PASS — GitHub Actions run #109:** 68 backend tests (including 23 region-source-manifest tests), 28 frontend tests (8 regional summary, 11 saved-region, 9 saved-search), and all JavaScript syntax checks succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/45004001134
