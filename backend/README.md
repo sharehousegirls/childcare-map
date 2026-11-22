@@ -85,3 +85,7 @@ The tests cover XML/JSON record flattening, alias mapping, numeric/null handling
 - The API adapter does not guess endpoint paths, request parameters, or response field names.
 - Verify provider terms and commercial reuse before public deployment.
 - Keep existing known-good demo files intact until live data is validated.
+
+## Facility API metadata
+
+`GET /api/facilities` includes `meta.collected_at` (UTC), distinct provider `source_data_dates`, `source_data_date` only for a single distinct date, mixed-date flag, and dated/undated record counts. Provider dates are preserved as strings pending specification validation; collection time does not imply source freshness. The frontend rejects a response when its integer `count` does not equal `facilities.length`. See the implementation note in `docs/api-freshness-metadata-2026-11-22.md`.
