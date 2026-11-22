@@ -29,7 +29,7 @@
     node --check saved-searches.mjs
     node --test tests/saved-searches.test.mjs
 
-CI 최신 확인: GitHub Actions run #62에서 Backend 41개 테스트, Frontend JavaScript 문법 검사, 저장 검색 테스트 9개가 모두 성공했습니다. https://github.com/sharehousegirls/childcare-map/actions/runs/44967776618
+CI 최신 확인: GitHub Actions run #74에서 Backend 44개 테스트, Frontend JavaScript 문법 검사, 저장 검색 테스트 9개가 모두 성공했습니다. https://github.com/sharehousegirls/childcare-map/actions/runs/44968035073
 
 ## Backend 설정
 backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니다.
