@@ -1,4 +1,4 @@
-# Region-code validation scaffold — 2026-11-22
+# Region-code validation scaffold — 2026-11-23
 
 ## Scope
 
@@ -9,6 +9,12 @@
 - The latest MOIS change notice located in this review was posted **2026-11-18** and states an effective date of **2026-10-23**. It lists `jscode20261111.zip`, the abolished-code version, and the layout file. Treat the `20261111` suffix as the archive/version label, not as the effective date. Official notice: https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000052&nttId=131063
 - The notice page reviewed here does not expose an explicit reuse/license statement for its attached ZIP. This is **not** evidence that reuse is prohibited or allowed; keep redistribution/commercial flags pending until the archive-specific terms or written clarification are confirmed. Do not transfer reuse terms from the separate legal-dong API catalog (15077871) to the attached ZIP by assumption.
 - Catalog/source review date is 2026-11-23. No archive was downloaded or imported in this run.
+
+## Copyright-policy clarification — reviewed 2026-11-23
+
+MOIS's official website copyright policy states that MOIS-owned materials may be freely used without separate permission under the public-work free-use provision only when the work is marked with **KOGL Type 1**; users must specifically identify the source. Materials without a KOGL mark should be used only after prior consultation with the responsible office. Official policy: https://mois.go.kr/frt/sub/a08/copyrightPolicy/screen.do
+
+The attached administrative/legal-dong ZIP has **not been verified as carrying a KOGL Type 1 mark**. Therefore this policy does not clear the archive for reuse: redistribution and commercial-use gates remain pending. Confirm the mark on the exact attachment or obtain written clarification before importing or publishing the codes.
 
 ## Official sources checked
 

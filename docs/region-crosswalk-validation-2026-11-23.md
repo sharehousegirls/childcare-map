@@ -45,6 +45,13 @@ Source region records are passed through the existing region validator. Codes an
 
 Code review found and corrected an issue where overlap diagnostics could report a normalized row index rather than the original input row index. Missing fields now emit explicit required-field issue codes; both fixes are covered by the CI run.
 
+
+### Regression coverage added 2026-11-23
+
+- Added a test that a `valid_to: null` open-ended interval rejects a later interval for the same pair and version. The validator converts an open end to `date.max` for overlap comparison.
+- **PASS — GitHub Actions run #138:** 92 backend tests, 40 frontend tests, and JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45067435394
+- Direct local checkout tests were **NOT RUN**; repository CI is the execution evidence.
+
 ## Next steps
 
 1. Recheck the current MOIS code-change board and obtain the current official archives/layout.

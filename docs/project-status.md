@@ -27,6 +27,7 @@
 - Credentials are not available; no live request has been made.
 - Official API endpoint, operation, request parameters, pagination, response/error envelope, exact field names, ID stability, null semantics and row limit need the service specification and a redacted sample.
 - Service-specific attribution, caching, display, redistribution, commercial and advertising conditions are not cleared.
+- MOIS's website copyright policy says MOIS-owned material may be freely reused without separate permission only when marked KOGL Type 1, with source attribution; unmarked material requires prior consultation. The KOGL mark on the exact administrative-code ZIP has not been verified, so the ZIP reuse gate remains closed. Official policy: https://mois.go.kr/frt/sub/a08/copyrightPolicy/screen.do
 - Current official administrative/legal-region code files have not been imported or validated.
 - The Childcare Portal FAQ (Q12) confirms its regional facility-type/count query is limited to 시·군·구, not dong. This does not conclusively rule out a derived dong aggregation from facility-level rows; validated coordinates, boundaries, deduplication, and coverage are required.
 - The Portal FAQ (Q13) reports EPSG:5181 TM coordinates for the childcare map data it describes; exact feed CRS and axis order still require confirmation. FAQ Q10 notes legal-dong/administrative-dong lookup mismatches.
@@ -122,3 +123,10 @@
 - Added synthetic unit tests covering M:N, missing/invalid references, dates, overlaps, URL credentials, immutability, and deterministic sorting.
 - No official region-code data was downloaded or imported. No live API, map, spatial crosswalk, or deployment was connected.
 - **PASS — GitHub Actions run #134:** 91 backend tests, 40 frontend tests, and JavaScript syntax checks passed. A code-review correction made overlap issues retain original input row indexes and missing fields use explicit required-field errors; the fix was verified in the same run.
+
+
+## 2026-11-23 incremental milestone — crosswalk open-ended interval regression
+- Added a regression test ensuring a null valid_to (open-ended) interval overlaps and rejects any later interval for the same legal/admin pair and version.
+- **PASS — GitHub Actions run #138:** 92 backend tests, 40 frontend tests, JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45067435394
+- **PASS — GitHub Actions run #139:** README verification-note update also passed the full CI workflow. https://github.com/sharehousegirls/childcare-map/actions/runs/45067529233
+- **NOT RUN:** direct local repository checkout tests; manual browser and assistive-technology review remain outstanding.
