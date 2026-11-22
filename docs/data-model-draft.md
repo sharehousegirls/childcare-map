@@ -22,7 +22,9 @@ Status: **partially implemented**. SQLite facility/snapshot/ingestion-run/unreso
 - `backend/app/regions.py` validates normalized region records and builds deterministic trees; test data is synthetic only. It does not import official codes or perform an administrative/legal-dong crosswalk.
 - **PASS:** 11 storage tests and `compileall` in an isolated local copy.
 - **PASS:** GitHub Actions run #48 passed 26 repository tests for commit `396e30762bb3776eadeddd1715b0574bf0049ce4`.
-- **PASS — GitHub Actions run #62:** 41 backend tests passed; frontend syntax and 9 saved-search tests also succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/44967776618
+- **PASS (isolated local harness):** 18 region-validator tests and `py_compile`.
+- **PASS — GitHub Actions run #74:** 44 backend tests passed; frontend syntax and 9 saved-search tests also succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/44968035073
+- **FAIL — Run #73:** a temporary malformed test-file edit caused a syntax error; corrected in commit `eb116b5555b6ef70192302c54b8609eddfa0b658`, verified by run #74.
 - **NOT RUN:** direct local repository checkout test run.
 
 Not implemented: official canonical region hierarchy/code import, administrative/legal-dong crosswalk, internal facility IDs, source dataset registry, versioned region assignment, database migrations, failed-run/retry auditing, retention/backup, integration with provider/API routes, and production concurrency/load review.
