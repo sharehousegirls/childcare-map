@@ -120,27 +120,31 @@ def validate_region_records(records: Any) -> list[dict[str, Any]]:
             if record["is_active"] is True and parent["is_active"] is False:
                 issues.append(_issue("active_child_of_inactive_parent", region_id, "An active region cannot have an inactive parent."))
 
-    # Detect cycles even if other parent-type errors exist.
+    # Detect cycles iteratively so malformed deep input cannot exhaust Python's
+    # recursion limit. Every traversal is finalized before the next one begins.
     state: dict[str, int] = {}  # 0/unseen, 1/visiting, 2/complete
     cycle_ids: set[str] = set()
-    stack: list[str] = []
-    def visit(region_id: str) -> None:
-        current_state = state.get(region_id, 0)
-        if current_state == 2:
-            return
-        if current_state == 1:
-            if region_id in stack:
-                cycle_ids.update(stack[stack.index(region_id):])
-            return
-        state[region_id] = 1
-        stack.append(region_id)
-        parent_id = by_id[region_id].get("parent_region_id")
-        if parent_id in by_id:
-            visit(parent_id)
-        stack.pop()
-        state[region_id] = 2
-    for region_id in by_id:
-        visit(region_id)
+    for start_id in by_id:
+        if state.get(start_id) == 2:
+            continue
+        path: list[str] = []
+        position: dict[str, int] = {}
+        current_id: str | None = start_id
+        while current_id in by_id:
+            current_state = state.get(current_id, 0)
+            if current_state == 2:
+                break
+            if current_state == 1:
+                cycle_start = position.get(current_id)
+                if cycle_start is not None:
+                    cycle_ids.update(path[cycle_start:])
+                break
+            state[current_id] = 1
+            position[current_id] = len(path)
+            path.append(current_id)
+            current_id = by_id[current_id].get("parent_region_id")
+        for region_id in path:
+            state[region_id] = 2
     for region_id in sorted(cycle_ids):
         issues.append(_issue("parent_cycle", region_id, "Region parent links contain a cycle."))
 
@@ -162,9 +166,9 @@ def build_region_tree(records: Any) -> list[dict[str, Any]]:
         else:
             nodes[parent_id]["children"].append(node)
     order = {region_type: index for index, region_type in enumerate(REGION_TYPE_ORDER)}
-    def sort_nodes(items: list[dict[str, Any]]) -> None:
+    pending = list(roots)
+    while pending:
+        items = pending.pop()
         items.sort(key=lambda item: (order[item["region_type"]], item["name"], item["region_id"]))
-        for item in items:
-            sort_nodes(item["children"])
-    sort_nodes(roots)
+        pending.extend(item["children"] for item in items)
     return roots
