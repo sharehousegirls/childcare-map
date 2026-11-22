@@ -31,7 +31,7 @@ These parent rules are intentionally conservative and are **not yet verified aga
 
 `validate_region_records(records)` aggregates structural issues and returns normalized rows only when valid. It checks required strings, type allowlist, ID/code duplicates, parent existence/type, root rules, cycles and active-child/inactive-parent contradictions. Source codes are unique within `source_system`; their format and length are not guessed.
 
-`build_region_tree(records)` returns deterministic nested `children` arrays sorted by region type, name and ID. It does not create legal-dong/admin-dong crosswalks.
+`build_region_tree(records)` returns deterministic nested `children` arrays sorted by region type, name and ID. Cycle detection and tree sorting use iterative traversal to avoid recursion-limit failures from malformed deep inputs. It does not create legal-dong/admin-dong crosswalks.
 
 ## Crosswalk and geometry gate
 
@@ -55,8 +55,8 @@ Before dong-level facility assignment or map aggregation:
 
 ## Test status
 
-- **PASS (isolated local harness):** 18 region-validator tests and `py_compile`.
-- **PASS — GitHub Actions run #74:** 44 backend tests, frontend syntax checks and 9 saved-search tests succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/44968035073
+- **PASS — GitHub Actions run #82:** 19 region-validator tests, including a 1,500-node malformed cycle, plus all 45 backend tests, frontend syntax checks and 9 saved-search tests. https://github.com/sharehousegirls/childcare-map/actions/runs/44976683017
+- **FAIL — Runs #80/#81:** initial iterative tree-sort queue implementation attempted to sort a dictionary and failed two existing tree tests. Fixed by sorting each node's child list while queueing nodes; run #82 verifies the correction.
 - **FAIL — Run #73:** a temporary test-file edit contained literal escaped newlines and caused a Python syntax error; corrected in commit `eb116b5555b6ef70192302c54b8609eddfa0b658`, verified by run #74.
 - No official file parsing, full coverage or dong crosswalk test yet.
 - **NOT RUN:** browser/manual UI validation; validator is not wired to a route or selector.
