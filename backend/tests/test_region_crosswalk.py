@@ -4,7 +4,6 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from app.regions import validate_region_records
 from app.region_crosswalk import RegionCrosswalkValidationError, validate_region_crosswalk
 
 
@@ -121,6 +120,37 @@ class RegionCrosswalkTests(unittest.TestCase):
         rows = [crosswalk_row("L2", "D2"), crosswalk_row("L1", "D1")]
         result = validate_region_crosswalk(rows, fixture_regions())
         self.assertEqual([(row["legal_region_id"], row["admin_region_id"]) for row in result], [("L1", "D1"), ("L2", "D2")])
+
+
+    def test_missing_fields_report_required_codes(self):
+        with self.assertRaises(RegionCrosswalkValidationError) as ctx:
+            validate_region_crosswalk([{}], fixture_regions())
+        codes = {issue["code"] for issue in ctx.exception.issues}
+        self.assertIn("legal_region_id_required", codes)
+        self.assertIn("admin_region_id_required", codes)
+        self.assertIn("crosswalk_version_required", codes)
+        self.assertIn("valid_from_required", codes)
+        self.assertIn("source_system_required", codes)
+        self.assertIn("source_reference_required", codes)
+
+    def test_overlap_issue_uses_original_row_index(self):
+        rows = [
+            {"bad": "record"},
+            crosswalk_row(start="2026-01-01", end="2026-06-30"),
+            crosswalk_row(start="2026-06-30", end="2026-12-31"),
+        ]
+        with self.assertRaises(RegionCrosswalkValidationError) as ctx:
+            validate_region_crosswalk(rows, fixture_regions())
+        overlap = next(issue for issue in ctx.exception.issues if issue["code"] == "crosswalk_period_overlap")
+        self.assertEqual(overlap["row_index"], 2)
+
+    def test_overlapping_periods_in_different_versions_allowed(self):
+        rows = [
+            crosswalk_row(start="2026-01-01", end="2026-12-31", version="v1"),
+            crosswalk_row(start="2026-01-01", end="2026-12-31", version="v2"),
+        ]
+        result = validate_region_crosswalk(rows, fixture_regions())
+        self.assertEqual(len(result), 2)
 
 
 if __name__ == "__main__":

@@ -34,6 +34,9 @@ def _text(
     issues: list[dict[str, Any]],
     max_length: int = 300,
 ) -> str | None:
+    if value is None:
+        issues.append(_issue(f"{field}_required", row_index, f"{field} is required."))
+        return None
     if not isinstance(value, str):
         issues.append(_issue(f"{field}_must_be_string", row_index, f"{field} must be a string."))
         return None
@@ -156,7 +159,7 @@ def validate_region_crosswalk(records: Any, regions: Any) -> list[dict[str, Any]
 
         if len(issues) == row_issue_start and legal_id and admin_id and version and valid_from and source_system and reference:
             normalized.append(
-                {
+                (index, {
                     "legal_region_id": legal_id,
                     "admin_region_id": admin_id,
                     "crosswalk_version": version,
@@ -164,15 +167,15 @@ def validate_region_crosswalk(records: Any, regions: Any) -> list[dict[str, Any]
                     "valid_to": valid_to,
                     "source_system": source_system,
                     "source_reference": reference,
-                }
+                })
             )
 
     # Inclusive date intervals: a link ending on a day overlaps another link
     # starting that day. An open end is treated as date.max.
     grouped: dict[tuple[str, str, str], list[tuple[int, dict[str, Any]]]] = {}
-    for row_index, row in enumerate(normalized):
+    for original_index, row in normalized:
         key = (row["crosswalk_version"], row["legal_region_id"], row["admin_region_id"])
-        grouped.setdefault(key, []).append((row_index, row))
+        grouped.setdefault(key, []).append((original_index, row))
 
     for group in grouped.values():
         group.sort(key=lambda item: item[1]["valid_from"])
@@ -194,8 +197,9 @@ def validate_region_crosswalk(records: Any, regions: Any) -> list[dict[str, Any]
     if issues:
         raise RegionCrosswalkValidationError(issues)
 
+    rows = [row for _, row in normalized]
     return sorted(
-        normalized,
+        rows,
         key=lambda row: (
             row["crosswalk_version"],
             row["legal_region_id"],
