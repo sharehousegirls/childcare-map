@@ -5,7 +5,6 @@ rows into this schema and preserve source codes as strings.
 """
 from __future__ import annotations
 
-
 from typing import Any
 
 REGION_TYPES = frozenset({"sido", "sigungu", "admin_dong", "legal_dong", "eup", "myeon", "ri"})
@@ -20,17 +19,11 @@ PARENT_TYPES = {
     "ri": frozenset({"eup", "myeon"}),
 }
 
-
 class RegionValidationError(ValueError):
     """Raised when normalized region rows violate the initial hierarchy contract."""
 
-
-
-
 def _issue(code: str, region_id: str | None, message: str) -> dict[str, str | None]:
     return {"code": code, "region_id": region_id, "message": message}
-
-
 
 def _optional_text(value: Any, field: str, region_id: str | None, issues: list[dict]) -> str | None:
     if value is None:
@@ -46,11 +39,8 @@ def _optional_text(value: Any, field: str, region_id: str | None, issues: list[d
         return None
     return value
 
-
-
 def validate_region_records(records: Any) -> list[dict[str, Any]]:
     """Return normalized records or raise with aggregated structural issues.
-
 
     Records are not mutated. Official source-code formats/lengths are deliberately
     not assumed; source code strings are retained exactly after trimming.
@@ -59,8 +49,6 @@ def validate_region_records(records: Any) -> list[dict[str, Any]]:
         error = RegionValidationError("regions_not_list")
         error.issues = [_issue("regions_not_list", None, "Expected a list of region records.")]
         raise error
-
-
 
     issues: list[dict[str, str | None]] = []
     normalized: list[dict[str, Any]] = []
@@ -161,8 +149,6 @@ def validate_region_records(records: Any) -> list[dict[str, Any]]:
         error.issues = issues
         raise error
     return normalized
-
-
 
 def build_region_tree(records: Any) -> list[dict[str, Any]]:
     """Build deterministic root/child lists from validated records."""
