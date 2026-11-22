@@ -84,7 +84,8 @@
 
 
 ## Saved facilities — 2026-11-22
-- **PASS — commit `f0a12d30`, GitHub Actions run #114:** 68 backend tests, 40 frontend tests (8 regional summary, 11 saved regions, 9 saved searches, 12 saved facilities), and 5 JavaScript syntax checks succeeded.
+- **PASS — commit `f0a12d30`, GitHub Actions run #114:** 68 backend tests, 40 frontend tests (8 regional summary, 11 saved regions, 9 saved searches, 12 saved facilities), and 5 JavaScript syntax checks succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/45013742067
+- **PASS — documentation commit `8760f731`, run #115:** project README/status/feature documentation changes also passed the same CI workflow. https://github.com/sharehousegirls/childcare-map/actions/runs/45013812845
 - **PASS — isolated Node 22 harness:** 12 saved-facility unit tests also ran independently before commit.
 - **NOT RUN:** manual browser interaction, responsive viewport and screen-reader checks.
 - Facility card buttons save by dataset ID, load by exact ID (no name-only fallback), and delete. Browser-local only, 50-item cap.
