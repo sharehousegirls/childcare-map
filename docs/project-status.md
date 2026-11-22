@@ -95,6 +95,6 @@
 - Added additive `meta` to `GET /api/facilities`: timezone-aware UTC collection time, distinct provider record dates, single-date value only for unambiguous dates, mixed-date flag and dated/undated record counts.
 - Frontend displays source date and browser-local collection time separately; exact UTC collection timestamp is available in the status title. It rejects a mismatched API count and falls back to the labeled demo.
 - **PASS — GitHub Actions run #123:** 73 backend tests (68 existing + 5 freshness-metadata tests), 40 frontend tests, and JavaScript syntax checks passed on the repository checkout. https://github.com/sharehousegirls/childcare-map/actions/runs/45023627178. Runs #121–#123 also passed for the documentation commits.
-- **NOT RUN:** direct local checkout test run, manual browser interaction, mobile viewport, and screen-reader checks. The dynamic data-status element now uses `role=status` and `aria-live=polite; manual assistive-technology verification is still pending.
+- **NOT RUN:** direct local checkout test run, manual browser interaction, mobile viewport, and screen-reader checks. The dynamic data-status element now uses `role=status` and `aria-live=polite`; manual assistive-technology verification is still pending.
 - No provider freshness SLA is inferred from collection time. Source date format and semantics remain pending official API schema/sample.
 - Implementation note: `docs/api-freshness-metadata-2026-11-22.md`.
