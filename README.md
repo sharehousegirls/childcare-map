@@ -29,13 +29,16 @@
 - 저장 조건은 데모/실제 데이터 상태와 무관하게 필터만 기억합니다. 실제 데이터의 정확성이나 가용성을 보장하지 않습니다.
 
 ## Frontend 검증
-저장 검색 모듈 및 앱 스크립트 문법 확인:
+저장 검색/관심 지역 모듈 및 앱 스크립트 문법 확인:
 
     node --check app.js
     node --check saved-searches.mjs
-    node --test tests/saved-searches.test.mjs
+    node --check saved-regions.mjs
+    node --test tests/*.test.mjs
 
-CI 최신 확인: GitHub Actions run #82에서 Backend 45개 테스트, Frontend JavaScript 문법 검사, 저장 검색 테스트 9개가 모두 성공했습니다. 깊은(1,500개 노드) 잘못된 순환 계층 테스트도 통과했습니다. https://github.com/sharehousegirls/childcare-map/actions/runs/44976683017
+CI 기존 확인: GitHub Actions run #82에서 Backend 45개 테스트, Frontend JavaScript 문법 검사, 저장 검색 테스트 9개가 성공했습니다. 깊은(1,500개 노드) 잘못된 순환 계층 테스트도 통과했습니다. https://github.com/sharehousegirls/childcare-map/actions/runs/44976683017
+
+관심 지역 기능 상세: `docs/saved-regions-implementation-2026-11-22.md`
 
 ## Backend 설정
 backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니다.
