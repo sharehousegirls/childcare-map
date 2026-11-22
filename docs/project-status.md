@@ -89,3 +89,11 @@
 - **PASS — isolated Node 22 harness:** 12 saved-facility unit tests also ran independently before commit.
 - **NOT RUN:** manual browser interaction, responsive viewport and screen-reader checks.
 - Facility card buttons save by dataset ID, load by exact ID (no name-only fallback), and delete. Browser-local only, 50-item cap.
+
+
+## API freshness metadata — 2026-11-22
+- Added additive `meta` to `GET /api/facilities`: timezone-aware UTC collection time, distinct provider record dates, single-date value only for unambiguous dates, mixed-date flag and dated/undated record counts.
+- Frontend displays source date and browser-local collection time separately; exact UTC collection timestamp is available in the status title. It rejects a mismatched API count and falls back to the labeled demo.
+- **NOT RUN in this automation run:** direct checkout tests and manual browser/mobile/accessibility checks. New unit tests were committed; GitHub Actions status must be checked after the final commit before reporting pass/fail.
+- No provider freshness SLA is inferred from collection time. Source date format and semantics remain pending official API schema/sample.
+- Implementation note: `docs/api-freshness-metadata-2026-11-22.md`.
