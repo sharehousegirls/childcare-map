@@ -4,6 +4,12 @@
 
 `backend/app/regions.py` is a **normalized-record validator and tree builder**, not an official-code downloader/importer. It deliberately makes no assumption about code length or numeric format. Official code strings (including leading zeroes) must be preserved.
 
+## Source freshness and reuse review — 2026-11-23
+
+- The latest MOIS change notice located in this review was posted **2026-11-18** and states an effective date of **2026-10-23**. It lists `jscode20261111.zip`, the abolished-code version, and the layout file. Treat the `20261111` suffix as the archive/version label, not as the effective date. Official notice: https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000052&nttId=131063
+- The notice page reviewed here does not expose an explicit reuse/license statement for its attached ZIP. This is **not** evidence that reuse is prohibited or allowed; keep redistribution/commercial flags pending until the archive-specific terms or written clarification are confirmed. Do not transfer reuse terms from the separate legal-dong API catalog (15077871) to the attached ZIP by assumption.
+- Catalog/source review date is 2026-11-23. No archive was downloaded or imported in this run.
+
 ## Official sources checked
 
 - **Ministry of the Interior and Safety (MOIS), 2026-10-23 effective administrative/legal-dong change notice**, posted 2026-11-18: the notice identifies a new Jinwon-myeon branch office in Jangseong County and says the legal-dong codes are unchanged for that change. It lists `jscode20261111.zip`, the version with abolished codes, and a layout file. Use the notice and its official files as the starting point for the next code-data review; do not assume they remain the latest without checking the MOIS/code-change board first. https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000052&nttId=131063

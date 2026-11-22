@@ -39,7 +39,7 @@
     node --check saved-facilities.mjs
     node --test tests/*.test.mjs
 
-**PASS — GitHub Actions run #130 (latest):** 73 backend tests, 40 frontend tests (8 regional summary, 11 saved-region, 9 saved-search, 12 saved-facility), and all JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45033836799
+**PASS — GitHub Actions run #136 (latest code verification):** 91 backend tests, 40 frontend tests (8 regional summary, 11 saved-region, 9 saved-search, 12 saved-facility), and all JavaScript syntax checks passed after upgrading `actions/checkout`, `actions/setup-python`, and `actions/setup-node` to v7. https://github.com/sharehousegirls/childcare-map/actions/runs/45056638594
 
 관심 지역 기능 상세: `docs/saved-regions-implementation-2026-11-22.md`
 
@@ -71,7 +71,7 @@ Review note and acceptance criteria: `docs/region-granularity-coordinate-review-
 ## Data sources and status
 - **Nationwide waitlist candidate:** SSIS 한국사회보장정보원_어린이집별 기본정보 조회 (15101154). Official catalog lists age waitlist buckets 0–5, 6+ and total: https://www.data.go.kr/data/15101154/openapi.do. XML, real-time metadata, and unrestricted reuse are listed; request schema/sample and service-specific terms remain unverified.
 - **Existing Daegu application:** 한국사회보장정보원_대구광역시 어린이집 정보조회 (15101186), submitted for development account on 2026-11-21. Catalog lists facility metadata (name/code/address/contact/homepage/capacity), not waitlist counts: https://www.data.go.kr/data/15101186/openapi.do. Review/credentials pending.
-- **Administrative region codes:** MOIS provides current administrative/legal-dong code archives and change notices; the code validator is only a scaffold. See `docs/region-code-validation-2026-11-22.md`.
+- **Administrative region codes:** As checked 2026-11-23, the MOIS notice posted 2026-11-18 lists `jscode20261111.zip` and its layout for the 2026-10-23 effective changes. The archive's filename suffix is not the effective date. The attachment notice does not show a reuse license; do not assume terms from the separate legal-dong API catalog apply to this ZIP. Reuse review remains pending. See `docs/region-code-validation-2026-11-22.md`.
 - **MOIS legal-dong code API:** dataset 15077871 is legal-dong data, not administrative-dong: https://www.data.go.kr/data/15077871/openapi.do.
 - **Regional aggregate comparator:** Incheon Namdong waitlist dataset 15119081 is annual district-level aggregate, not facility-level/nationwide: https://www.data.go.kr/data/15119081/fileData.do.
 - Catalog-level unrestricted reuse is not blanket commercial clearance. Verify service-specific API terms, attribution, caching, redistribution, and commercial/advertising conditions before launch or monetization. Portal API policy limits development account to 50 rows and separately reviews operation access.

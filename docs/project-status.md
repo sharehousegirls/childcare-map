@@ -30,7 +30,7 @@
 - Current official administrative/legal-region code files have not been imported or validated.
 - The Childcare Portal FAQ (Q12) confirms its regional facility-type/count query is limited to 시·군·구, not dong. This does not conclusively rule out a derived dong aggregation from facility-level rows; validated coordinates, boundaries, deduplication, and coverage are required.
 - The Portal FAQ (Q13) reports EPSG:5181 TM coordinates for the childcare map data it describes; exact feed CRS and axis order still require confirmation. FAQ Q10 notes legal-dong/administrative-dong lookup mismatches.
-- Reviewed geography constraints and derived-dong acceptance criteria in `docs/region-granularity-coordinate-review-2026-11-22.md`. The normalized validator uses a deliberately simplified parent contract; administrative-dong/legal-dong crosswalk is M:N and not implemented. Coordinate CRS and axis order require source validation.
+- Reviewed geography constraints and derived-dong acceptance criteria in `docs/region-granularity-coordinate-review-2026-11-22.md`. The normalized parent contract remains simplified and unverified against full official files. The M:N legal-dong/admin-dong crosswalk validator exists as a scaffold using synthetic rows only; no official crosswalk or spatial mapping is imported. Coordinate CRS and axis order still require source validation.
 
 ## Known limitations
 - Demo values are fictional and must not be interpreted as current real waitlist data.
@@ -45,13 +45,12 @@
 - Complaint/violation/administrative-history feature remains deferred until all other scope is complete and owner review is requested.
 
 ## Next priorities
-- Import current official region-code files only after source/reuse review; preserve stable codes and keep administrative/legal-dong records separate.
-- Import the current official region codes and crosswalk only after source layout and reuse review; map them to the new M:N crosswalk validator and retain unresolved cases for manual review.
+- Import the current official region-code archives only after source/layout and reuse review; preserve codes, keep administrative/legal-dong records separate, map crosswalk rows through the validator, and retain unresolved cases for manual review.
 - Validate facility coordinates and EPSG:5181 transformation using a redacted official sample before map rendering.
 - Prototype derived dong aggregation with deduplication, mapping coverage, null handling, and explicit UI labeling; do not claim a direct official dong query.
 
 ## Verification
-- **PASS — GitHub Actions run #130 (latest verified):** 73 backend tests and 40 frontend tests passed; JavaScript syntax checks passed. Documentation-only geography review changes are on the same repository workflow. https://github.com/sharehousegirls/childcare-map/actions/runs/45033836799
+- **PASS — GitHub Actions run #136 (CI action runtime update):** 91 backend tests, 40 frontend tests, and JavaScript syntax checks passed on commit `a2b04f88a10a93ddc7ae79886282d449c97af72a`; all three action majors were upgraded to v7. No Node 20 deprecation warning appeared in this run. https://github.com/sharehousegirls/childcare-map/actions/runs/45056638594
 
 - **PASS — GitHub Actions run #109:** 68 backend tests (including 23 region-source-manifest tests), 28 frontend tests (8 regional summary, 11 saved-region, 9 saved-search), and all JavaScript syntax checks succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/45004001134
 - **PASS (isolated harness):** 23 region-source-manifest tests and `py_compile` passed. Exact GitHub checkout was not available locally; repository CI run #109 is the source-checkout evidence.
@@ -111,6 +110,10 @@
 - No provider freshness SLA is inferred from collection time. Source date format and semantics remain pending official API schema/sample.
 - Implementation note: `docs/api-freshness-metadata-2026-11-22.md`.
 
+
+## 2026-11-23 incremental milestone — CI action runtime modernization
+- Updated `actions/checkout`, `actions/setup-python`, and `actions/setup-node` from v4/v5 to v7; the run completed without the previous Node 20 runtime deprecation warning.
+- **PASS — GitHub Actions run #136:** 91 backend tests, 40 frontend tests, and JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45056638594
 
 ## 2026-11-23 incremental milestone — crosswalk validation scaffold
 
