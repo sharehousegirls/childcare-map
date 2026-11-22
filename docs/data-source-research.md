@@ -1,6 +1,6 @@
 # Data Source Research — Verified Catalog Findings
 
-**Research date:** 2026-11-21  
+**Research date:** 2026-11-22  
 **Status:** Facility-level waitlist data is documented in an official catalog candidate; schema/sample and service-specific terms remain unverified. No live API request has been made.
 
 ## 1. Primary waitlist candidate: nationwide facility-level data
@@ -51,7 +51,16 @@ Catalog pages for 15101154 and 15101186 list **이용허락범위 제한 없음*
 
 A catalog real-time update designation is not a row-level freshness guarantee. Preserve the source data-date when present and record collection time separately; never fabricate dates.
 
-## 6. Geographic and coordinate validation
+## 6. Administrative-region code sources (reviewed 2026-11-22)
+
+- **MOIS change notice:** the 2026-10-23 effective notice posted 2026-11-18 documents a new Jinwon-myeon branch office in Jangseong County; legal-dong codes are unchanged for that change. It lists the code archive `jscode20261111.zip`, the archive including abolished codes, and a layout file. This is a versioned starting point, not a guarantee that no newer code release exists. Check the official change board before import. https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000052&nttId=131063
+- **MOIS legal-dong code API (dataset 15077871):** documents `region_cd`, `sido_cd`, `sgg_cd`, `umd_cd`, `ri_cd`, `locatadd_nm`, `locathigh_cd` and related fields. This is legal-dong code data, not a substitute for administrative-dong codes. https://www.data.go.kr/data/15077871/openapi.do
+- **Statistics Korea/SIGIS classification guide:** administrative-dong and legal-dong relationships are commonly M:N and identical names do not prove identical boundaries. A separate versioned crosswalk is required; name-only joins are prohibited. https://sgis.mods.go.kr/html/attachFiles/%ED%95%9C%EA%B5%AD%ED%96%89%EC%A0%95%EA%B5%AC%EC%97%AD%EB%B6%84%EB%A5%98%20%ED%95%B4%EC%84%A4%EC%84%9C%282021.12.28.%29.pdf
+- **Code-change board:** https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardList.do?bbsId=BBSMSTR_000000000052. Code/name changes are frequent; verify effective dates and abolished records before loading a current selector.
+- A normalized region validator/tree scaffold now exists in `backend/app/regions.py`; it uses synthetic test rows only and does not import official codes or validate the full official hierarchy.
+
+
+## 7. Geographic and coordinate validation
 
 Official FAQ: https://info.childcare.go.kr/info_html5/cera/community/faqboard/FaqBoardSlPL.jsp
 - Portal regional type/count lookup supports city/county/district, not administrative-dong.
@@ -59,7 +68,7 @@ Official FAQ: https://info.childcare.go.kr/info_html5/cera/community/faqboard/Fa
 - FAQ identifies facility coordinates as EPSG:5181/TM. Verify exact returned fields, units and system in the sample. Convert projected coordinates to WGS84 before using a map that expects latitude/longitude.
 - Dong-level summaries need validated address/coordinate-to-administrative-boundary mapping and a documented boundary source.
 
-## 7. Data interpretation and quality rules
+## 8. Data interpretation and quality rules
 
 - Waitlist child counts and application counts are distinct; retain separately when available.
 - Do not assume a child is unique across multiple facility waitlists.
