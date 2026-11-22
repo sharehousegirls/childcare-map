@@ -35,8 +35,8 @@ The “all regions” selector value is not saveable. Duplicate region labels ar
 ## Verification
 
 - **PASS (isolated local Node harness):** 11/11 tests; module syntax check. Duplicate region IDs are rejected and malformed stored entries with duplicate IDs are skipped.
+- **PASS — GitHub Actions run #98:** all 45 backend tests, JavaScript syntax checks, 9 saved-search tests and 11 saved-region tests passed for code commit `1d8825a5560e9100774494d0234bf53bbacd6657. https://github.com/sharehousegirls/childcare-map/actions/runs/44985738434
 - **NOT RUN:** browser manual interaction, mobile viewport, screen-reader check.
-- **CI:** GitHub Actions validation for the initial integrated UI commits passed; the later duplicate-ID hardening commits are pending at time of writing.
 
 ## Limitations and migration
 
