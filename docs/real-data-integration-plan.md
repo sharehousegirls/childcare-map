@@ -30,6 +30,17 @@ Annual CSV with regional facility/capacity/enrollment and waitlist child/applica
 - Existing source FAQ notes regional lookup granularity may be city/county/district and legal-dong/admin-dong can differ; facility coordinates may use EPSG:5181/TM. Confirm exact fields, coordinate system and axis order before mapping or conversion.
 - Dong-level summaries require validated address/coordinate-to-boundary mapping with a documented boundary source, version and reuse terms.
 
+## Verified portal geography constraints (reviewed 2026-11-22)
+
+Official Childcare Information Disclosure Portal FAQ:
+- FAQ 12 says regional facility-type/count query is available at 시·군·구, not dong. This is not proof that dong aggregates are impossible: facility-level rows may support a derived aggregate if address/coordinate mapping, boundary terms, deduplication and coverage are validated.
+- FAQ 13 reports EPSG:5181 (TM) for the childcare-map coordinates it describes. Confirm the exact response's CRS and axis order; transform to the map CRS before rendering.
+- FAQ 10 notes that legal-dong and administrative-dong can differ and advises using the administrative dong for facility lookup.
+
+Source: https://info.childcare.go.kr/info_html5/cera/community/faqboard/FaqBoardSlPL.jsp
+
+Implementation rule: build canonical region navigation with official stable codes, keep legal and administrative dong separate, version any M:N crosswalk, and retain ambiguous/unmapped facility rows for review. Derived dong waitlist metrics must report coverage and must not turn unknown waits into zero. See `docs/region-granularity-coordinate-review-2026-11-22.md` for acceptance criteria.
+
 ## Integration blockers
 
 - Nationwide waitlist API (15101154) development application has not been confirmed as submitted/approved.
