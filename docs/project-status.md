@@ -50,6 +50,8 @@
 - Prototype derived dong aggregation with deduplication, mapping coverage, null handling, and explicit UI labeling; do not claim a direct official dong query.
 
 ## Verification
+- **PASS — GitHub Actions run #130 (latest verified):** 73 backend tests and 40 frontend tests passed; JavaScript syntax checks passed. Documentation-only geography review changes are on the same repository workflow. https://github.com/sharehousegirls/childcare-map/actions/runs/45033836799
+
 - **PASS — GitHub Actions run #109:** 68 backend tests (including 23 region-source-manifest tests), 28 frontend tests (8 regional summary, 11 saved-region, 9 saved-search), and all JavaScript syntax checks succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/45004001134
 - **PASS (isolated harness):** 23 region-source-manifest tests and `py_compile` passed. Exact GitHub checkout was not available locally; repository CI run #109 is the source-checkout evidence.
 - **PASS — GitHub Actions run #105:** 45 backend tests, 28 frontend tests (8 regional summary, 11 saved-region, 9 saved-search), and all four JavaScript syntax checks passed for commit `437384c3f430a7498f7ba7f091a993dd52a0d8bc`. https://github.com/sharehousegirls/childcare-map/actions/runs/44995019954
