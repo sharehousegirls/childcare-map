@@ -1,6 +1,6 @@
 # Data model draft — 2026-11-22
 
-Status: **partially implemented**. The SQLite facility/snapshot/ingestion-run/unresolved-record subset exists in `backend/app/storage.py`. Canonical region codes, region mapping, user features, migrations and API integration remain design-only. The official API response, stable identifiers, region codes and service-specific reuse terms remain unverified.
+Status: **partially implemented**. SQLite facility/snapshot/ingestion-run/unresolved-record storage exists in `backend/app/storage.py`; a normalized region validator/tree builder exists in `backend/app/regions.py`. Official region-code rows, canonical region hierarchy, M:N dong crosswalk, user features, migrations and API integration remain unimplemented. The waitlist API response, stable identifiers and service-specific reuse terms remain unverified.
 
 ## Design goals
 - Preserve provider values and provenance; keep derived calculations separate.
@@ -19,11 +19,12 @@ Status: **partially implemented**. The SQLite facility/snapshot/ingestion-run/un
 - `unresolved_record`: keeps normalized rows with missing IDs or later duplicate IDs for review; raw provider payload is not saved.
 - Same run ID + same fingerprint is idempotent; same run ID + different content is rejected.
 - Snapshot updates are blocked by an append-only trigger. Deletes remain possible for a future verified retention policy.
+- `backend/app/regions.py` validates normalized region records and builds deterministic trees; test data is synthetic only. It does not import official codes or perform an administrative/legal-dong crosswalk.
 - **PASS:** 11 storage tests and `compileall` in an isolated local copy.
 - **PASS:** GitHub Actions run #48 passed 26 repository tests for commit `396e30762bb3776eadeddd1715b0574bf0049ce4`.
 - **NOT RUN:** direct local repository checkout test run.
 
-Not implemented: canonical region hierarchy, internal facility IDs, source dataset registry, versioned region assignment, database migrations, failed-run/retry auditing, retention/backup, integration with provider/API routes, and production concurrency/load review.
+Not implemented: official canonical region hierarchy/code import, administrative/legal-dong crosswalk, internal facility IDs, source dataset registry, versioned region assignment, database migrations, failed-run/retry auditing, retention/backup, integration with provider/API routes, and production concurrency/load review.
 
 ## Proposed entities
 
@@ -33,12 +34,16 @@ Not implemented: canonical region hierarchy, internal facility IDs, source datas
 | region_id | Internal stable ID |
 | source_region_code | Official code only after source verification; nullable |
 | region_name | Official sourced name |
-| region_type | sido, sigungu, admin_dong, or legal_dong |
+| region_type | sido, sigungu, admin_dong, legal_dong, eup, myeon, or ri |
 | parent_region_id | Parent link; null for top-level |
 | boundary_source / boundary_version | Boundary provenance, if available |
 | valid_from / valid_to | Effective dates, when known |
 
-Acceptance: no guessed region codes; hierarchy and legal/admin dong distinction validated; names alone are not unique IDs.
+Acceptance: no guessed region codes; hierarchy validated against current official files; legal/admin dong distinction preserved; names alone are not unique IDs. The validator currently applies a conservative parent-type contract that has not been checked against the full official dataset.
+
+### Administrative-dong/legal-dong crosswalk (separate from the region tree)
+
+Administrative-dong and legal-dong names/codes are not a reliable 1:1 relationship. Maintain a separate versioned crosswalk with explicit source/boundary provenance, mapping method, confidence/review status and valid dates. Do not join facilities or aggregate dong data by matching names alone. See `docs/region-code-validation-2026-11-22.md`.
 
 ### 2. facility — identity and attributes
 | Field | Purpose |
@@ -111,4 +116,4 @@ Acceptance: save/unsave, reload persistence, stale-ID handling, version migratio
 6. Release gate: accessibility, responsive layout, security, tests and deploy-readiness review completed; deployment requires owner approval.
 
 ## Next bounded work
-Implement the region hierarchy/selector from verified official administrative codes and provider fields; do not hardcode an unverified code list. In parallel, obtain and validate the official API spec/sample and terms. Add schema migrations and ingestion failure/retry audit, then connect the snapshot-storage scaffold only after all API gates pass.
+Validate the initial region model against the current official MOIS code archives, then implement the canonical region loader/selector and separate versioned M:N dong crosswalk; do not hardcode an unverified code list. In parallel, obtain and validate the official API spec/sample and terms. Add schema migrations and ingestion failure/retry audit, then connect the snapshot-storage scaffold only after all API gates pass.
