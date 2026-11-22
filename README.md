@@ -118,3 +118,7 @@ Implementation and manifest example: `docs/region-source-manifest-2026-11-22.md`
 - 구현: `saved-facilities.mjs`; 테스트: `tests/saved-facilities.test.mjs`
 
 관심 시설 기능 상세: `docs/saved-facilities-implementation-2026-11-22.md`
+
+## API source-date and collection-time metadata
+
+The backend `GET /api/facilities` response includes additive `meta` fields for the UTC collection timestamp, provider source-date coverage, distinct source dates, and whether records have mixed dates. The UI displays source-date status and collection time separately. This timestamp is not a freshness guarantee; the official API's update frequency and date semantics still require verification. See `docs/api-freshness-metadata-2026-11-22.md`.
