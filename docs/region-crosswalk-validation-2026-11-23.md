@@ -64,4 +64,5 @@ Code review found and corrected an issue where overlap diagnostics could report 
 
 - The HTTPS provenance validator now rejects hostnames containing whitespace or backslashes and rejects malformed/out-of-range ports. It still blocks credentials and non-HTTPS URLs.
 - Added tests for a hostname containing whitespace and port 99999.
-- **CI status at documentation edit:** runs #141 (validator code) and #142 (new tests) were in progress; no PASS claim is made until their conclusions are confirmed.
+- **PASS — GitHub Actions run #142:** 94 backend tests, 40 frontend tests, and JavaScript syntax checks passed with the URL-hardening regression tests included. https://github.com/sharehousegirls/childcare-map/actions/runs/45079217801
+- Run #141 also passed the validator code change before the new tests were added. https://github.com/sharehousegirls/childcare-map/actions/runs/45079211694
