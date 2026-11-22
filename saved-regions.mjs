@@ -33,11 +33,13 @@ function readStoredItems(target) {
     }
     if (!Array.isArray(parsed)) return { ok: true, items: [] };
     const seenRegions = new Set();
+    const seenIds = new Set();
     const items = [];
     for (const entry of parsed) {
       const item = normalizeSavedRegion(entry);
-      if (!item || seenRegions.has(item.region)) continue;
+      if (!item || seenRegions.has(item.region) || seenIds.has(item.id)) continue;
       seenRegions.add(item.region);
+      seenIds.add(item.id);
       items.push(item);
       if (items.length >= MAX_SAVED_REGIONS) break;
     }
@@ -62,6 +64,9 @@ export function saveSavedRegion(value, storage) {
   const current = stored.items;
   if (current.some(existing => existing.region === item.region)) {
     return { ok: false, reason: "duplicate", items: current };
+  }
+  if (current.some(existing => existing.id === item.id)) {
+    return { ok: false, reason: "duplicate-id", items: current };
   }
   if (current.length >= MAX_SAVED_REGIONS) return { ok: false, reason: "limit", items: current };
   const items = [item, ...current];
