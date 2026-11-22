@@ -77,7 +77,7 @@ Run from the backend directory:
 python -m unittest discover -s tests -v
 ```
 
-The tests cover XML/JSON record flattening, alias mapping, numeric/null handling, age-bucket sums, total consistency diagnostics, field-map validation, credential-safe HTTP error messages, SQLite schema initialization, snapshot persistence, idempotency, unresolved-record handling, append-only snapshot behavior, and normalized region validation. GitHub Actions run #48 passed all 26 repository tests: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967.
+The tests cover XML/JSON record flattening, alias mapping, numeric/null handling, age-bucket sums, total consistency diagnostics, field-map validation, credential-safe HTTP error messages, SQLite schema initialization, snapshot persistence, idempotency, unresolved-record handling, append-only snapshot behavior, and normalized region validation. GitHub Actions run #62 passed 41 backend tests, plus frontend syntax checks and 9 saved-search tests: https://github.com/sharehousegirls/childcare-map/actions/runs/44967776618.
 
 ## Important
 
