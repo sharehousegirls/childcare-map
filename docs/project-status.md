@@ -118,4 +118,4 @@
 - Enforces source/target region types and IDs, provenance URL, version label, strict inclusive dates, and non-overlapping intervals for each pair/version.
 - Added synthetic unit tests covering M:N, missing/invalid references, dates, overlaps, URL credentials, immutability, and deterministic sorting.
 - No official region-code data was downloaded or imported. No live API, map, spatial crosswalk, or deployment was connected.
-- **Repository CI status at preparation: NOT RUN.** Record the exact run and test count after the commit-triggered workflow completes.
+- **PASS — GitHub Actions run #134:** 91 backend tests, 40 frontend tests, and JavaScript syntax checks passed. A code-review correction made overlap issues retain original input row indexes and missing fields use explicit required-field errors; the fix was verified in the same run.

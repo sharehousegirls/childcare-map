@@ -35,13 +35,15 @@ Source region records are passed through the existing region validator. Codes an
 - [x] Date periods are strict, inclusive, and non-overlapping per pair/version.
 - [x] Source provenance is required.
 - [x] Output ordering is deterministic.
-- [ ] Tests run in the repository CI after commit.
+- [x] Tests run in repository CI after commit (#134).
 - [ ] Official current code archives and crosswalk rows imported only after source-layout and reuse review.
 - [ ] Spatial/area mapping and unresolved-case review remain separate future work.
 
-## Test status at commit preparation
+## Test status
 
-NOT RUN against a repository checkout in this environment. GitHub Actions will run the repository suite after the commit; record the run and counts in project status after it completes.
+**PASS — GitHub Actions run #134:** 91 backend tests, 40 frontend tests, and JavaScript syntax checks passed for commit 2ee71fb4772b1082ecc38258ac5de156d123eac8. Direct local repository checkout tests were not run in this environment. https://github.com/sharehousegirls/childcare-map/actions/runs/45045057756
+
+Code review found and corrected an issue where overlap diagnostics could report a normalized row index rather than the original input row index. Missing fields now emit explicit required-field issue codes; both fixes are covered by the CI run.
 
 ## Next steps
 
