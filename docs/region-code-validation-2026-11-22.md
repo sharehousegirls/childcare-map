@@ -55,6 +55,8 @@ Before dong-level facility assignment or map aggregation:
 
 ## Test status
 
-- **PASS (isolated local harness):** 15 region-validator tests.
-- **BLOCKED/PENDING:** GitHub Actions run for this commit; no official file parsing, full coverage or dong crosswalk test yet.
+- **PASS (isolated local harness):** 18 region-validator tests and `py_compile`.
+- **PASS — GitHub Actions run #74:** 44 backend tests, frontend syntax checks and 9 saved-search tests succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/44968035073
+- **FAIL — Run #73:** a temporary test-file edit contained literal escaped newlines and caused a Python syntax error; corrected in commit `eb116b5555b6ef70192302c54b8609eddfa0b658`, verified by run #74.
+- No official file parsing, full coverage or dong crosswalk test yet.
 - **NOT RUN:** browser/manual UI validation; validator is not wired to a route or selector.
