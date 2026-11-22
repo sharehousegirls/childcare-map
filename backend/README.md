@@ -59,6 +59,16 @@ Use a file-backed SQLite path; `:memory:` is rejected because the functions open
 
 Storage tests are in `tests/test_storage.py`; run the same test command below.
 
+## Region validation scaffold
+
+`app/regions.py` accepts normalized region records and checks required fields, allowed region types, source-code identity pairs, duplicate IDs/codes, parent existence/type, root rules, cycles, and active/inactive contradictions. It can build a deterministic `children` tree. It deliberately assumes no official code length or numeric format and preserves source codes as strings.
+
+
+Initial parent rules are conservative (`sido` root; `sigungu` under `sido`; `admin_dong`, `legal_dong`, `eup`, `myeon` under `sigungu`; `ri` under `eup`/`myeon`). These rules are not yet verified against the complete official code files. The module is not connected to API routes or the frontend, and its tests use synthetic fixtures only. Administrative-dong/legal-dong mapping must be a separate versioned M:N crosswalk; do not join by names.
+
+See `docs/region-code-validation-2026-11-22.md` for official sources and import acceptance criteria.
+
+
 ## Tests
 
 Run from the backend directory:
@@ -67,7 +77,7 @@ Run from the backend directory:
 python -m unittest discover -s tests -v
 ```
 
-The tests cover XML/JSON record flattening, alias mapping, numeric/null handling, age-bucket sums, total consistency diagnostics, field-map validation, credential-safe HTTP error messages, SQLite schema initialization, snapshot persistence, idempotency, unresolved-record handling, and append-only snapshot behavior. GitHub Actions run #48 passed all 26 repository tests: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967.
+The tests cover XML/JSON record flattening, alias mapping, numeric/null handling, age-bucket sums, total consistency diagnostics, field-map validation, credential-safe HTTP error messages, SQLite schema initialization, snapshot persistence, idempotency, unresolved-record handling, append-only snapshot behavior, and normalized region validation. GitHub Actions run #48 passed all 26 repository tests: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967.
 
 ## Important
 
