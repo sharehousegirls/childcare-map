@@ -16,6 +16,8 @@
 - File-backed SQLite snapshot-storage scaffold: facility metadata, append-only snapshots, ingestion-run summaries, and unresolved-record review table; idempotent batch handling and quality flags. Not yet wired to the API route.
 - Initial normalized region validator/tree builder in `backend/app/regions.py`; supports separate administrative/legal dong types and checks duplicates, parent links, cycles and active-status contradictions. Cycle detection and deterministic tree sorting are iterative to avoid recursion-depth failures on malformed input. Synthetic fixtures only; no official code data imported.
 
+- Regional aggregation is extracted into `regional-summary.mjs`: missing wait counts stay null, partial totals/coverage are explicit, zero-wait counts only explicit zero, and live region labels are province-first.
+
 ## Blockers / not yet verified
 - Daegu facility-metadata development API application is pending; it does not itself provide the waitlist fields.
 - Nationwide waitlist dataset 15101154 application/approval is not confirmed.
@@ -53,6 +55,8 @@
 - **BLOCKED:** live API validation, nationwide data completeness, real map/geospatial validation, end-to-end integration.
 - **WARN:** GitHub Actions reports Node 20 deprecation notices for checkout/setup-python actions; run is successful, but workflow action maintenance should be scheduled.
 - **NOT RUN:** deployment; requires owner approval.
+
+- Regional aggregation has a new Node test suite; CI evidence for this change is pending.
 
 ## Next priorities
 1. Obtain nationwide waitlist API access, official specification, redacted response, and complete reuse/attribution review.
