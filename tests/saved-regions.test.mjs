@@ -27,6 +27,14 @@ test("same region cannot be saved twice", () => {
   assert.equal(duplicate.reason, "duplicate");
   assert.equal(readSavedRegions(storage).length, 1);
 });
+test("duplicate IDs cannot be reused for different regions", () => {
+  const storage = createStorage();
+  saveSavedRegion(sample(), storage);
+  const duplicateId = saveSavedRegion(sample({ region: "대구 동구" }), storage);
+  assert.equal(duplicateId.ok, false);
+  assert.equal(duplicateId.reason, "duplicate-id");
+  assert.equal(readSavedRegions(storage).length, 1);
+});
 test("saved regions are capped at twenty", () => {
   const storage = createStorage();
   for (let index = 0; index < MAX_SAVED_REGIONS; index++) {
@@ -51,7 +59,7 @@ test("malformed JSON and invalid entries are safely ignored", () => {
 });
 test("duplicate stored regions are normalized and deduplicated", () => {
   const storage = createStorage();
-  storage.setItem(SAVED_REGIONS_KEY, JSON.stringify([sample(), sample({ id: "region-2" }), sample({ id: "region-3", region: "대구 동구" })]));
+  storage.setItem(SAVED_REGIONS_KEY, JSON.stringify([sample(), sample({ id: "region-2" }), sample({ id: "region-1", region: "대구 중구" }), sample({ id: "region-3", region: "대구 동구" })]));
   const items = readSavedRegions(storage);
   assert.equal(items.length, 2);
   assert.equal(items[0].region, "대구 수성구");
