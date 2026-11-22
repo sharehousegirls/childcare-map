@@ -36,7 +36,7 @@
     node --check saved-regions.mjs
     node --test tests/*.test.mjs
 
-CI 기존 확인: GitHub Actions run #82에서 Backend 45개 테스트, Frontend JavaScript 문법 검사, 저장 검색 테스트 9개가 성공했습니다. 깊은(1,500개 노드) 잘못된 순환 계층 테스트도 통과했습니다. https://github.com/sharehousegirls/childcare-map/actions/runs/44976683017
+CI 확인: GitHub Actions run #98에서 Backend 45개 테스트, JavaScript 문법 검사, 저장 검색 9개, 관심 지역 11개 테스트가 모두 성공했습니다. https://github.com/sharehousegirls/childcare-map/actions/runs/44985738434
 
 관심 지역 기능 상세: `docs/saved-regions-implementation-2026-11-22.md`
 
