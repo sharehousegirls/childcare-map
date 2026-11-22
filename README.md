@@ -39,7 +39,7 @@
     node --check saved-facilities.mjs
     node --test tests/*.test.mjs
 
-**PASS — GitHub Actions run #138 (latest code verification):** 92 backend tests, 40 frontend tests (8 regional summary, 11 saved-region, 9 saved-search, 12 saved-facility), and all JavaScript syntax checks passed. This run adds an open-ended crosswalk interval overlap regression test. https://github.com/sharehousegirls/childcare-map/actions/runs/45067435394
+**PASS — GitHub Actions run #142 (latest code verification):** 94 backend tests, 40 frontend tests (8 regional summary, 11 saved-region, 9 saved-search, 12 saved-facility), and all JavaScript syntax checks passed. Crosswalk provenance validation now rejects malformed hostnames and invalid/out-of-range ports; regression tests cover these cases. https://github.com/sharehousegirls/childcare-map/actions/runs/45079217801
 
 관심 지역 기능 상세: `docs/saved-regions-implementation-2026-11-22.md`
 
