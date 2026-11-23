@@ -117,6 +117,9 @@ def _number(value, floating=False):
     except (TypeError, ValueError):
         return None
 
+def _missing_numeric(value):
+    return value in (None, "", "-", "--")
+
 def _sum_age_waits(age_values):
     return sum(age_values) if all(value is not None for value in age_values) else None
 
@@ -125,6 +128,43 @@ def _wait_total_consistent(provided_total, age_sum):
     if provided_total is None or age_sum is None:
         return None
     return provided_total == age_sum
+
+def _normalize_provider_record(record: dict, field_map: dict) -> dict:
+    """Normalize one provider row and retain diagnostics for invalid values."""
+    row = {field: _get_value(record, field, field_map) for field in FIELD_ALIASES}
+    raw_numeric = {field: row[field] for field in NUMERIC_FIELDS}
+    quality_flags = []
+    for field in NUMERIC_FIELDS:
+        row[field] = _number(row[field], floating=field in {"latitude", "longitude"})
+        if not _missing_numeric(raw_numeric[field]) and row[field] is None:
+            quality_flags.append(f"invalid_numeric:{field}")
+
+    # These are normalized geographic coordinates, not projected x/y values.
+    # The source CRS must be verified before configuring the field mapping.
+    if row["latitude"] is not None and not -90 <= row["latitude"] <= 90:
+        row["latitude"] = None
+        quality_flags.append("coordinate_out_of_range:latitude")
+    if row["longitude"] is not None and not -180 <= row["longitude"] <= 180:
+        row["longitude"] = None
+        quality_flags.append("coordinate_out_of_range:longitude")
+
+    age_values = [row[f"wait_{age}"] for age in range(6)] + [row["wait_6_plus"]]
+    age_sum = _sum_age_waits(age_values)
+    provided_total = row["wait_total"]
+    row["wait_total_reported"] = provided_total
+    row["wait_total_derived"] = age_sum
+    row["wait_age_sum"] = age_sum  # Backward-compatible alias.
+    row["wait_total_consistent"] = _wait_total_consistent(provided_total, age_sum)
+    if age_sum is None:
+        quality_flags.append("wait_age_buckets_incomplete")
+    if row["wait_total_consistent"] is False:
+        quality_flags.append("wait_total_mismatch")
+    # Preserve the existing effective-total behavior for display/aggregation, but
+    # distinguish provider-reported and age-derived values for storage and auditing.
+    if provided_total is None and age_sum is not None:
+        row["wait_total"] = age_sum
+    row["quality_flags"] = sorted(set(quality_flags))
+    return row
 
 def _mark_facility_id_quality(rows: list[dict]) -> list[dict]:
     """Normalize IDs and flag missing/duplicate IDs within this response batch."""
@@ -137,6 +177,15 @@ def _mark_facility_id_quality(rows: list[dict]) -> list[dict]:
         facility_id = row["facility_id"]
         row["facility_id_missing"] = not bool(facility_id)
         row["facility_id_duplicate"] = bool(facility_id and counts[facility_id] > 1)
+        flags = row.setdefault("quality_flags", [])
+        if not isinstance(flags, list):
+            flags = []
+            row["quality_flags"] = flags
+        if row["facility_id_missing"]:
+            flags.append("facility_id_missing")
+        if row["facility_id_duplicate"]:
+            flags.append("facility_id_duplicate")
+        row["quality_flags"] = sorted(set(flags))
     return rows
 
 async def get_facilities() -> list[dict]:
@@ -176,16 +225,7 @@ async def get_facilities() -> list[dict]:
         raise ProviderError("No facility records found. Inspect a sample official response and configure field mapping.")
     normalized = []
     for record in records:
-        row = {field: _get_value(record, field, field_map) for field in FIELD_ALIASES}
-        for field in NUMERIC_FIELDS:
-            row[field] = _number(row[field], floating=field in {"latitude", "longitude"})
-        age_values = [row[f"wait_{age}"] for age in range(6)] + [row["wait_6_plus"]]
-        age_sum = _sum_age_waits(age_values)
-        provided_total = row["wait_total"]
-        if row["wait_total"] is None and age_sum is not None:
-            row["wait_total"] = age_sum
-        row["wait_age_sum"] = age_sum
-        row["wait_total_consistent"] = _wait_total_consistent(provided_total, age_sum)
+        row = _normalize_provider_record(record, field_map)
         if row.get("facility_id") or row.get("name"):
             normalized.append(row)
     return _mark_facility_id_quality(normalized)
