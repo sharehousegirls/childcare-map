@@ -42,3 +42,9 @@ Acceptance criteria:
 - a provider field name cannot be assigned to multiple normalized fields;
 - duplicate assignments fail before the live HTTP request;
 - no official tag names are inferred or added by this safeguard.
+
+## Verification follow-up — 2026-11-23
+
+- **PASS — GitHub Actions run #179:** 113 backend tests, 40 frontend tests, and JavaScript syntax checks passed after the field-map uniqueness change. https://github.com/sharehousegirls/childcare-map/actions/runs/45139845270
+- **PASS — GitHub Actions run #183:** same test suite and syntax checks passed against the project-status documentation commit. https://github.com/sharehousegirls/childcare-map/actions/runs/45139921558
+- **NOT RUN:** direct local checkout tests; source-checkout evidence is GitHub Actions.
