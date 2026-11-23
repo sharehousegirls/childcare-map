@@ -81,6 +81,25 @@ class ProviderNormalizationTests(unittest.TestCase):
         self.assertEqual(_validate_live_field_map(total_map), total_map)
         age_map = {**identity, **{field: field.upper() for field in LIVE_WAIT_FIELDS}}
         self.assertEqual(_validate_live_field_map(age_map), age_map)
+    def test_field_map_trims_provider_field_names_and_rejects_duplicates(self):
+        self.assertEqual(_validate_field_map({"name": " CRNAME "}), {"name": "CRNAME"})
+        duplicate_maps = (
+            {"facility_id": "ID", "name": "ID"},
+            {"wait_0": "AGE", "wait_1": "AGE"},
+        )
+        for duplicate in duplicate_maps:
+            with self.subTest(duplicate=duplicate):
+                with self.assertRaisesRegex(ProviderError, "mapped to multiple normalized fields"):
+                    _validate_field_map(duplicate)
+
+    def test_live_field_map_rejects_duplicate_critical_provider_fields(self):
+        duplicate_map = {
+            "facility_id": "ID", "name": "ID", "data_date": "DATE",
+            "wait_total": "TOTAL",
+        }
+        with self.assertRaisesRegex(ProviderError, "mapped to multiple normalized fields"):
+            _validate_live_field_map(duplicate_map)
+
 
     def test_live_normalization_uses_only_explicit_field_mapping(self):
         record = {
