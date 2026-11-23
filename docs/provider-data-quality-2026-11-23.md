@@ -17,7 +17,8 @@ A bounded improvement to the unconnected API normalization/storage scaffold. No 
 
 - Missing/sentinel values stay null and do not become zero.
 - Invalid numeric counts are not silently treated as missing; they receive a field-specific quality flag.
-- Coordinates outside geographic bounds are not retained as normalized latitude/longitude.
+- Coordinates outside geographic bounds are not retained as normalized latitude/longitude, even when normalized rows are passed directly into SQLite storage.
+- A partial latitude/longitude pair is flagged at both normalization and storage boundaries; two missing coordinates remain unflagged.
 - Reported and derived waitlist totals are not conflated in snapshots.
 - Quality flags survive the provider-to-storage boundary.
 
