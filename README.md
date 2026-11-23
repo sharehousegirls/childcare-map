@@ -136,3 +136,11 @@ The backend `GET /api/facilities` response includes additive `meta` fields for t
 A backend-only validator now checks normalized legal-dong to administrative-dong links, allowing many-to-many relationships while enforcing region-type references, source provenance, strict effective dates and non-overlapping periods per pair/version. It is synthetic-data-only and does not import official rows or validate spatial boundaries.
 
 See [crosswalk validation notes](docs/region-crosswalk-validation-2026-11-23.md).
+
+## Nationwide waitlist API schema verification (2026-11-23)
+
+The official catalog for dataset 15101154 lists facility identifiers, location, capacity/enrollment, provider data date, and waitlist buckets for ages 0–5, 6+, and total. The listed fields are catalog descriptions only; the exact XML tags, request/response envelope, pagination, null semantics, and coordinate CRS/axis order have not been verified from the authenticated service specification or a redacted sample. No live API request was made.
+
+The official API guide says the service specification is available from the API detail page's technical documents and includes URLs, operations, request/response definitions, and examples. The development account is limited to 50 rows; the operating account requires separate approval and an expected-traffic estimate, and has a 12-month validity period.
+
+See [schema verification and integration acceptance gate](docs/api-schema-verification-2026-11-23.md) before configuring live integration.
