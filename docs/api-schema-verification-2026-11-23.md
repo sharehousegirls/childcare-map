@@ -88,12 +88,17 @@ Official policy: https://info.childcare.go.kr/info_html5/oais/introduction/Polic
 
 The 50-row development limit is not enough to claim nationwide coverage or validate full pagination/deduplication. Treat development results as sample data only.
 
+## Live adapter mapping gate — 2026-11-23
+
+The live adapter now requires explicit field mappings for facility ID, name and source data date, plus either the provider-reported total or all seven age buckets. Unmapped fields are not filled from the adapter's alias list during a live request. This is a fail-closed safeguard against the third-party tag-name hints listed above; it does not verify the accuracy of any configured mapping. Live requests remain unconfigured.
+
 ## Acceptance gate before live integration
 
 - [ ] Development API account approval and key are available (key stays server-side; never commit it).
 - [ ] Service specification and a redacted response sample have been reviewed.
 - [ ] Exact request, pagination and response schema are confirmed.
 - [ ] Field mapping is tested against the sample, including missing values and numeric parsing.
+- [ ] Live mapping is explicit for facility ID, facility name, data date, and waitlist total or all seven age buckets; no unverified alias fallback is used.
 - [ ] Facility IDs and cross-page duplicate handling are verified.
 - [ ] Data-date and collection-time metadata are separate.
 - [ ] CRS and axis order are confirmed before map placement.

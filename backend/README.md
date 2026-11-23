@@ -27,6 +27,7 @@ Run the commands from the repository root, then enter `backend`:
 - `API_KEY_PARAM`: key parameter name (defaults to `serviceKey`).
 - `API_EXTRA_PARAMS`: JSON object of additional required query parameters.
 - `API_FIELD_MAP`: JSON object mapping normalized field names to exact provider field names. Configure after reviewing a sample payload.
+- Live requests fail closed unless the map explicitly includes `facility_id`, `name`, and `data_date`, plus either `wait_total` or all seven age buckets. Live normalization does not use alias guessing for unmapped fields. The aliases remain available to isolated normalization tests/compatibility paths; they are not evidence of the official XML schema. This gate prevents accidental mapping, but it does not prove a configured field name is correct.
 
 Normalized fields include facility_id, name, type, status, address, sido, sigungu, capacity, enrolled, latitude, longitude, wait_0..wait_5, wait_6_plus, wait_total, data_date. The adapter also exposes `wait_age_sum` and `wait_total_consistent` as quality diagnostics: the latter is true/false only when the provider total and all age buckets are available, otherwise null. A derived total from age buckets is not treated as an independently verified provider total.
 

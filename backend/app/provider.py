@@ -78,9 +78,9 @@ def _flatten_records(payload: Any) -> list[dict]:
                 return found
     return []
 
-def _get_value(record: dict, field: str, field_map: dict) -> Any:
+def _get_value(record: dict, field: str, field_map: dict, *, allow_aliases: bool = True) -> Any:
     configured = field_map.get(field)
-    candidates = [configured] if configured else FIELD_ALIASES.get(field, [])
+    candidates = [configured] if configured else (FIELD_ALIASES.get(field, []) if allow_aliases else [])
     for candidate in candidates:
         if candidate and candidate in record and record[candidate] not in (None, ""):
             return record[candidate]
@@ -92,6 +92,25 @@ def _validate_field_map(field_map: Any) -> dict:
     for normalized, provider_field in field_map.items():
         if normalized not in FIELD_ALIASES or not isinstance(provider_field, str) or not provider_field.strip():
             raise ProviderError("API_FIELD_MAP must map known normalized fields to non-empty provider field names.")
+    return field_map
+
+
+LIVE_REQUIRED_FIELDS = ("facility_id", "name", "data_date")
+LIVE_WAIT_FIELDS = ("wait_0", "wait_1", "wait_2", "wait_3", "wait_4", "wait_5", "wait_6_plus")
+
+
+def _validate_live_field_map(field_map: dict) -> dict:
+    """Fail closed until identity, source date, and waitlist mapping are explicit."""
+    missing = [field for field in LIVE_REQUIRED_FIELDS if field not in field_map]
+    has_reported_total = "wait_total" in field_map
+    has_complete_age_buckets = all(field in field_map for field in LIVE_WAIT_FIELDS)
+    if missing or not (has_reported_total or has_complete_age_buckets):
+        requirements = []
+        if missing:
+            requirements.append("explicit mappings for " + ", ".join(missing))
+        if not has_reported_total and not has_complete_age_buckets:
+            requirements.append("wait_total or mappings for all seven age buckets")
+        raise ProviderError("Live API field mapping is incomplete: " + "; ".join(requirements) + ".")
     return field_map
 
 def _safe_http_error(exc: httpx.HTTPError) -> str:
@@ -129,9 +148,12 @@ def _wait_total_consistent(provided_total, age_sum):
         return None
     return provided_total == age_sum
 
-def _normalize_provider_record(record: dict, field_map: dict) -> dict:
+def _normalize_provider_record(record: dict, field_map: dict, *, allow_aliases: bool = True) -> dict:
     """Normalize one provider row and retain diagnostics for invalid values."""
-    row = {field: _get_value(record, field, field_map) for field in FIELD_ALIASES}
+    row = {
+        field: _get_value(record, field, field_map, allow_aliases=allow_aliases)
+        for field in FIELD_ALIASES
+    }
     raw_numeric = {field: row[field] for field in NUMERIC_FIELDS}
     quality_flags = []
     for field in NUMERIC_FIELDS:
@@ -202,6 +224,7 @@ async def get_facilities() -> list[dict]:
     try:
         extra = json.loads(os.getenv("API_EXTRA_PARAMS", "{}"))
         field_map = _validate_field_map(json.loads(os.getenv("API_FIELD_MAP", "{}")))
+        _validate_live_field_map(field_map)
         if not isinstance(extra, dict):
             raise ValueError("API_EXTRA_PARAMS must be a JSON object")
     except ValueError as exc:
@@ -228,7 +251,7 @@ async def get_facilities() -> list[dict]:
         raise ProviderError("No facility records found. Inspect a sample official response and configure field mapping.")
     normalized = []
     for record in records:
-        row = _normalize_provider_record(record, field_map)
+        row = _normalize_provider_record(record, field_map, allow_aliases=False)
         if row.get("facility_id") or row.get("name"):
             normalized.append(row)
     return _mark_facility_id_quality(normalized)

@@ -62,6 +62,38 @@ class ProviderNormalizationTests(unittest.TestCase):
                 with self.assertRaises(ProviderError):
                     _validate_field_map(invalid)
 
+    def test_live_field_map_requires_identity_date_and_waitlist(self):
+        invalid_maps = (
+            {},
+            {"name": "NAME", "data_date": "DATE", "wait_total": "TOTAL"},
+            {"facility_id": "ID", "name": "NAME", "wait_0": "W0"},
+            {"facility_id": "ID", "name": "NAME", "wait_total": "TOTAL"},
+        )
+        for invalid in invalid_maps:
+            with self.subTest(invalid=invalid):
+                with self.assertRaises(ProviderError):
+                    _validate_live_field_map(invalid)
+
+    def test_live_field_map_accepts_total_or_complete_age_buckets(self):
+        identity = {"facility_id": "ID", "name": "NAME", "data_date": "DATE"}
+        total_map = {**identity, "wait_total": "TOTAL"}
+        self.assertEqual(_validate_live_field_map(total_map), total_map)
+        age_map = {**identity, **{field: field.upper() for field in LIVE_WAIT_FIELDS}}
+        self.assertEqual(_validate_live_field_map(age_map), age_map)
+
+    def test_live_normalization_uses_only_explicit_field_mapping(self):
+        record = {
+            "facility_id": "F1", "name": "Mapped Name", "data_date": "2026-11-23",
+            "wait_total": "7", "CRNAME": "Alias Name", "CRCODE": "Alias ID",
+            "CRTNAME": "Alias Type",
+        }
+        mapping = {"facility_id": "facility_id", "name": "name", "data_date": "data_date", "wait_total": "wait_total"}
+        row = _normalize_provider_record(record, mapping, allow_aliases=False)
+        self.assertEqual(row["facility_id"], "F1")
+        self.assertEqual(row["name"], "Mapped Name")
+        self.assertEqual(row["wait_total"], 7)
+        self.assertIsNone(row["type"])
+
     def test_http_status_error_does_not_expose_key(self):
         request = httpx.Request("GET", "https://api.example.test/data?serviceKey=SECRET_KEY")
         response = httpx.Response(403, request=request)

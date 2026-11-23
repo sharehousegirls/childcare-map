@@ -10,6 +10,7 @@
 - Browser-local saved facilities: save/load/delete by exact facility ID (up to 50). Demo IDs are fictional; records without IDs cannot be saved.
 - FastAPI adapter scaffold with server-side credential configuration, XML/JSON parsing, normalized fields, health and facility endpoints.
 - Provider error sanitization and field-map validation.
+- Live API normalization fails closed until facility ID, name, source date and waitlist total/all age-bucket mappings are explicitly configured; live normalization no longer guesses from aliases for unmapped fields.
 - Provider normalization now retains reported and age-bucket-derived waitlist totals separately, flags invalid numeric/geographic coordinate values, incomplete coordinate pairs and incomplete waitlist buckets, and propagates quality flags into SQLite snapshots. SQLite independently rejects out-of-range geographic coordinates and flags partial coordinate pairs at its ingestion boundary. This remains a disconnected scaffold, not live-data validation.
 - Waitlist-total consistency diagnostic; missing/duplicate facility-ID flags (batch-level only).
 - Backend unit-test evidence and CI evidence documented in the security review.
@@ -162,3 +163,12 @@
 - **PASS — GitHub Actions run #158:** 103 backend tests, 40 frontend tests and JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45101632033
 - **NOT RUN:** direct local repository tests (GitHub DNS prevented clone), live API/schema/CRS/license checks, browser/manual responsive/accessibility checks.
 - Implementation notes: [provider data-quality safeguards](provider-data-quality-2026-11-23.md).
+
+
+## 2026-11-23 incremental milestone — live field-mapping fail-closed gate
+
+- Added a pre-request mapping gate requiring explicit facility ID, name, and provider data date, plus either the reported waitlist total or all seven age buckets.
+- Live normalization uses only explicitly mapped fields; candidate aliases remain available only in compatibility/unit-normalization paths and are not treated as official schema evidence.
+- This prevents accidental field guessing but cannot prove configured tags are correct. Official service specification and a redacted sample are still required.
+- **NOT RUN:** no live API request, schema sample, CRS, or redistribution/commercial review was performed.
+- New regression tests cover missing mapping, valid total/complete age mapping, and alias fallback disabled for live normalization.
