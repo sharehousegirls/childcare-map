@@ -10,7 +10,7 @@
 - Browser-local saved facilities: save/load/delete by exact facility ID (up to 50). Demo IDs are fictional; records without IDs cannot be saved.
 - FastAPI adapter scaffold with server-side credential configuration, XML/JSON parsing, normalized fields, health and facility endpoints.
 - Provider error sanitization and field-map validation.
-- Provider normalization now retains reported and age-bucket-derived waitlist totals separately, flags invalid numeric/geographic coordinate values and incomplete buckets, and propagates quality flags into SQLite snapshots. This remains a disconnected scaffold, not live-data validation.
+- Provider normalization now retains reported and age-bucket-derived waitlist totals separately, flags invalid numeric/geographic coordinate values, incomplete coordinate pairs and incomplete waitlist buckets, and propagates quality flags into SQLite snapshots. SQLite independently rejects out-of-range geographic coordinates and flags partial coordinate pairs at its ingestion boundary. This remains a disconnected scaffold, not live-data validation.
 - Waitlist-total consistency diagnostic; missing/duplicate facility-ID flags (batch-level only).
 - Backend unit-test evidence and CI evidence documented in the security review.
 - Official source inventory and integration plan.
