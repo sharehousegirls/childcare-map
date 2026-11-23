@@ -146,4 +146,4 @@ The official API guide says the service specification is available from the API 
 See [schema verification and integration acceptance gate](docs/api-schema-verification-2026-11-23.md) before configuring live integration.
 
 
-**Latest verification — GitHub Actions run #148:** 96 backend tests, 40 frontend tests, and all JavaScript syntax checks passed after the manifest-source URL hardening. https://github.com/sharehousegirls/childcare-map/actions/runs/45090277903
+**Latest verification — GitHub Actions run #158:** 103 backend tests, 40 frontend tests, and all JavaScript syntax checks passed. Provider normalization now retains reported/derived totals separately and flags invalid numeric/coordinate data; see [provider data-quality safeguards](docs/provider-data-quality-2026-11-23.md). https://github.com/sharehousegirls/childcare-map/actions/runs/45101632033
