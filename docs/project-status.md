@@ -194,3 +194,12 @@
 - **NOT RUN:** local checkout tests, live API requests, manual browser/responsive/accessibility review.
 - Review: strict date parsing is bounded and non-destructive; raw values are retained, invalid dates are not silently repaired, and no new dependency or frontend behavior was introduced.
 - Next priorities remain official API approval/specification and redacted sample, terms/redistribution review, schema/date/CRS validation, then nationwide ingestion and map. No live data or deployment.
+
+
+## 2026-11-23 incremental milestone — source-date coverage ratios
+- Added two additive `GET /api/facilities` metadata ratios: non-empty source-date coverage across facility rows, and strict ISO-date parseability among non-empty date strings. Both are rounded to four decimals; coverage is 0.0 for a non-empty batch with no dates, parseability is null when there are no dated rows, and both are null for an empty batch.
+- Existing raw source-date values, earliest/latest parseable dates, and collection timestamps are unchanged. Ratios are not freshness/SLA claims.
+- Added regression coverage for fully parseable dates, mixed valid/invalid/missing dates, all-missing dates, and empty batches.
+- **CI: NOT RUN / UNVERIFIED** — repository tests were not executed locally, and this run's GitHub Actions status could not yet be retrieved with the available connector.
+- **NOT RUN:** direct local checkout tests, live API/schema/CRS/reuse review, and manual browser/accessibility checks.
+- Review: additive metadata only; no new dependency, frontend behavior, credentials, live API calls, or deployment.
