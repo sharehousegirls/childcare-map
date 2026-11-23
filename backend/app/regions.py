@@ -34,6 +34,9 @@ def _optional_text(value: Any, field: str, region_id: str | None, issues: list[d
     value = value.strip()
     if not value:
         return None
+    if any(ord(char) < 32 or 127 <= ord(char) <= 159 for char in value):
+        issues.append(_issue(f"{field}_contains_control_character", region_id, f"{field} must not contain control characters."))
+        return None
     if len(value) > 100:
         issues.append(_issue(f"{field}_too_long", region_id, f"{field} exceeds 100 characters."))
         return None
