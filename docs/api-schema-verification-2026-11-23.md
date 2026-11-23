@@ -31,6 +31,14 @@ Do not add together mixed-class, special-disability, age-bucket, enrollment, or 
 
 Official catalog reviewed: https://www.data.go.kr/data/15101154/openapi.do
 
+## Secondary field-name hints (unverified)
+
+A third-party API index was reviewed only as a discovery aid; it is not an official specification and must not be used to configure live field mapping. It lists candidate tags such as `sidoname`, `sigunguname`, `stcode`, `crname`, `crtypename`, `crstatusname`, `craddr`, `Crcapat`, `Crchcnt`, `La`, `Lo`, `datastdrdt`, and waitlist tags `ew_cnt_00`–`ew_cnt_05`, `ew_cnt_m6`, `ew_cnt_tot`.
+
+These names are **unverified** against the provider's service specification or a response sample. Do not add them to `FIELD_ALIASES` or `API_FIELD_MAP` until official evidence confirms each mapping, especially coordinates, totals, and date semantics.
+
+Discovery-only reference: https://infosnake.net/services/opendata/?id=15101154
+
 ## Candidate normalized fields (not a confirmed XML schema)
 
 | Normalized field | Catalog-described item | Schema status |
