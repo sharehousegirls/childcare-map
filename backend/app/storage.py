@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS ingestion_run (
     unresolved_count INTEGER NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS facility (
-    provider_facility_id TEXT PRIMARY KEY,
+    provider_facility_id TEXT PRIMARY PRIMARY KEY,
     name TEXT,
     type TEXT,
     status TEXT,
@@ -136,6 +136,16 @@ def _normalize_record(record: dict[str, Any]) -> tuple[dict[str, Any], list[str]
         normalized[field] = _safe_number(normalized[field], field, flags, integer=True)
     for field in COORD_FIELDS:
         normalized[field] = _safe_number(normalized[field], field, flags)
+    # Provider adapters may expose the display total derived from age buckets.
+    # Persist the explicit source total separately instead of mislabeling a
+    # derived value as provider-reported.
+    if "wait_total_reported" in record:
+        normalized["wait_total"] = _safe_number(
+            record.get("wait_total_reported"), "wait_total", flags, integer=True
+        )
+    provider_flags = record.get("quality_flags")
+    if isinstance(provider_flags, list):
+        flags.extend(flag.strip() for flag in provider_flags if isinstance(flag, str) and flag.strip())
     if not normalized["facility_id"]:
         flags.append("facility_id_missing")
     if not normalized["data_date"]:
