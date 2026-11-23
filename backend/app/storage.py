@@ -136,6 +136,15 @@ def _normalize_record(record: dict[str, Any]) -> tuple[dict[str, Any], list[str]
         normalized[field] = _safe_number(normalized[field], field, flags, integer=True)
     for field in COORD_FIELDS:
         normalized[field] = _safe_number(normalized[field], field, flags)
+    # Stored coordinates must be geographic latitude/longitude, not projected x/y.
+    if normalized["latitude"] is not None and not -90 <= normalized["latitude"] <= 90:
+        normalized["latitude"] = None
+        flags.append("coordinate_out_of_range:latitude")
+    if normalized["longitude"] is not None and not -180 <= normalized["longitude"] <= 180:
+        normalized["longitude"] = None
+        flags.append("coordinate_out_of_range:longitude")
+    if (normalized["latitude"] is None) != (normalized["longitude"] is None):
+        flags.append("coordinate_pair_incomplete")
     # Provider adapters may expose the display total derived from age buckets.
     # Persist the explicit source total separately instead of mislabeling a
     # derived value as provider-reported.
