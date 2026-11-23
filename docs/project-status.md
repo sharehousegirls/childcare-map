@@ -223,3 +223,9 @@
 - **PASS — GitHub Actions run #208:** 118 backend tests, 40 frontend tests, and JavaScript syntax checks passed on commit `36b2acd8ea77906c4635b12a1e162957626aba2d`. https://github.com/sharehousegirls/childcare-map/actions/runs/45219072602
 - Documentation added in `docs/region-code-control-character-validation-2026-11-24.md`; README points to the note.
 - **NOT RUN:** direct local repository checkout, official code archive import, live API/schema/CRS/reuse validation, browser/manual/responsive/accessibility review. No credentials, live API calls, map/geospatial changes, or deployment.
+
+
+## Documentation CI confirmation — 2026-11-24
+
+- **PASS — GitHub Actions run #209:** 118 backend tests, 40 frontend tests, and JavaScript syntax checks passed for documentation commit `79b63469229b01a9b3a842a247cce8947cc2b091`. https://github.com/sharehousegirls/childcare-map/actions/runs/45218756014
+- **PASS — GitHub Actions run #210:** the updated project-status commit `4b0c330e976200cf7a2c7fff2a0edb3cc607543` passed the same workflow; backend log reports 118 tests and `OK`. https://github.com/sharehousegirls/childcare-map/actions/runs/45219246014
