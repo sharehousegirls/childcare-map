@@ -144,3 +144,6 @@ The official catalog for dataset 15101154 lists facility identifiers, location, 
 The official API guide says the service specification is available from the API detail page's technical documents and includes URLs, operations, request/response definitions, and examples. The development account is limited to 50 rows; the operating account requires separate approval and an expected-traffic estimate, and has a 12-month validity period.
 
 See [schema verification and integration acceptance gate](docs/api-schema-verification-2026-11-23.md) before configuring live integration.
+
+
+**Latest verification — GitHub Actions run #148:** 96 backend tests, 40 frontend tests, and all JavaScript syntax checks passed after the manifest-source URL hardening. https://github.com/sharehousegirls/childcare-map/actions/runs/45090277903
