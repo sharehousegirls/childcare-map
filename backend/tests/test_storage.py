@@ -101,6 +101,40 @@ class SnapshotStorageTests(unittest.TestCase):
             self.assertIn("invalid_numeric:wait_0", flags)
             self.assertIn("wait_age_buckets_incomplete", flags)
 
+    def test_out_of_range_coordinates_are_null_and_flagged_at_storage_boundary(self):
+        ingest_snapshot_batch(
+            self.db_path, [self.record(latitude=95, longitude=181)],
+            source="test", run_id="run-coordinate-range",
+        )
+        with sqlite3_connection(self.db_path) as conn:
+            facility = conn.execute("SELECT latitude, longitude FROM facility").fetchone()
+            flags = json.loads(conn.execute("SELECT quality_flags_json FROM facility_snapshot").fetchone()[0])
+            self.assertIsNone(facility["latitude"])
+            self.assertIsNone(facility["longitude"])
+            self.assertIn("coordinate_out_of_range:latitude", flags)
+            self.assertIn("coordinate_out_of_range:longitude", flags)
+
+    def test_incomplete_coordinate_pair_is_flagged_at_storage_boundary(self):
+        ingest_snapshot_batch(
+            self.db_path, [self.record(latitude=37.5, longitude=None)],
+            source="test", run_id="run-coordinate-pair",
+        )
+        with sqlite3_connection(self.db_path) as conn:
+            facility = conn.execute("SELECT latitude, longitude FROM facility").fetchone()
+            flags = json.loads(conn.execute("SELECT quality_flags_json FROM facility_snapshot").fetchone()[0])
+            self.assertEqual(facility["latitude"], 37.5)
+            self.assertIsNone(facility["longitude"])
+            self.assertIn("coordinate_pair_incomplete", flags)
+
+    def test_missing_coordinate_pair_is_not_flagged(self):
+        ingest_snapshot_batch(
+            self.db_path, [self.record(latitude=None, longitude=None)],
+            source="test", run_id="run-coordinate-none",
+        )
+        with sqlite3_connection(self.db_path) as conn:
+            flags = json.loads(conn.execute("SELECT quality_flags_json FROM facility_snapshot").fetchone()[0])
+            self.assertNotIn("coordinate_pair_incomplete", flags)
+
     def test_missing_id_record_is_retained_for_review(self):
         result = ingest_snapshot_batch(self.db_path, [self.record(facility_id=" ")], source="test", run_id="run-3")
         self.assertEqual(result["stored_count"], 0)
