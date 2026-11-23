@@ -147,6 +147,9 @@ def _normalize_provider_record(record: dict, field_map: dict) -> dict:
     if row["longitude"] is not None and not -180 <= row["longitude"] <= 180:
         row["longitude"] = None
         quality_flags.append("coordinate_out_of_range:longitude")
+    # A map pin needs both coordinates; a lone value is retained as unknown.
+    if (row["latitude"] is None) != (row["longitude"] is None):
+        quality_flags.append("coordinate_pair_incomplete")
 
     age_values = [row[f"wait_{age}"] for age in range(6)] + [row["wait_6_plus"]]
     age_sum = _sum_age_waits(age_values)
