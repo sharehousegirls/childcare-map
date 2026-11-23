@@ -21,10 +21,17 @@ A bounded hardening change to the normalized region-record validator. The valida
 - [x] Every normalized region text field rejects embedded C1 controls.
 - [x] Existing trimming, leading-zero preservation, and source-code uniqueness behavior remain covered.
 - [x] No official-code assumptions or external dependencies were added.
-- [ ] Repository CI for this change is verified.
+- [x] Repository CI for this change is verified.
 
 
 ## Test status
 
 - **CI pending** for code/test commits `e96101b` and `b567423` at the time this note was added.
 - **NOT RUN:** direct local repository checkout, official source import, live API, map/geospatial checks, browser and accessibility review.
+
+
+## Verification outcome — 2026-11-24
+
+- **PASS — GitHub Actions run #208:** 118 backend tests, 40 frontend tests, and JavaScript syntax checks succeeded on commit `36b2acd8ea77906c4635b12a1e162957626aba2d`. https://github.com/sharehousegirls/childcare-map/actions/runs/45219072602
+- **Correction:** Runs #204–#207 initially failed because the test cases appended U+001F and U+0085, which Python `str.strip()` removes at the ends. The tests were corrected to insert both control characters inside each value, ensuring they exercise the embedded-control validation. The implementation was not changed for this test-placement issue.
+- **NOT RUN:** direct local checkout, official source import, live API, CRS/spatial assignment, browser and accessibility checks.
