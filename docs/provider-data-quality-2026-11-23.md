@@ -25,6 +25,7 @@ A bounded improvement to the unconnected API normalization/storage scaffold. No 
 ## Verification
 
 - **PASS — GitHub Actions run #158:** 103 backend tests, 40 frontend tests, and frontend JavaScript syntax checks succeeded on commit `fcea52b602f5ced3fbd9254bcb77da4fd0d6ad20`. https://github.com/sharehousegirls/childcare-map/actions/runs/45101632033
+- **PASS — GitHub Actions run #167 (coordinate validation follow-up):** 108 backend tests, 40 frontend tests, and frontend JavaScript syntax checks completed successfully. https://github.com/sharehousegirls/childcare-map/actions/runs/45112984412
 - **NOT RUN:** direct local checkout tests. GitHub DNS resolution failed when attempting `git clone`; CI is the source-checkout test evidence.
 - **NOT RUN:** live API/schema, CRS, license/redistribution, browser, responsive, and assistive-technology checks.
 
