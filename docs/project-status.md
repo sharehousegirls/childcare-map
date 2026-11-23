@@ -172,3 +172,11 @@
 - This prevents accidental field guessing but cannot prove configured tags are correct. Official service specification and a redacted sample are still required.
 - **NOT RUN:** no live API request, schema sample, CRS, or redistribution/commercial review was performed.
 - New regression tests cover missing mapping, valid total/complete age mapping, and alias fallback disabled for live normalization.
+
+
+## 2026-11-23 incremental milestone — fail-closed live field mapping verification
+
+- **FAIL — GitHub Actions run #175:** the first commit of the mapping gate reached 111 backend tests but five errors were caused by test imports missing the new helper/constants. Frontend steps were skipped because the backend step failed. Failure evidence: https://github.com/sharehousegirls/childcare-map/actions/runs/45125173484
+- Corrected the test imports in follow-up commit `eae2687e05170edf9a21fb42bd85c56738803ff8`.
+- **PASS — GitHub Actions run #176:** 111 backend tests, 40 frontend tests and JavaScript syntax checks passed on the corrected test commit. https://github.com/sharehousegirls/childcare-map/actions/runs/45125220339
+- **NOT RUN:** local checkout tests, live API requests, official schema/CRS/reuse review, and manual browser/responsive/accessibility checks.
