@@ -214,3 +214,12 @@
 - **PASS — GitHub Actions run #201:** 116 backend tests, 40 frontend tests, and JavaScript syntax checks passed for commit 406f604. https://github.com/sharehousegirls/childcare-map/actions/runs/45196215022
 - **NOT RUN:** direct local repository checkout tests, manual browser/mobile/accessibility checks, live API/schema/CRS/reuse validation.
 - No runtime code, dependencies, credentials, live API connections, or deployment were added.
+
+
+## 2026-11-24 incremental milestone — normalized region text control-character hardening
+
+- Hardened `backend/app/regions.py` to reject embedded C0 (U+0000–U+001F) and C1 (U+007F–U+009F) control characters in non-empty normalized region text fields: IDs, names, region types, parent IDs, source-system labels, and source codes. Existing outer-whitespace trimming remains unchanged; codes are still treated as strings with no guessed format/length.
+- Added two regression tests covering each field with embedded C0 and C1 characters. A test-only failure occurred in runs #204–#207 because the initial test inputs placed control characters at the end and `str.strip()` removed them; tests were corrected to embed the characters in the middle of each value. No production logic change was needed for that test-placement issue.
+- **PASS — GitHub Actions run #208:** 118 backend tests, 40 frontend tests, and JavaScript syntax checks passed on commit `36b2acd8ea77906c4635b12a1e162957626aba2d`. https://github.com/sharehousegirls/childcare-map/actions/runs/45219072602
+- Documentation added in `docs/region-code-control-character-validation-2026-11-24.md`; README points to the note.
+- **NOT RUN:** direct local repository checkout, official code archive import, live API/schema/CRS/reuse validation, browser/manual/responsive/accessibility review. No credentials, live API calls, map/geospatial changes, or deployment.
