@@ -58,6 +58,8 @@ def build_facility_meta(records, collected_at=None):
         "records_without_source_data_date": len(records) - dated_records,
         "records_with_parseable_source_data_date": len(parsed_dates),
         "records_with_unparseable_source_data_date": unparseable_dates,
+        "source_data_date_coverage_ratio": round(dated_records / len(records), 4) if records else None,
+        "source_data_date_parseability_ratio": round(len(parsed_dates) / dated_records, 4) if dated_records else None,
         "source_data_date_earliest": min(parsed_dates).isoformat() if parsed_dates else None,
         "source_data_date_latest": max(parsed_dates).isoformat() if parsed_dates else None,
     }
