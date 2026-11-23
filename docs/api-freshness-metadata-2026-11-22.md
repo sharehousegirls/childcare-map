@@ -47,3 +47,18 @@ These fields are parseability diagnostics only. Because the provider's source-da
 - No freshness SLA or stale/fresh label is inferred.
 
 Test cases cover mixed valid, non-ISO, invalid-calendar, and missing date values. GitHub Actions result is recorded in project status after the run completes.
+
+
+## Source-date coverage ratios — 2026-11-23
+
+Added two additive diagnostics to `GET /api/facilities` metadata:
+- `source_data_date_coverage_ratio`: non-empty provider source-date records divided by all facility records. Invalid-but-present date strings count as present; missing/blank dates do not. Rounded to four decimals; null for an empty record set.
+- `source_data_date_parseability_ratio`: strict valid `YYYY-MM-DD` dates divided by non-empty source-date records. Invalid formats/calendar dates count against parseability; missing values are excluded from this denominator. Rounded to four decimals; null when no non-empty source date exists.
+
+These ratios are coverage/format diagnostics, not freshness indicators. They do not establish how recent a facility record is, the provider update SLA, or the semantic correctness of the date field. No stale/fresh threshold is applied.
+
+Acceptance:
+- all valid dated records yield 1.0 for both ratios;
+- invalid and missing dates affect the appropriate denominator only;
+- empty batches return null for both ratios, avoiding a misleading zero-percent claim;
+- raw dates and existing metadata remain unchanged.
