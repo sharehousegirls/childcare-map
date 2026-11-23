@@ -159,3 +159,8 @@ See [API freshness metadata](docs/api-freshness-metadata-2026-11-22.md).
 
 
 Source-date coverage and parseability ratios are **record-level**, not unique-facility metrics. Duplicate facility IDs are not deduplicated by these calculations and should be reviewed separately before interpreting coverage as facility-level. See the detailed ratio semantics in `docs/api-freshness-metadata-2026-11-22.md`.
+
+
+## Frontend source-date quality details
+
+When live backend metadata is present, the status panel reports source-date coverage and parseability using row counts, including separate missing and unparseable counts. In demo mode it explicitly states that no real date diagnostics are available. Counts are per response row (not unique facilities), and these ratios do not establish freshness. See `docs/frontend-data-quality-display-2026-11-24.md`.

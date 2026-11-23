@@ -229,3 +229,11 @@
 
 - **PASS — GitHub Actions run #209:** 118 backend tests, 40 frontend tests, and JavaScript syntax checks passed for documentation commit `79b63469229b01a9b3a842a247cce8947cc2b091`. https://github.com/sharehousegirls/childcare-map/actions/runs/45218756014
 - **PASS — GitHub Actions run #210:** the updated project-status commit `4b0c330e976200cf7a2c7fff2a0edb3cc607543` passed the same workflow; backend log reports 118 tests and `OK`. https://github.com/sharehousegirls/childcare-map/actions/runs/45219246014
+
+
+## 2026-11-24 incremental milestone — visible source-date quality diagnostics
+
+- Added a small frontend helper to display backend source-date coverage and parseability counts with row denominators. The diagnostic text distinguishes missing dates from unparseable dates, avoids percentages for an empty facility response, and shows a warning if metadata counts are inconsistent.
+- Demo mode explicitly states that real source-date diagnostics are unavailable; no fictional date quality values are shown. The live display is accessible via a polite status region and uses text-only rendering.
+- **PASS — isolated Node tests:** 5/5 tests passed for valid metadata, all dates missing, empty facility response, inconsistent counts, and missing/invalid metadata; module and test syntax checks passed. Exact repository checkout/full CI/browser test not yet run at the time of this status update.
+- No dependencies, live API requests, credentials, geospatial data, or deployment were added. Ratios are response-row-based, not unique facility coverage or freshness guarantees.

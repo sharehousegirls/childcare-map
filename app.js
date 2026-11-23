@@ -2,6 +2,7 @@ import { readSavedSearches, saveSavedSearch, removeSavedSearch } from "./saved-s
 import { readSavedRegions, saveSavedRegion, removeSavedRegion } from "./saved-regions.mjs";
 import { buildRegions } from "./regional-summary.mjs";
 import { readSavedFacilities, saveSavedFacility, removeSavedFacility } from "./saved-facilities.mjs";
+import { formatDataQualityDetails } from "./data-quality.mjs";
 
 // Live backend is preferred when configured; otherwise clearly labeled fictional demo.
 const DEMO_REGIONS=[
@@ -22,7 +23,7 @@ const DEMO_FACILITIES=[
 {facilityId:"demo-cheonan-sprout",name:"새싹 어린이집",region:"천안시 서북구",type:"가정",address:"천안시 서북구 (예시 주소)",waiting:4,capacity:20,enrolled:19},
 {facilityId:"demo-heungdeok-dream",name:"청주 꿈 어린이집",region:"청주시 흥덕구",type:"민간",address:"청주시 흥덕구 (예시 주소)",waiting:9,capacity:50,enrolled:46}];
 let regions=DEMO_REGIONS,facilities=DEMO_FACILITIES,liveData=false,liveError="",liveMeta=null;
-const regionSelect=document.querySelector("#regionSelect"),regionCards=document.querySelector("#regionCards"),facilityList=document.querySelector("#facilityList"),statusEl=document.querySelector("#dataStatus");
+const regionSelect=document.querySelector("#regionSelect"),regionCards=document.querySelector("#regionCards"),facilityList=document.querySelector("#facilityList"),statusEl=document.querySelector("#dataStatus"),dataQualityDetails=document.querySelector("#dataQualityDetails");
 const facilitySearch=document.querySelector("#facilitySearch"),typeFilter=document.querySelector("#typeFilter"),zeroFilter=document.querySelector("#zeroFilter");
 const savedSearchForm=document.querySelector("#savedSearchForm"),savedSearchName=document.querySelector("#savedSearchName"),savedSearchStatus=document.querySelector("#savedSearchStatus"),savedSearchList=document.querySelector("#savedSearchList");
 const saveRegionButton=document.querySelector("#saveRegionButton"),savedRegionStatus=document.querySelector("#savedRegionStatus"),savedRegionList=document.querySelector("#savedRegionList");
@@ -94,7 +95,23 @@ function renderFacilities(){
     if(facilityId)save.dataset.saveFacility=facilityId;else save.title="시설 고유 ID가 없어 저장할 수 없습니다.";
     card.append(details,badge,save);facilityList.append(card);
   });
-}function render(){const dates=liveMeta?.source_data_dates?.length?liveMeta.source_data_dates:[...new Set(facilities.map(f=>f.dataDate).filter(Boolean))];const sourceDate=liveMeta?.source_data_date||(dates.length===1?dates[0]:null);const dateLabel=sourceDate?"기준일 "+sourceDate:dates.length>1?"시설별 기준일 혼재":"기준일 미확인";const collectedAt=liveMeta?.collected_at?new Date(liveMeta.collected_at):null;const collectionLabel=collectedAt&&!Number.isNaN(collectedAt.getTime())?" · 수집(현지) "+collectedAt.toLocaleString("ko-KR"):"";statusEl.textContent=liveData?"실제 API 데이터 연결 · "+dateLabel+collectionLabel:"가상 데모 데이터 · 실제 현황 아님";statusEl.className="data-status "+(liveData?"live":"demo");if(liveMeta?.collected_at)statusEl.title="API 수집 시각(UTC): "+liveMeta.collected_at;else if(liveError&&!liveData)statusEl.title="Backend 연결 오류: "+liveError;renderSummary();renderRegions();renderFacilities();}
+}function render(){
+ const dates=liveMeta?.source_data_dates?.length?liveMeta.source_data_dates:[...new Set(facilities.map(f=>f.dataDate).filter(Boolean))];
+ const sourceDate=liveMeta?.source_data_date||(dates.length===1?dates[0]:null);
+ const dateLabel=sourceDate?"기준일 "+sourceDate:dates.length>1?"시설별 기준일 혼재":"기준일 미확인";
+ const collectedAt=liveMeta?.collected_at?new Date(liveMeta.collected_at):null;
+ const collectionLabel=collectedAt&&!Number.isNaN(collectedAt.getTime())?" · 수집(현지) "+collectedAt.toLocaleString("ko-KR"):"";
+ statusEl.textContent=liveData?"실제 API 데이터 연결 · "+dateLabel+collectionLabel:"가상 데모 데이터 · 실제 현황 아님";
+ statusEl.className="data-status "+(liveData?"live":"demo");
+ if(liveData){
+   statusEl.title=liveMeta?.collected_at?"API 수집 시각(UTC): "+liveMeta.collected_at:"";
+   dataQualityDetails.textContent=formatDataQualityDetails(liveMeta,facilities.length);
+ }else{
+   statusEl.title=liveError&&!liveData?"Backend 연결 오류: "+liveError:"";
+   dataQualityDetails.textContent="가상 데모에는 실제 기준일 품질 진단이 없습니다.";
+ }
+ renderSummary();renderRegions();renderFacilities();
+}
 async function tryLoadLive(){try{const res=await fetch("http://127.0.0.1:8000/api/facilities");if(!res.ok)throw Error("Backend HTTP "+res.status);const data=await res.json();if(data.source!=="official_api"||!Array.isArray(data.facilities))throw Error("Unexpected API payload");if(!Number.isInteger(data.count)||data.count!==data.facilities.length)throw Error("API record count does not match facilities");const mapped=mapApiRows(data.facilities);if(!mapped.length)throw Error("No usable facility records");facilities=mapped;regions=buildRegions(mapped);liveMeta=data.meta&&typeof data.meta==="object"?data.meta:null;liveData=true;liveError="";}catch(e){liveData=false;liveError=e.message||String(e);liveMeta=null;facilities=DEMO_FACILITIES;regions=DEMO_REGIONS;}populateRegions();render();}
 function showSavedSearchStatus(message,isError=false){savedSearchStatus.textContent=message;savedSearchStatus.className="saved-search-status"+(isError?" error":"");}
 function savedSearchDescription(item){return [item.region==="all"?"전체 지역":item.region,item.query||"시설명 전체",item.type==="all"?"전체 유형":item.type,item.zeroWait?"대기 0명":"전체 대기"].join(" · ");}
