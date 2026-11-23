@@ -52,6 +52,7 @@
 - Prototype derived dong aggregation with deduplication, mapping coverage, null handling, and explicit UI labeling; do not claim a direct official dong query.
 
 ## Verification
+- **PASS — GitHub Actions run #167 (coordinate validation follow-up):** 108 backend tests, 40 frontend tests, and JavaScript syntax checks passed after the provider and storage coordinate-pair validation changes. https://github.com/sharehousegirls/childcare-map/actions/runs/45112984412
 - **PASS — GitHub Actions run #136 (CI action runtime update):** 91 backend tests, 40 frontend tests, and JavaScript syntax checks passed on commit `a2b04f88a10a93ddc7ae79886282d449c97af72a`; all three action majors were upgraded to v7. No Node 20 deprecation warning appeared in this run. https://github.com/sharehousegirls/childcare-map/actions/runs/45056638594
 
 - **PASS — GitHub Actions run #109:** 68 backend tests (including 23 region-source-manifest tests), 28 frontend tests (8 regional summary, 11 saved-region, 9 saved-search), and all JavaScript syntax checks succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/45004001134
