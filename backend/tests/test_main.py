@@ -8,6 +8,11 @@ from app.main import build_facility_meta
 
 
 class FacilityMetaTests(unittest.TestCase):
+    def test_empty_batch_has_unknown_date_coverage_ratios(self):
+        meta = build_facility_meta([])
+        self.assertIsNone(meta["source_data_date_coverage_ratio"])
+        self.assertIsNone(meta["source_data_date_parseability_ratio"])
+
     def test_single_source_date_and_collection_timestamp_are_separate(self):
         collected_at = datetime(2026, 11, 22, 12, 34, 56, tzinfo=timezone.utc)
         records = [{"data_date": "2026-11-21"}, {"data_date": "2026-11-21"}]
@@ -19,6 +24,8 @@ class FacilityMetaTests(unittest.TestCase):
         self.assertEqual(meta["records_without_source_data_date"], 0)
         self.assertEqual(meta["records_with_parseable_source_data_date"], 2)
         self.assertEqual(meta["records_with_unparseable_source_data_date"], 0)
+        self.assertEqual(meta["source_data_date_coverage_ratio"], 1.0)
+        self.assertEqual(meta["source_data_date_parseability_ratio"], 1.0)
         self.assertEqual(meta["source_data_date_earliest"], "2026-11-21")
         self.assertEqual(meta["source_data_date_latest"], "2026-11-21")
         self.assertEqual(meta["collected_at"], "2026-11-22T12:34:56+00:00")
@@ -47,6 +54,8 @@ class FacilityMetaTests(unittest.TestCase):
         self.assertEqual(meta["records_with_unparseable_source_data_date"], 2)
         self.assertEqual(meta["source_data_date_earliest"], "2026-11-20")
         self.assertEqual(meta["source_data_date_latest"], "2026-11-23")
+        self.assertEqual(meta["source_data_date_coverage_ratio"], 0.8)
+        self.assertEqual(meta["source_data_date_parseability_ratio"], 0.5)
         # Raw non-ISO and invalid calendar strings are preserved for source review.
         self.assertIn("2026/11/21", meta["source_data_dates"])
         self.assertIn("2026-02-30", meta["source_data_dates"])
@@ -60,6 +69,8 @@ class FacilityMetaTests(unittest.TestCase):
         self.assertEqual(meta["records_without_source_data_date"], 3)
         self.assertEqual(meta["records_with_parseable_source_data_date"], 0)
         self.assertEqual(meta["records_with_unparseable_source_data_date"], 0)
+        self.assertIsNone(meta["source_data_date_coverage_ratio"])
+        self.assertIsNone(meta["source_data_date_parseability_ratio"])
         self.assertIsNone(meta["source_data_date_earliest"])
         self.assertIsNone(meta["source_data_date_latest"])
 
