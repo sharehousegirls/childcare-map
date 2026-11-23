@@ -77,6 +77,30 @@ class SnapshotStorageTests(unittest.TestCase):
             self.assertIsNone(snapshot["wait_total_reported"])
             self.assertIsNone(snapshot["wait_total_derived"])
 
+    def test_provider_derived_total_is_not_stored_as_reported(self):
+        record = self.record(
+            wait_total=2,
+            wait_total_reported=None,
+            wait_total_derived=2,
+            wait_total_consistent=None,
+        )
+        ingest_snapshot_batch(self.db_path, [record], source="test", run_id="run-derived-total")
+        with sqlite3_connection(self.db_path) as conn:
+            snapshot = conn.execute(
+                "SELECT wait_total_reported, wait_total_derived, wait_total_consistent FROM facility_snapshot"
+            ).fetchone()
+            self.assertIsNone(snapshot["wait_total_reported"])
+            self.assertEqual(snapshot["wait_total_derived"], 2)
+            self.assertIsNone(snapshot["wait_total_consistent"])
+
+    def test_provider_quality_flags_are_preserved(self):
+        record = self.record(wait_0=None, quality_flags=["invalid_numeric:wait_0"])
+        ingest_snapshot_batch(self.db_path, [record], source="test", run_id="run-quality")
+        with sqlite3_connection(self.db_path) as conn:
+            flags = json.loads(conn.execute("SELECT quality_flags_json FROM facility_snapshot").fetchone()[0])
+            self.assertIn("invalid_numeric:wait_0", flags)
+            self.assertIn("wait_age_buckets_incomplete", flags)
+
     def test_missing_id_record_is_retained_for_review(self):
         result = ingest_snapshot_batch(self.db_path, [self.record(facility_id=" ")], source="test", run_id="run-3")
         self.assertEqual(result["stored_count"], 0)
