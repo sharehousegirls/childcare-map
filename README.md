@@ -148,3 +148,9 @@ See [schema verification and integration acceptance gate](docs/api-schema-verifi
 
 
 **Latest verification — GitHub Actions run #158:** 103 backend tests, 40 frontend tests, and all JavaScript syntax checks passed. Provider normalization now retains reported/derived totals separately and flags invalid numeric/coordinate data; see [provider data-quality safeguards](docs/provider-data-quality-2026-11-23.md). https://github.com/sharehousegirls/childcare-map/actions/runs/45101632033
+
+## Source-date parseability diagnostics (2026-11-23)
+
+The facilities API metadata adds strict date parseability counts and the earliest/latest valid `YYYY-MM-DD` source dates. Non-empty source-date values in other formats or with invalid calendar dates are retained in the raw distinct-date list and counted as unparseable; blank values remain missing. These diagnostics do not define freshness or a stale threshold. Source-date semantics and the provider update cadence must be verified before any freshness SLA is configured.
+
+See [API freshness metadata](docs/api-freshness-metadata-2026-11-22.md).
