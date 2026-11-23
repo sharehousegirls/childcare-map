@@ -1,5 +1,5 @@
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
-const TIMESTAMP_WITH_ZONE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})$/;
+const TIMESTAMP_WITH_ZONE = /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/;
 const DAY_MS = 86_400_000;
 
 function parseDateOnly(value) {
@@ -7,6 +7,23 @@ function parseDateOnly(value) {
   const parsed = new Date(`${value}T00:00:00.000Z`);
   if (!Number.isFinite(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== value) return null;
   return parsed;
+}
+
+function parseCollectionTimestamp(value) {
+  if (typeof value !== "string") return null;
+  const match = TIMESTAMP_WITH_ZONE.exec(value);
+  if (!match || !parseDateOnly(match[1])) return null;
+  const hour = Number(match[2]);
+  const minute = Number(match[3]);
+  const second = match[4] == null ? 0 : Number(match[4]);
+  if (hour > 23 || minute > 59 || second > 59) return null;
+  const zone = match[5];
+  if (zone !== "Z") {
+    const [offsetHour, offsetMinute] = zone.slice(1).split(":").map(Number);
+    if (offsetHour > 14 || offsetMinute > 59 || (offsetHour === 14 && offsetMinute !== 0)) return null;
+  }
+  const timestamp = Date.parse(value);
+  return Number.isFinite(timestamp) ? timestamp : null;
 }
 
 function validUniqueDates(values) {
@@ -60,9 +77,7 @@ export function formatDataFreshness(meta) {
     metadataMismatch ||= meta.mixed_source_data_dates !== (validDates.length > 1 || invalidDateCount > 0 && rawDates.filter((value) => String(value).trim()).length > 1);
   }
 
-  const collectedAt = typeof meta.collected_at === "string" && TIMESTAMP_WITH_ZONE.test(meta.collected_at)
-    ? Date.parse(meta.collected_at)
-    : NaN;
+  const collectedAt = parseCollectionTimestamp(meta.collected_at);
   if (Number.isFinite(collectedAt)) {
     const collectedDate = new Date(collectedAt);
     const collectionDay = Date.UTC(collectedDate.getUTCFullYear(), collectedDate.getUTCMonth(), collectedDate.getUTCDate());

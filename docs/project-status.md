@@ -246,3 +246,10 @@
 - No stale threshold, SLA, or provider update cadence is inferred. Source-date meaning still requires official schema/sample verification.
 - Added 8 Node unit tests covering valid age, mixed-date range, invalid dates, future dates, missing collection timestamp, inconsistent latest-date metadata, mixed-flag mismatch, and invalid entries alongside valid dates.
 - CI result pending for this commit; no local repository checkout is available in this run.
+
+
+
+## 2026-11-24 follow-up — collection timestamp validation
+- Tightened elapsed-day calculation to require a calendar-valid collection date, valid clock fields, and a timezone offset no greater than ±14:00.
+- Added a regression test for invalid collection dates, clock values, and timezone offsets.
+- GitHub Actions run #212 passed the initial freshness-display implementation (8 tests); this follow-up CI is pending.

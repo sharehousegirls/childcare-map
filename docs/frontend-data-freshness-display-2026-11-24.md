@@ -19,11 +19,12 @@ Date values are accepted only as valid calendar dates in `YYYY-MM-DD`. Collectio
 - [x] Elapsed days use the collection timestamp's UTC calendar date.
 - [x] Future source dates are flagged.
 - [x] Missing/invalid collection timestamps do not produce a computed age.
+- [x] Invalid collection calendar dates, clock values, and timezone offsets are rejected.
 - [x] Latest-date and mixed-date metadata inconsistencies are flagged.
 - [x] Demo mode states that real freshness is unavailable.
 - [x] No dependency, live API request, credential, or deployment added.
 
 ## Tests
-- 8 Node unit tests added to `tests/data-freshness.test.mjs`.
-- GitHub Actions result pending.
+- 10 Node unit tests added to `tests/data-freshness.test.mjs`.
+- PASS — GitHub Actions run #212 passed the initial 8-test implementation. Follow-up timestamp validation and its 2 added assertions are pending CI
 - Direct local repository tests: NOT RUN (no local checkout in this execution environment).

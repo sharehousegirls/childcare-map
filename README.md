@@ -168,7 +168,7 @@ When live backend metadata is present, the status panel reports source-date cove
 
 ## Frontend source-date freshness display
 
-When live API metadata is present, the frontend displays the newest valid source-record date, a date range when records have mixed dates, and the elapsed calendar days between the latest source date and the API collection timestamp. It flags invalid or inconsistent date metadata. This is descriptive only: it does not define a freshness threshold, SLA, or provider update cadence. Collection time is not the source-record date. In demo mode, the UI explicitly states that real freshness information is unavailable.
+When live API metadata is present, the frontend displays the newest valid source-record date, a date range when records have mixed dates, and the elapsed calendar days between the latest source date and the API collection timestamp. It flags invalid or inconsistent date metadata. Time elapsed is computed only from a calendar-valid, timezone-qualified collection timestamp with valid clock and offset values. This is descriptive only: it does not define a freshness threshold, SLA, or provider update cadence. Collection time is not the source-record date. In demo mode, the UI explicitly states that real freshness information is unavailable.
 
 
 See [frontend source-date freshness display](docs/frontend-data-freshness-display-2026-11-24.md).

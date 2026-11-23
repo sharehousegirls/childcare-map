@@ -76,3 +76,17 @@ test("reports invalid source-date entries when some valid dates remain", () => {
   });
   assert.match(result, /유효하지 않은 기준일 1개 제외/);
 });
+
+test("invalid collection date, clock, or offset does not calculate age", () => {
+  const invalidTimestamps = [
+    "2026-02-31T05:00:00Z",
+    "2026-11-24T25:00:00Z",
+    "2026-11-24T05:00:00+14:30",
+  ];
+  for (const collected_at of invalidTimestamps) {
+    assert.equal(
+      formatDataFreshness({ source_data_dates: ["2026-11-22"], collected_at }),
+      "최신 기준일 2026-11-22",
+    );
+  }
+});
