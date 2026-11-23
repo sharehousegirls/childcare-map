@@ -235,5 +235,6 @@
 
 - Added a small frontend helper to display backend source-date coverage and parseability counts with row denominators. The diagnostic text distinguishes missing dates from unparseable dates, avoids percentages for an empty facility response, and shows a warning if metadata counts are inconsistent.
 - Demo mode explicitly states that real source-date diagnostics are unavailable; no fictional date quality values are shown. The live display is accessible via a polite status region and uses text-only rendering.
-- **PASS — isolated Node tests:** 5/5 tests passed for valid metadata, all dates missing, empty facility response, inconsistent counts, and missing/invalid metadata; module and test syntax checks passed. Exact repository checkout/full CI/browser test not yet run at the time of this status update.
+- **PASS — isolated Node tests:** 5/5 tests passed for valid metadata, all dates missing, empty facility response, inconsistent counts, and missing/invalid metadata; module and test syntax checks passed.
+- **PASS — GitHub Actions run #212:** Backend unit-test step, JavaScript syntax-check step, and frontend test step all completed successfully for commit `0723232c7c453b441b4e95b16ea807e44125f936`. The connector exposed step conclusions but not test-count output. https://github.com/sharehousegirls/childcare-map/actions/runs/45241050402
 - No dependencies, live API requests, credentials, geospatial data, or deployment were added. Ratios are response-row-based, not unique facility coverage or freshness guarantees.
