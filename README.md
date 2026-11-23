@@ -147,7 +147,7 @@ The official API guide says the service specification is available from the API 
 See [schema verification and integration acceptance gate](docs/api-schema-verification-2026-11-23.md) before configuring live integration.
 
 
-**Latest verification — GitHub Actions run #158:** 103 backend tests, 40 frontend tests, and all JavaScript syntax checks passed. Provider normalization now retains reported/derived totals separately and flags invalid numeric/coordinate data; see [provider data-quality safeguards](docs/provider-data-quality-2026-11-23.md). https://github.com/sharehousegirls/childcare-map/actions/runs/45101632033
+**Latest verification — GitHub Actions run #201:** 116 backend tests, 40 frontend tests, and all JavaScript syntax checks passed, including the record-level source-date ratio regression test. Earlier provider-quality safeguards are documented in [provider data-quality notes](docs/provider-data-quality-2026-11-23.md). https://github.com/sharehousegirls/childcare-map/actions/runs/45196215022
 
 ## Source-date parseability diagnostics (2026-11-23)
 

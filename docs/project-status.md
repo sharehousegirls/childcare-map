@@ -204,3 +204,13 @@
 - **CI: NOT RUN / UNVERIFIED** — repository tests were not executed locally, and this run's GitHub Actions status could not be retrieved with the available connector.
 - **NOT RUN:** direct local checkout tests, live API/schema/CRS/reuse review, and manual browser/accessibility checks.
 - Review: additive metadata only; no new dependency, frontend behavior, credentials, live API calls, or deployment.
+
+
+## 2026-11-23 milestone — record-level source-date ratios and verified CI
+
+- Clarified that source-date coverage/parseability ratios are calculated per response record (row), not per unique facility ID; duplicate IDs are not deduplicated by these ratios and must be reviewed separately before interpreting them as facility coverage.
+- Added a regression test with three rows, two dated rows, and a repeated facility ID: coverage 0.6667 and parseability 1.0.
+- **PASS — GitHub Actions run #200:** 115 backend tests, 40 frontend tests, and JavaScript syntax checks passed for commit 5155d170. https://github.com/sharehousegirls/childcare-map/actions/runs/45176395224
+- **PASS — GitHub Actions run #201:** 116 backend tests, 40 frontend tests, and JavaScript syntax checks passed for commit 406f604. https://github.com/sharehousegirls/childcare-map/actions/runs/45196215022
+- **NOT RUN:** direct local repository checkout tests, manual browser/mobile/accessibility checks, live API/schema/CRS/reuse validation.
+- No runtime code, dependencies, credentials, live API connections, or deployment were added.
