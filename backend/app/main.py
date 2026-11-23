@@ -1,5 +1,6 @@
 import os
-from datetime import datetime, timezone
+import re
+from datetime import date, datetime, timezone
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from .provider import get_facilities, ProviderNotConfigured, ProviderError
@@ -16,20 +17,38 @@ app.add_middleware(
 )
 
 
+def _parse_iso_source_date(value):
+    """Parse only verified-shape ISO calendar dates; unknown formats stay unknown."""
+    text = str(value).strip() if value is not None else ""
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", text):
+        return None
+    try:
+        return date.fromisoformat(text)
+    except ValueError:
+        return None
+
+
 def build_facility_meta(records, collected_at=None):
     """Describe source-record dates separately from this API collection timestamp."""
     collected_at = collected_at or datetime.now(timezone.utc)
     if collected_at.tzinfo is None or collected_at.utcoffset() is None:
         raise ValueError("collected_at must be timezone-aware.")
-    dates = sorted({
-        str(record.get("data_date")).strip()
-        for record in records
-        if record.get("data_date") is not None and str(record.get("data_date")).strip()
-    })
-    dated_records = sum(
-        1 for record in records
-        if record.get("data_date") is not None and str(record.get("data_date")).strip()
-    )
+    raw_dates = []
+    parsed_dates = []
+    unparseable_dates = 0
+    for record in records:
+        value = record.get("data_date")
+        if value is None or not str(value).strip():
+            continue
+        source_date = str(value).strip()
+        raw_dates.append(source_date)
+        parsed = _parse_iso_source_date(source_date)
+        if parsed is None:
+            unparseable_dates += 1
+        else:
+            parsed_dates.append(parsed)
+    dates = sorted(set(raw_dates))
+    dated_records = len(raw_dates)
     return {
         "collected_at": collected_at.astimezone(timezone.utc).isoformat(),
         "source_data_date": dates[0] if len(dates) == 1 else None,
@@ -37,6 +56,10 @@ def build_facility_meta(records, collected_at=None):
         "mixed_source_data_dates": len(dates) > 1,
         "records_with_source_data_date": dated_records,
         "records_without_source_data_date": len(records) - dated_records,
+        "records_with_parseable_source_data_date": len(parsed_dates),
+        "records_with_unparseable_source_data_date": unparseable_dates,
+        "source_data_date_earliest": min(parsed_dates).isoformat() if parsed_dates else None,
+        "source_data_date_latest": max(parsed_dates).isoformat() if parsed_dates else None,
     }
 
 
