@@ -62,3 +62,9 @@ Acceptance:
 - invalid and missing dates affect the appropriate denominator only;
 - empty batches return null for both ratios, avoiding a misleading zero-percent claim;
 - raw dates and existing metadata remain unchanged.
+
+
+## Validation note — 2026-11-23
+
+- **PASS (isolated harness):** 7 metadata-helper tests and Python compilation passed against a temporary copy of the helper/module and test cases. This is not a full repository checkout or backend-suite run.
+- **NOT RUN:** repository checkout test suite. GitHub commit status queries returned no status entries, so CI is unverified for this change.
