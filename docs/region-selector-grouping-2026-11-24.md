@@ -27,7 +27,8 @@ When a region name begins with the parent label followed by a space, the visible
 ## Tests
 
 - **PASS (isolated Node harness):** 7/7 unit tests passed; module and test syntax checks passed. This harness ran the new module/test files outside a repository checkout, not the full project suite.
-- **NOT RUN:** full repository frontend/backend suite and browser/manual responsive/accessibility tests. GitHub Actions will provide full repository test evidence after the commit.
+- **PASS — GitHub Actions run #217:** backend unit-test, JavaScript syntax-check, and frontend test steps completed successfully; run-level conclusion is success. Exact test-count output was not exposed by the connector. https://github.com/sharehousegirls/childcare-map/actions/runs/45281684930
+- **NOT RUN:** browser/manual responsive/accessibility tests.
 
 ## Next step
 

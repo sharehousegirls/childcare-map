@@ -264,5 +264,6 @@
 - Grouped the existing region selector by its parent display label using native optgroups; child labels are shortened only when the parent prefix is present, while option values preserve the full region name.
 - Added 7 unit tests for Korean sorting, parent grouping, display/value separation, fallback parent, malformed rows, same-group duplicates, and input immutability.
 - **PASS (isolated Node harness):** 7/7 tests and syntax checks. This was not a full repository checkout.
-- **NOT RUN:** full repository CI at commit time (pending), browser interaction, mobile viewport, and screen-reader checks.
+- **PASS — GitHub Actions run #217:** backend unit-test, JavaScript syntax-check, and frontend test steps completed successfully; run-level conclusion is success. Exact test-count output was not exposed by the connector. https://github.com/sharehousegirls/childcare-map/actions/runs/45281684930
+- **NOT RUN:** browser interaction, mobile viewport, and screen-reader checks.
 - No official region codes, live API data, mapping, external dependency, or deployment were added. Grouping is presentation-only; canonical code-based hierarchy and dong navigation remain blocked on official source review/import.
