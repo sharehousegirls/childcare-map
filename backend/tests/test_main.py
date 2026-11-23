@@ -17,6 +17,10 @@ class FacilityMetaTests(unittest.TestCase):
         self.assertFalse(meta["mixed_source_data_dates"])
         self.assertEqual(meta["records_with_source_data_date"], 2)
         self.assertEqual(meta["records_without_source_data_date"], 0)
+        self.assertEqual(meta["records_with_parseable_source_data_date"], 2)
+        self.assertEqual(meta["records_with_unparseable_source_data_date"], 0)
+        self.assertEqual(meta["source_data_date_earliest"], "2026-11-21")
+        self.assertEqual(meta["source_data_date_latest"], "2026-11-21")
         self.assertEqual(meta["collected_at"], "2026-11-22T12:34:56+00:00")
 
     def test_mixed_source_dates_do_not_claim_a_single_date(self):
@@ -25,6 +29,27 @@ class FacilityMetaTests(unittest.TestCase):
         self.assertIsNone(meta["source_data_date"])
         self.assertEqual(meta["source_data_dates"], ["2026-11-20", "2026-11-22"])
         self.assertTrue(meta["mixed_source_data_dates"])
+        self.assertEqual(meta["source_data_date_earliest"], "2026-11-20")
+        self.assertEqual(meta["source_data_date_latest"], "2026-11-22")
+
+    def test_iso_date_range_and_unparseable_values_are_diagnosed(self):
+        records = [
+            {"data_date": "2026-11-20"},
+            {"data_date": "2026-11-23"},
+            {"data_date": "2026/11/21"},
+            {"data_date": "2026-02-30"},
+            {"data_date": ""},
+        ]
+        meta = build_facility_meta(records)
+        self.assertEqual(meta["records_with_source_data_date"], 4)
+        self.assertEqual(meta["records_without_source_data_date"], 1)
+        self.assertEqual(meta["records_with_parseable_source_data_date"], 2)
+        self.assertEqual(meta["records_with_unparseable_source_data_date"], 2)
+        self.assertEqual(meta["source_data_date_earliest"], "2026-11-20")
+        self.assertEqual(meta["source_data_date_latest"], "2026-11-23")
+        # Raw non-ISO and invalid calendar strings are preserved for source review.
+        self.assertIn("2026/11/21", meta["source_data_dates"])
+        self.assertIn("2026-02-30", meta["source_data_dates"])
 
     def test_missing_source_dates_are_counted_not_filled(self):
         records = [{"data_date": None}, {}, {"data_date": "  "}]
@@ -33,6 +58,10 @@ class FacilityMetaTests(unittest.TestCase):
         self.assertIsNone(meta["source_data_date"])
         self.assertEqual(meta["records_with_source_data_date"], 0)
         self.assertEqual(meta["records_without_source_data_date"], 3)
+        self.assertEqual(meta["records_with_parseable_source_data_date"], 0)
+        self.assertEqual(meta["records_with_unparseable_source_data_date"], 0)
+        self.assertIsNone(meta["source_data_date_earliest"])
+        self.assertIsNone(meta["source_data_date_latest"])
 
     def test_collection_timestamp_is_normalized_to_utc(self):
         collected_at = datetime(2026, 11, 22, 21, 40, 0, tzinfo=timezone(timedelta(hours=9)))
