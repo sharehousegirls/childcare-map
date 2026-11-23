@@ -27,3 +27,23 @@ The frontend checks the API envelope record count, displays source-date status a
 
 ## Limitation
 This is a collection-time indicator, not a freshness SLA. No provider freshness threshold is assigned until the official API's date semantics and update frequency are confirmed.
+
+## Strict source-date diagnostics — 2026-11-23
+
+The metadata helper now adds:
+- `records_with_parseable_source_data_date`: non-empty provider date strings that match the strict `YYYY-MM-DD` format and are valid calendar dates.
+- `records_with_unparseable_source_data_date`: non-empty strings not accepted by that strict parser (including other formats and invalid calendar dates).
+- `source_data_date_earliest` and `source_data_date_latest`: minimum/maximum among parseable dates only; null when no valid ISO date exists.
+
+Raw non-empty values remain in `source_data_dates` for audit. Missing values continue to be counted separately and are not classified as unparseable.
+
+These fields are parseability diagnostics only. Because the provider's source-date format/semantics and update cadence remain unverified, the API does not label records fresh or stale and does not apply an age threshold. No date is synthesized from collection time.
+
+## Acceptance additions
+
+- Strict ISO date diagnostics do not rewrite raw source-date strings.
+- Invalid calendar dates and non-ISO strings count as unparseable, not as missing.
+- Earliest/latest values use parseable calendar dates only.
+- No freshness SLA or stale/fresh label is inferred.
+
+Test cases cover mixed valid, non-ISO, invalid-calendar, and missing date values. GitHub Actions result is recorded in project status after the run completes.
