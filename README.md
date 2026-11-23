@@ -62,6 +62,8 @@ backend/README.md 참조. 아래 명령은 저장소 루트에서 시작합니�
 
 Implementation and manifest example: `docs/region-source-manifest-2026-11-22.md`.
 
+Normalized region records reject embedded C0/C1 control characters in identifiers, names, type labels, parent IDs, and source metadata. This is input-quality validation only; official region codes and source files remain unimported. See `docs/region-code-control-character-validation-2026-11-24.md`.
+
 ## Region granularity and coordinate constraints
 
 The Childcare Information Disclosure Portal FAQ (reviewed 2026-11-22) says its regional facility type/count query supports 시·군·구, not dong-level query (FAQ 12). This is scoped to that query and does not rule out deriving dong aggregates from facility-level records; any such aggregation requires validated facility coordinates, a reviewed/versioned boundary source, deduplication, and coverage disclosure. The FAQ reports EPSG:5181 TM coordinates for its childcare map data (FAQ 13), so verify the exact API field/CRS and transform before mapping. It also warns that legal-dong and administrative-dong lookup may differ (FAQ 10).
