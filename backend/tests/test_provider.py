@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.provider import (
     _number, _flatten_records, _get_value, _sum_age_waits,
     _validate_field_map, _safe_http_error, _wait_total_consistent,
-    _mark_facility_id_quality, ProviderError,
+    _mark_facility_id_quality, _normalize_provider_record, ProviderError,
 )
 
 class ProviderNormalizationTests(unittest.TestCase):
@@ -83,6 +83,8 @@ class ProviderNormalizationTests(unittest.TestCase):
         self.assertEqual([row["facility_id"] for row in result], ["A001", "A001", "B002"])
         self.assertEqual([row["facility_id_duplicate"] for row in result], [True, True, False])
         self.assertEqual([row["facility_id_missing"] for row in result], [False, False, False])
+        self.assertIn("facility_id_duplicate", result[0]["quality_flags"])
+        self.assertNotIn("facility_id_duplicate", result[2]["quality_flags"])
 
     def test_missing_facility_id_flagged_without_dropping_named_row(self):
         rows = [{"facility_id": None, "name": "Unnamed code facility"}, {"facility_id": " "}]
@@ -91,6 +93,51 @@ class ProviderNormalizationTests(unittest.TestCase):
         self.assertTrue(result[0]["facility_id_missing"])
         self.assertFalse(result[0]["facility_id_duplicate"])
         self.assertTrue(result[1]["facility_id_missing"])
+        self.assertIn("facility_id_missing", result[0]["quality_flags"])
+
+    def test_provider_total_provenance_preserved_when_derived(self):
+        record = {
+            "facility_id": "F1", "wait_0": 1, "wait_1": 2,
+            "wait_2": 0, "wait_3": 0, "wait_4": 0, "wait_5": 0,
+            "wait_6_plus": 0, "wait_total": None,
+        }
+        row = _normalize_provider_record(record, {})
+        self.assertEqual(row["wait_total"], 3)
+        self.assertIsNone(row["wait_total_reported"])
+        self.assertEqual(row["wait_total_derived"], 3)
+        self.assertIsNone(row["wait_total_consistent"])
+        self.assertNotIn("wait_total_mismatch", row["quality_flags"])
+
+    def test_reported_total_mismatch_is_quality_flagged(self):
+        record = {
+            "facility_id": "F1", "wait_0": 1, "wait_1": 2,
+            "wait_2": 0, "wait_3": 0, "wait_4": 0, "wait_5": 0,
+            "wait_6_plus": 0, "wait_total": 4,
+        }
+        row = _normalize_provider_record(record, {})
+        self.assertEqual(row["wait_total_reported"], 4)
+        self.assertEqual(row["wait_total_derived"], 3)
+        self.assertEqual(row["wait_total"], 4)
+        self.assertFalse(row["wait_total_consistent"])
+        self.assertIn("wait_total_mismatch", row["quality_flags"])
+
+    def test_invalid_numeric_value_is_null_and_flagged(self):
+        row = _normalize_provider_record({"facility_id": "F1", "wait_0": "2.5"}, {})
+        self.assertIsNone(row["wait_0"])
+        self.assertIn("invalid_numeric:wait_0", row["quality_flags"])
+
+    def test_geographic_coordinates_out_of_range_are_null_and_flagged(self):
+        row = _normalize_provider_record({"facility_id": "F1", "latitude": "95", "longitude": "181"}, {})
+        self.assertIsNone(row["latitude"])
+        self.assertIsNone(row["longitude"])
+        self.assertIn("coordinate_out_of_range:latitude", row["quality_flags"])
+        self.assertIn("coordinate_out_of_range:longitude", row["quality_flags"])
+
+    def test_incomplete_age_buckets_are_flagged_not_zero_filled(self):
+        row = _normalize_provider_record({"facility_id": "F1", "wait_0": 0, "wait_1": None}, {})
+        self.assertIsNone(row["wait_total_derived"])
+        self.assertIsNone(row["wait_total"])
+        self.assertIn("wait_age_buckets_incomplete", row["quality_flags"])
 
 if __name__ == "__main__":
     unittest.main()
