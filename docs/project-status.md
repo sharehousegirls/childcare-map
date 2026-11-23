@@ -142,7 +142,9 @@
 
 ## 2026-11-23 incremental milestone — manifest URL hardening and official API schema evidence
 - Hardened the region-source manifest HTTPS URL validator: reject host whitespace/backslashes and malformed or out-of-range ports, while preserving existing HTTPS, hostname, and credential checks.
-- Added two regression tests for a whitespace hostname and an out-of-range terms URL port. **CI verification is pending for these new commits; do not mark tests passed until the workflow completes.**
+- Added two regression tests for a whitespace hostname and an out-of-range terms URL port.
+- **PASS — GitHub Actions run #147:** URL-hardening code commit passed.
+- **PASS — GitHub Actions run #148:** 96 backend tests, 40 frontend tests, and JavaScript syntax checks passed with the regression tests included. https://github.com/sharehousegirls/childcare-map/actions/runs/45090277903
 - Reviewed the official data.gov catalog for nationwide dataset 15101154. Its catalog lists age waitlist fields (0–5, 6+, total), facility metadata and a data date, with XML, LINK, real-time update metadata, unrestricted catalog reuse, and catalog last-modified date 2025-08-20. This confirms catalog-described fields only; exact XML tags and payload schema remain unverified.
 - Official Childcare API guide confirms that service specifications on API detail pages contain service URLs, operations, request/response definitions and examples. Policy confirms the development-account result cap is 50 rows and operating accounts require separate approval, expected traffic, and renewal after 12 months.
 - Added \`docs/api-schema-verification-2026-11-23.md\` with a candidate field mapping and acceptance checklist. No API request, credentials, live data, or deployment was added.
