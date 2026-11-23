@@ -55,11 +55,20 @@ def _https_url(value: str | None, field: str, issues: list[str]) -> str | None:
         return None
     try:
         parsed = urlparse(value)
+        hostname = parsed.hostname
+        port = parsed.port
     except ValueError:
         issues.append(f"{field}_invalid_url")
         return None
-    if parsed.scheme != "https" or not parsed.hostname:
+    if parsed.scheme != "https" or not hostname:
         issues.append(f"{field}_must_be_https_url")
+        return None
+    if (
+        any(char.isspace() for char in hostname)
+        or "\\" in hostname
+        or (port is not None and not 1 <= port <= 65535)
+    ):
+        issues.append(f"{field}_invalid_url")
         return None
     if parsed.username is not None or parsed.password is not None:
         issues.append(f"{field}_must_not_contain_credentials")
