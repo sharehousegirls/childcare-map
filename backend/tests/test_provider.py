@@ -5,8 +5,9 @@ import httpx
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.provider import (
     _number, _flatten_records, _get_value, _sum_age_waits,
-    _validate_field_map, _safe_http_error, _wait_total_consistent,
-    _mark_facility_id_quality, _normalize_provider_record, ProviderError,
+    _validate_field_map, _validate_live_field_map, LIVE_WAIT_FIELDS,
+    _safe_http_error, _wait_total_consistent, _mark_facility_id_quality,
+    _normalize_provider_record, ProviderError,
 )
 
 class ProviderNormalizationTests(unittest.TestCase):
