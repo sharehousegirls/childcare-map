@@ -32,3 +32,13 @@ A bounded improvement to the unconnected API normalization/storage scaffold. No 
 ## Review notes
 
 The normalized total remains backward-compatible for consumers. The additional provenance fields and flags are additive. The coordinate guard is a basic geographic-range check only and must not be used as evidence that coordinates are accurate or in the correct CRS.
+
+## Explicit field-map uniqueness follow-up
+
+Live API configuration now trims configured provider-field names and rejects a provider field assigned to more than one normalized field (for example, mapping both facility ID and facility name to the same XML tag). This is a consistency guard, not evidence that the tag exists in the official schema. A verified service specification and redacted sample remain required.
+
+Acceptance criteria:
+- whitespace around configured provider-field names is removed;
+- a provider field name cannot be assigned to multiple normalized fields;
+- duplicate assignments fail before the live HTTP request;
+- no official tag names are inferred or added by this safeguard.
