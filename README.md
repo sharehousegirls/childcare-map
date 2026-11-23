@@ -154,3 +154,6 @@ See [schema verification and integration acceptance gate](docs/api-schema-verifi
 The facilities API metadata adds strict date parseability counts and the earliest/latest valid `YYYY-MM-DD` source dates. Non-empty source-date values in other formats or with invalid calendar dates are retained in the raw distinct-date list and counted as unparseable; blank values remain missing. These diagnostics do not define freshness or a stale threshold. Source-date semantics and the provider update cadence must be verified before any freshness SLA is configured.
 
 See [API freshness metadata](docs/api-freshness-metadata-2026-11-22.md).
+
+
+Source-date coverage and parseability ratios are **record-level**, not unique-facility metrics. Duplicate facility IDs are not deduplicated by these calculations and should be reviewed separately before interpreting coverage as facility-level. See the detailed ratio semantics in `docs/api-freshness-metadata-2026-11-22.md`.

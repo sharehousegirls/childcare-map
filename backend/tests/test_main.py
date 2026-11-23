@@ -76,6 +76,19 @@ class FacilityMetaTests(unittest.TestCase):
         self.assertIsNone(meta["source_data_date_earliest"])
         self.assertIsNone(meta["source_data_date_latest"])
 
+    def test_source_date_ratios_are_record_level_not_unique_facility_level(self):
+        records = [
+            {"facility_id": "F-001", "data_date": "2026-11-20"},
+            {"facility_id": "F-001", "data_date": None},
+            {"facility_id": "F-002", "data_date": "2026-11-21"},
+        ]
+        meta = build_facility_meta(records)
+        # Ratios use response rows, not deduplicated facility IDs.
+        self.assertEqual(meta["records_with_source_data_date"], 2)
+        self.assertEqual(meta["records_without_source_data_date"], 1)
+        self.assertEqual(meta["source_data_date_coverage_ratio"], 0.6667)
+        self.assertEqual(meta["source_data_date_parseability_ratio"], 1.0)
+
     def test_collection_timestamp_is_normalized_to_utc(self):
         collected_at = datetime(2026, 11, 22, 21, 40, 0, tzinfo=timezone(timedelta(hours=9)))
         meta = build_facility_meta([], collected_at)

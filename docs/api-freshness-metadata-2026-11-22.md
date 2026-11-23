@@ -68,3 +68,10 @@ Acceptance:
 
 - **PASS (isolated harness):** 7 metadata-helper tests and Python compilation passed against a temporary copy of the helper/module and test cases. This is not a full repository checkout or backend-suite run.
 - **NOT RUN:** repository checkout test suite. GitHub commit status queries returned no status entries, so CI is unverified for this change.
+
+
+## Ratio unit and duplicate records — 2026-11-23
+
+The source-date coverage and parseability ratios are calculated per normalized response record (row), not per unique facility ID. They do not deduplicate records. If a batch contains duplicate facility IDs with different or missing dates, those rows each contribute to the denominator; the ratio can therefore differ from unique-facility coverage. Provider duplicate-ID diagnostics are separate, and duplicates should be resolved or explicitly reviewed before interpreting these ratios as facility coverage.
+
+Acceptance: a batch with three rows, two dated rows, and a repeated facility ID yields record-level coverage '0.6667' and parseability '1.0' when both dated rows have valid ISO dates. A regression test now locks this behavior.
