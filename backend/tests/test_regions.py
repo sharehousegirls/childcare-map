@@ -109,6 +109,25 @@ class RegionValidationTests(unittest.TestCase):
         normalized = validate_region_records(records)
         self.assertEqual(normalized[0]["source_code"], "00011")
 
+    def test_c0_control_characters_rejected_in_region_text_fields(self):
+        fields = ("region_id", "name", "region_type", "parent_region_id", "source_system", "source_code")
+        for field in fields:
+            with self.subTest(field=field):
+                records = fixture_regions()
+                records[1][field] = records[1][field] + chr(31)
+                with self.assertRaises(RegionValidationError) as context:
+                    validate_region_records(records)
+                self.assertIn(f"{field}_contains_control_character", {issue["code"] for issue in context.exception.issues})
+
+    def test_c1_control_characters_rejected_in_region_text_fields(self):
+        fields = ("region_id", "name", "region_type", "parent_region_id", "source_system", "source_code")
+        for field in fields:
+            with self.subTest(field=field):
+                records = fixture_regions()
+                records[1][field] = records[1][field] + chr(133)
+                with self.assertRaises(RegionValidationError) as context:
+                    validate_region_records(records)
+                self.assertIn(f"{field}_contains_control_character", {issue["code"] for issue in context.exception.issues})
     def test_records_are_not_mutated(self):
         records = fixture_regions()
         before = copy.deepcopy(records)
