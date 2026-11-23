@@ -36,7 +36,7 @@ Normalized fields include facility_id, name, type, status, address, sido, sigung
 ## Security and data quality
 
 - Request failures are sanitized before they are returned by the backend; raw HTTP exceptions can contain query URLs and service keys.
-- `API_FIELD_MAP` must be a JSON object mapping known normalized fields to non-empty strings.
+- `API_FIELD_MAP` must be a JSON object mapping known normalized fields to non-empty strings. Provider-field names are trimmed, and duplicate source-field assignments across normalized fields are rejected before a live request.
 - API credentials must stay server-side. Do not put keys in frontend code, repository files, chat, or email.
 - Missing values remain null; do not treat blanks as zero wait.
 - Waitlist totals are application counts and may not represent unique children across facilities.
