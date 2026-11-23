@@ -114,7 +114,8 @@ class RegionValidationTests(unittest.TestCase):
         for field in fields:
             with self.subTest(field=field):
                 records = fixture_regions()
-                records[1][field] = records[1][field] + chr(31)
+                value = records[1][field]
+                records[1][field] = value[:1] + chr(31) + value[1:]
                 with self.assertRaises(RegionValidationError) as context:
                     validate_region_records(records)
                 self.assertIn(f"{field}_contains_control_character", {issue["code"] for issue in context.exception.issues})
