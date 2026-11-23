@@ -25,6 +25,6 @@ Date values are accepted only as valid calendar dates in `YYYY-MM-DD`. Collectio
 - [x] No dependency, live API request, credential, or deployment added.
 
 ## Tests
-- 10 Node unit tests added to `tests/data-freshness.test.mjs`.
-- PASS — GitHub Actions run #212 passed the initial 8-test implementation. Follow-up timestamp validation and its 2 added assertions are pending CI
+- 9 Node unit tests added to `tests/data-freshness.test.mjs`.
+- PASS — GitHub Actions run #212 passed the initial 8-test implementation; run #215 passed the timestamp-validation follow-up (9 tests). Backend 118 methods and frontend 54 test cases are counted from repository test files; CI logs exposed step conclusions but not counts. https://github.com/sharehousegirls/childcare-map/actions/runs/45261706107
 - Direct local repository tests: NOT RUN (no local checkout in this execution environment).

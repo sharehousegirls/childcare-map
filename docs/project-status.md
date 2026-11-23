@@ -1,7 +1,7 @@
-# Project status — 2026-11-23
+# Project status — 2026-11-24
 
 ## Current phase
-**Data-source and geography validation.** Live API connection remains gated on verified official schema, credentials, quality, and service-specific reuse terms.
+**Data-source and geography validation, with frontend source-date freshness diagnostics.** Live API connection remains gated on verified official schema, credentials, quality, and service-specific reuse terms.
 
 ## Completed foundation
 - Responsive static prototype: region cards, facility search, type filter, explicit zero-wait filter.
@@ -244,12 +244,15 @@
 - Added a separate UI line showing the latest valid source-record date, date range/mixed-date status, and calendar-day difference measured at API collection time.
 - Invalid date strings are excluded from date calculations and counted in the display; future source dates and inconsistent metadata are flagged for review.
 - No stale threshold, SLA, or provider update cadence is inferred. Source-date meaning still requires official schema/sample verification.
-- Added 8 Node unit tests covering valid age, mixed-date range, invalid dates, future dates, missing collection timestamp, inconsistent latest-date metadata, mixed-flag mismatch, and invalid entries alongside valid dates.
-- CI result pending for this commit; no local repository checkout is available in this run.
+- Added 8 Node unit tests in the initial implementation covering valid age, mixed-date range, invalid dates, future dates, missing collection timestamp, inconsistent latest-date metadata, mixed-flag mismatch, and invalid entries alongside valid dates.
+- **PASS — GitHub Actions run #212:** backend, JavaScript syntax, and frontend test steps completed successfully for the initial implementation; the run did not expose test-count output. https://github.com/sharehousegirls/childcare-map/actions/runs/45261444098
+- No local repository checkout is available in this run.
 
 
 
 ## 2026-11-24 follow-up — collection timestamp validation
 - Tightened elapsed-day calculation to require a calendar-valid collection date, valid clock fields, and a timezone offset no greater than ±14:00.
 - Added a regression test for invalid collection dates, clock values, and timezone offsets.
-- GitHub Actions run #212 passed the initial freshness-display implementation (8 tests); this follow-up CI is pending.
+- Added one regression test covering invalid calendar date, clock, and offset variants.
+- **PASS — GitHub Actions run #215:** backend, JavaScript syntax, and frontend test steps succeeded for commit `92552ff6d5bc732c7cab6845be6386cc4a384b65`. The repository test files contain 118 backend test methods and 54 frontend test cases; CI output exposed step conclusions but not counts. https://github.com/sharehousegirls/childcare-map/actions/runs/45261706107
+- Direct local repository checkout tests: NOT RUN.

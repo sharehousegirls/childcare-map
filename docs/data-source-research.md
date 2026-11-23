@@ -89,3 +89,17 @@ Official FAQ: https://info.childcare.go.kr/info_html5/cera/community/faqboard/Fa
 ## Current conclusion
 
 Facility-level waitlist data is plausible and documented in official catalog 15101154; source discovery has advanced. The user's Daegu application 15101186 appears to provide basic facility fields, not waitlist counts. The nationwide waitlist API request schema, actual response, semantics, coordinate handling and service-specific reuse terms remain unvalidated. No real data is connected.
+
+## Official catalog and access-policy recheck — 2026-11-24
+
+The nationwide waitlist candidate page was opened directly and rechecked: https://www.data.go.kr/data/15101154/openapi.do
+
+The page describes facility-level waitlist child counts for ages 0, 1, 2, 3, 4, 5, 6+ and total, along with facility profile, location, capacity/enrollment and source-date fields. Catalog metadata currently shown on the page lists XML format, LINK delivery, free access, an `이용허락범위 제한 없음` reuse label, and real-time update cycle; the catalog modification date shown is 2025-08-20. This is the official catalog description, not an inspected response payload.
+
+Official catalog: https://www.data.go.kr/data/15101154/openapi.do
+
+The Childcare Information Disclosure API guide was also rechecked: https://info.childcare.go.kr/info_html5/oais/guide/Development.jsp. It requires portal membership/login, development-account application/review, development using the service specification, then operating-account application/review before service operation. The downloadable service specification is linked from the API detail page's technical-document section and describes service URL, operations, request/response messages and examples.
+
+Policy page: https://info.childcare.go.kr/info_html5/oais/introduction/Policy.jsp. Development accounts are limited to 50 returned rows and have no listed usage-period limit; operating accounts require traffic estimates, are issued after review, and are valid for 12 months with renewal. This limits development-account samples and does not establish nationwide coverage.
+
+**Reuse gate remains conservative:** the catalog's unrestricted label and free-access metadata are positive evidence, but the API's exact service-level caching, attribution, redistribution and commercial/advertising conditions have not been checked against the authenticated service specification/application. Do not treat these as fully cleared. No credentials were used and no live API request was made.

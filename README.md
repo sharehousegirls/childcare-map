@@ -172,3 +172,7 @@ When live API metadata is present, the frontend displays the newest valid source
 
 
 See [frontend source-date freshness display](docs/frontend-data-freshness-display-2026-11-24.md).
+
+## Official data-source recheck — 2026-11-24
+
+The official catalog page for nationwide facility-level dataset 15101154 was rechecked. It lists XML/LINK delivery, free access, an unrestricted-reuse catalog label, real-time update metadata, and facility-level waitlist counts for ages 0–5, 6+, and total. These are catalog descriptions; the exact service schema, response, pagination, date semantics, and service-specific reuse conditions are not yet verified. See [data-source research](docs/data-source-research.md).
