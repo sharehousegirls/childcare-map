@@ -91,6 +91,16 @@ class RegionManifestTests(unittest.TestCase):
         with self.assertRaises(RegionSourceManifestError):
             validate_region_source_manifest(manifest(dataset_kind="facility"))
 
+    def test_source_url_rejects_whitespace_hostname(self):
+        with self.assertRaises(RegionSourceManifestError) as ctx:
+            validate_region_source_manifest(manifest(source_url="https://bad host/source.zip"))
+        self.assertIn("source_url_invalid_url", ctx.exception.issues)
+
+    def test_terms_url_rejects_out_of_range_port(self):
+        with self.assertRaises(RegionSourceManifestError) as ctx:
+            validate_region_source_manifest(manifest(terms_url="https://mois.go.kr:99999/terms"))
+        self.assertIn("terms_url_invalid_url", ctx.exception.issues)
+
     def test_http_source_url_rejected(self):
         with self.assertRaises(RegionSourceManifestError) as ctx:
             validate_region_source_manifest(manifest(source_url="http://example.test/file.zip"))
