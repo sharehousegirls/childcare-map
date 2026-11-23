@@ -36,6 +36,8 @@ class FacilityMetaTests(unittest.TestCase):
         self.assertIsNone(meta["source_data_date"])
         self.assertEqual(meta["source_data_dates"], ["2026-11-20", "2026-11-22"])
         self.assertTrue(meta["mixed_source_data_dates"])
+        self.assertEqual(meta["source_data_date_coverage_ratio"], 1.0)
+        self.assertEqual(meta["source_data_date_parseability_ratio"], 1.0)
         self.assertEqual(meta["source_data_date_earliest"], "2026-11-20")
         self.assertEqual(meta["source_data_date_latest"], "2026-11-22")
 
@@ -69,7 +71,7 @@ class FacilityMetaTests(unittest.TestCase):
         self.assertEqual(meta["records_without_source_data_date"], 3)
         self.assertEqual(meta["records_with_parseable_source_data_date"], 0)
         self.assertEqual(meta["records_with_unparseable_source_data_date"], 0)
-        self.assertIsNone(meta["source_data_date_coverage_ratio"])
+        self.assertEqual(meta["source_data_date_coverage_ratio"], 0.0)
         self.assertIsNone(meta["source_data_date_parseability_ratio"])
         self.assertIsNone(meta["source_data_date_earliest"])
         self.assertIsNone(meta["source_data_date_latest"])
