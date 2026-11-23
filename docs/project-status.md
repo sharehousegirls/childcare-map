@@ -10,6 +10,7 @@
 - Browser-local saved facilities: save/load/delete by exact facility ID (up to 50). Demo IDs are fictional; records without IDs cannot be saved.
 - FastAPI adapter scaffold with server-side credential configuration, XML/JSON parsing, normalized fields, health and facility endpoints.
 - Provider error sanitization and field-map validation.
+- Provider normalization now retains reported and age-bucket-derived waitlist totals separately, flags invalid numeric/geographic coordinate values and incomplete buckets, and propagates quality flags into SQLite snapshots. This remains a disconnected scaffold, not live-data validation.
 - Waitlist-total consistency diagnostic; missing/duplicate facility-ID flags (batch-level only).
 - Backend unit-test evidence and CI evidence documented in the security review.
 - Official source inventory and integration plan.
@@ -149,3 +150,14 @@
 - Official Childcare API guide confirms that service specifications on API detail pages contain service URLs, operations, request/response definitions and examples. Policy confirms the development-account result cap is 50 rows and operating accounts require separate approval, expected traffic, and renewal after 12 months.
 - Added \`docs/api-schema-verification-2026-11-23.md\` with a candidate field mapping and acceptance checklist. No API request, credentials, live data, or deployment was added.
 - **NOT RUN:** direct local checkout tests and browser/accessibility checks remain outstanding.
+
+
+## 2026-11-23 incremental milestone — provider normalization quality
+
+- Invalid numeric values are nullified and flagged; blank/sentinel values remain unknown.
+- Latitude/longitude outside geographic ranges are nullified and flagged. This is only a bounds check; CRS/axis order remains unverified and projected values must not be mapped as geographic coordinates.
+- Provider-reported and age-derived waitlist totals are retained separately; existing effective-total behavior remains backward-compatible. Mismatch/incomplete-age and facility-ID quality flags are surfaced and persisted.
+- **FAIL — GitHub Actions runs #156/#157:** an intermediate SQL schema typo caused test setup errors; corrected before final verification.
+- **PASS — GitHub Actions run #158:** 103 backend tests, 40 frontend tests and JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45101632033
+- **NOT RUN:** direct local repository tests (GitHub DNS prevented clone), live API/schema/CRS/license checks, browser/manual responsive/accessibility checks.
+- Implementation notes: [provider data-quality safeguards](provider-data-quality-2026-11-23.md).
