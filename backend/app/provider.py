@@ -89,10 +89,22 @@ def _get_value(record: dict, field: str, field_map: dict, *, allow_aliases: bool
 def _validate_field_map(field_map: Any) -> dict:
     if not isinstance(field_map, dict):
         raise ProviderError("API_FIELD_MAP must be a JSON object.")
+    normalized_map = {}
+    provider_field_owners = {}
     for normalized, provider_field in field_map.items():
-        if normalized not in FIELD_ALIASES or not isinstance(provider_field, str) or not provider_field.strip():
+        if normalized not in FIELD_ALIASES or not isinstance(provider_field, str):
             raise ProviderError("API_FIELD_MAP must map known normalized fields to non-empty provider field names.")
-    return field_map
+        provider_field = provider_field.strip()
+        if not provider_field:
+            raise ProviderError("API_FIELD_MAP must map known normalized fields to non-empty provider field names.")
+        owner = provider_field_owners.get(provider_field)
+        if owner is not None:
+            raise ProviderError(
+                f"API_FIELD_MAP provider field {provider_field!r} is mapped to multiple normalized fields: {owner} and {normalized}."
+            )
+        normalized_map[normalized] = provider_field
+        provider_field_owners[provider_field] = normalized
+    return normalized_map
 
 
 LIVE_REQUIRED_FIELDS = ("facility_id", "name", "data_date")
@@ -100,7 +112,8 @@ LIVE_WAIT_FIELDS = ("wait_0", "wait_1", "wait_2", "wait_3", "wait_4", "wait_5", 
 
 
 def _validate_live_field_map(field_map: dict) -> dict:
-    """Fail closed until identity, source date, and waitlist mapping are explicit."""
+    """Fail closed until identity, source date, waitlist mapping, and unique tags are explicit."""
+    field_map = _validate_field_map(field_map)
     missing = [field for field in LIVE_REQUIRED_FIELDS if field not in field_map]
     has_reported_total = "wait_total" in field_map
     has_complete_age_buckets = all(field in field_map for field in LIVE_WAIT_FIELDS)
