@@ -112,3 +112,15 @@ The live adapter now requires explicit field mappings for facility ID, name and 
 - Service-spec download instructions: https://info.childcare.go.kr/info_html5/oais/guide/Development.jsp
 - API access policy: https://info.childcare.go.kr/info_html5/oais/introduction/Policy.jsp
 - Geographic FAQ: https://info.childcare.go.kr/info_html5/cera/community/faqboard/FaqBoardSlPL.jsp
+
+## Official portal review follow-up (2026-11-23)
+
+A fresh direct review of the official catalog confirms the catalog-described fields include facility identity/location and profile data, capacity/enrollment, data date, age waitlist buckets 0–5, 6+, and waitlist total. The catalog continues to display XML, LINK delivery, real-time update metadata, free access, and `이용허락범위 제한 없음`. These catalog statements do **not** establish exact XML tag names, source-date semantics, row-level freshness, or service-specific caching/redistribution/commercial terms.
+
+The official Childcare Portal API guide explains that the downloadable service specification is available in the API detail page's technical-document section and contains service URL, operations, request/response messages, and examples. The official portal policy reiterates the 50-row development-account cap and separate reviewed operating account (12 months; traffic estimate required). No account approval, credentials, request, or live schema was confirmed during this review.
+
+Official references:
+- Catalog: https://www.data.go.kr/data/15101154/openapi.do
+- API development guide: https://info.childcare.go.kr/info_html5/oais/guide/Development.jsp
+- API usage policy: https://info.childcare.go.kr/info_html5/oais/introduction/Policy.jsp
+- Portal FAQ (regional granularity and coordinate FAQ): https://info.childcare.go.kr/info_html5/cera/community/faqboard/FaqBoardSlPL.jsp
