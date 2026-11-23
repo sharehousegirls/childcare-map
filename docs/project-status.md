@@ -22,6 +22,7 @@
 - Region source manifest validator in `backend/app/region_manifest.py` records source/version/date/digest/attribution and reuse review; it provides separate public-redistribution and commercial-use gates. SHA-256 verification streams local files in 1 MiB chunks. The gate is not yet wired to an importer.
 
 - Regional aggregation is extracted into `regional-summary.mjs`: missing wait counts stay null, partial totals/coverage are explicit, zero-wait counts only explicit zero, and live region labels are province-first.
+- Region selector options are grouped by the existing parent display label with native optgroups and Korean sorting; child display labels may omit a repeated parent prefix while the selected value remains the full region name. This is not an official code-backed hierarchy and does not add dong navigation.
 
 ## Blockers / not yet verified
 - Daegu facility-metadata development API application is pending; it does not itself provide the waitlist fields.
@@ -49,6 +50,7 @@
 
 ## Next priorities
 - Import the current official region-code archives only after source/layout and reuse review; preserve codes, keep administrative/legal-dong records separate, map crosswalk rows through the validator, and retain unresolved cases for manual review.
+- After official region IDs are verified, replace display-name selector values with canonical IDs and a hierarchy; plan a compatibility migration for browser-local saved regions/searches.
 - Validate facility coordinates and EPSG:5181 transformation using a redacted official sample before map rendering.
 - Prototype derived dong aggregation with deduplication, mapping coverage, null handling, and explicit UI labeling; do not claim a direct official dong query.
 
@@ -256,3 +258,11 @@
 - Added one regression test covering invalid calendar date, clock, and offset variants.
 - **PASS — GitHub Actions run #215:** backend, JavaScript syntax, and frontend test steps succeeded for commit `92552ff6d5bc732c7cab6845be6386cc4a384b65`. The repository test files contain 118 backend test methods and 54 frontend test cases; CI output exposed step conclusions but not counts. https://github.com/sharehousegirls/childcare-map/actions/runs/45261706107
 - Direct local repository checkout tests: NOT RUN.
+
+
+## 2026-11-24 incremental milestone — grouped region selector
+- Grouped the existing region selector by its parent display label using native optgroups; child labels are shortened only when the parent prefix is present, while option values preserve the full region name.
+- Added 7 unit tests for Korean sorting, parent grouping, display/value separation, fallback parent, malformed rows, same-group duplicates, and input immutability.
+- **PASS (isolated Node harness):** 7/7 tests and syntax checks. This was not a full repository checkout.
+- **NOT RUN:** full repository CI at commit time (pending), browser interaction, mobile viewport, and screen-reader checks.
+- No official region codes, live API data, mapping, external dependency, or deployment were added. Grouping is presentation-only; canonical code-based hierarchy and dong navigation remain blocked on official source review/import.

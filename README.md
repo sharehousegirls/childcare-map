@@ -8,6 +8,7 @@
 - FastAPI backend scaffold가 backend/에 추가되었습니다.
 - SQLite 스냅샷 저장 기반(backend/app/storage.py)이 추가됐습니다. 시설 메타데이터, append-only 스냅샷, 수집 배치 요약, 검토 대상 레코드를 저장하지만 아직 API와 연결하지 않았습니다.
 - 브라우저에서 검색 조건 저장/불러오기/삭제 기능을 제공합니다. 저장 데이터는 해당 브라우저의 localStorage에만 보관됩니다.
+- 지역 선택 목록은 현재 상위 지역 표시명별로 묶어 보여주며, 하위 옵션은 한국어 정렬합니다. 공식 행정구역 코드 기반 탐색이 아니라 화면 편의용 그룹입니다.
 - Live regional summaries keep missing wait counts unknown, show partial totals and known/missing facility coverage; zero-wait only counts explicit zero values.
 - Frontend는 backend /api/facilities 응답이 정상이고 source=official_api일 때 실제 데이터로 전환합니다. 연결 실패 시 가상 데이터로 돌아가며 화면 상단 상태 표시로 구분합니다.
 - Backend API errors are sanitized to avoid exposing service keys in request URLs; field mapping configuration is validated.
@@ -24,6 +25,12 @@
 - 현재 저장 값은 지역명 문자열이며 공식 행정구역 코드가 아닙니다. 공식 코드 도입 시 ID 기반 저장과 마이그레이션이 필요합니다.
 - 브라우저 데이터 삭제 또는 저장소 제한 시 저장 내용이 사라지거나 저장되지 않을 수 있습니다. 계정/서버/기기 간 동기화는 제공하지 않습니다.
 
+## 상위 지역 그룹 선택
+
+지역 선택 목록은 기존 상위 지역 표시명(`district`)을 기준으로 그룹화하고, 하위 옵션을 한국어로 정렬합니다. 상위 지역명이 지역 이름에 반복되는 경우 표시 텍스트에서만 접두어를 줄이며, 선택 값과 저장 기능에는 전체 지역명 문자열을 유지합니다.
+
+이는 현재 데이터에 대한 화면 표시 그룹일 뿐 공식 행정구역 코드나 전국 계층 구조가 아닙니다. 공식 코드 import와 재사용 조건 검토 후 코드 기반 시도→시군구→읍면동 계층 및 저장 지역 마이그레이션을 구현할 예정입니다.
+
 ## 검색 조건 저장
 - 현재 선택 지역, 시설명 검색어, 시설 유형, 대기 0명 필터를 저장/불러오기/삭제할 수 있습니다.
 - 최대 20개까지 브라우저 localStorage에 저장하며 계정/서버 동기화는 제공하지 않습니다.
@@ -38,6 +45,7 @@
     node --check saved-regions.mjs
     node --check regional-summary.mjs
     node --check saved-facilities.mjs
+    node --check region-selector.mjs
     node --test tests/*.test.mjs
 
 **PASS — GitHub Actions run #167 (coordinate validation follow-up):** 108 backend tests, 40 frontend tests (8 regional summary, 11 saved-region, 9 saved-search, 12 saved-facility), and all JavaScript syntax checks passed. Provider and SQLite storage-boundary tests cover out-of-range coordinates, incomplete coordinate pairs, and the no-coordinate case. https://github.com/sharehousegirls/childcare-map/actions/runs/45112984412

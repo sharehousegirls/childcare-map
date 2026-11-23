@@ -1,4 +1,5 @@
 import { readSavedSearches, saveSavedSearch, removeSavedSearch } from "./saved-searches.mjs";
+import { groupRegionOptions } from "./region-selector.mjs";
 import { readSavedRegions, saveSavedRegion, removeSavedRegion } from "./saved-regions.mjs";
 import { buildRegions } from "./regional-summary.mjs";
 import { readSavedFacilities, saveSavedFacility, removeSavedFacility } from "./saved-facilities.mjs";
@@ -34,7 +35,24 @@ let focusedFacilityId=null;
 function num(v){if(v==null||v==="")return null;const n=Number(String(v).replace(/,/g,""));return Number.isFinite(n)?n:null;}
 function escapeHtml(value){return String(value??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");}
 function mapApiRows(rows){return rows.map(r=>{const ages=[r.wait_0,r.wait_1,r.wait_2,r.wait_3,r.wait_4,r.wait_5,r.wait_6_plus].map(num);let waiting=num(r.wait_total);if(waiting===null&&ages.every(v=>v!==null))waiting=ages.reduce((a,b)=>a+b,0);return{name:String(r.name||"이름 미확인 시설"),region:[r.sido,r.sigungu].filter(Boolean).map(String).join(" ")||"지역 미분류",sido:String(r.sido||""),type:String(r.type||"유형 미확인"),address:String(r.address||"주소 미확인"),waiting,capacity:num(r.capacity),enrolled:num(r.enrolled),facilityId:r.facility_id==null?null:String(r.facility_id).trim()||null,latitude:num(r.latitude),longitude:num(r.longitude),dataDate:r.data_date==null?"":String(r.data_date)};});}
-function populateRegions(){regionSelect.innerHTML='<option value="all">전체 지역</option>';regions.forEach(r=>{const o=document.createElement("option");o.value=r.name;o.textContent=r.name;regionSelect.append(o);});}
+function populateRegions(){
+  regionSelect.replaceChildren();
+  const all=document.createElement("option");
+  all.value="all";
+  all.textContent="전체 지역";
+  regionSelect.append(all);
+  groupRegionOptions(regions).forEach(group=>{
+    const optgroup=document.createElement("optgroup");
+    opt.label=group.parent;
+    group.options.forEach(option=>{
+      const o=document.createElement("option");
+      o.value=option.value;
+      o.textContent=option.label;
+      optgroup.append(o);
+    });
+    regionSelect.append(optgroup);
+  });
+}
 function selectedRegion(){return regionSelect.value;}
 function renderSummary(){
   const rs=selectedRegion()==="all"?regions:regions.filter(r=>r.name===selectedRegion());
