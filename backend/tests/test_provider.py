@@ -139,5 +139,17 @@ class ProviderNormalizationTests(unittest.TestCase):
         self.assertIsNone(row["wait_total"])
         self.assertIn("wait_age_buckets_incomplete", row["quality_flags"])
 
+    def test_incomplete_coordinate_pair_is_flagged(self):
+        row = _normalize_provider_record({"facility_id": "F1", "latitude": "37.5"}, {})
+        self.assertEqual(row["latitude"], 37.5)
+        self.assertIsNone(row["longitude"])
+        self.assertIn("coordinate_pair_incomplete", row["quality_flags"])
+
+    def test_missing_coordinate_pair_is_not_flagged(self):
+        row = _normalize_provider_record({"facility_id": "F1"}, {})
+        self.assertIsNone(row["latitude"])
+        self.assertIsNone(row["longitude"])
+        self.assertNotIn("coordinate_pair_incomplete", row["quality_flags"])
+
 if __name__ == "__main__":
     unittest.main()
