@@ -16,6 +16,21 @@ Catalog metadata reviewed:
 
 The catalog's update-cycle label is not a freshness SLA for individual facility records. Preserve a provider record date when present and the server collection timestamp separately. Do not synthesize dates.
 
+## Additional catalog-described facility fields
+
+A fresh catalog page review on 2026-11-23 also confirms a broader facility-detail inventory beyond waitlist totals. These are catalog descriptions, not verified response tags or definitions:
+
+- Facility profile: facility code/name/type/status, postal code and address, phone/fax/homepage, room count and room area, playground count, CCTV total, childcare staff count, capacity, enrolled children, latitude/longitude, approval date, temporary suspension start/end, abolition date, data date, and offered services.
+- Class counts: age 0–5, mixed infant class (0–2), mixed toddler class (3–5), special-disability class, and total.
+- Child counts: age 0–5, mixed infant (0–2), mixed toddler (3–5), special-disability, and total.
+- Staff tenure buckets: under 1 year, 1–2 years, 2–4 years, 4–6 years, and 6+ years.
+- Staff role counts: director, childcare teacher, special-education teacher, therapy teacher, nutritionist, nurse, nurse assistant, cook, office staff, and total.
+- Waitlist: age 0–5, 6+, and total.
+
+Do not add together mixed-class, special-disability, age-bucket, enrollment, or staffing counts unless the official schema definitions prove they are mutually exclusive and comparable. The exact response tags, semantics, null conventions, and update dates for these fields remain unverified.
+
+Official catalog reviewed: https://www.data.go.kr/data/15101154/openapi.do
+
 ## Candidate normalized fields (not a confirmed XML schema)
 
 | Normalized field | Catalog-described item | Schema status |
