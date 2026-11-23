@@ -40,7 +40,7 @@
     node --check saved-facilities.mjs
     node --test tests/*.test.mjs
 
-**PASS — GitHub Actions run #142 (latest code verification):** 94 backend tests, 40 frontend tests (8 regional summary, 11 saved-region, 9 saved-search, 12 saved-facility), and all JavaScript syntax checks passed. Crosswalk provenance validation now rejects malformed hostnames and invalid/out-of-range ports; regression tests cover these cases. https://github.com/sharehousegirls/childcare-map/actions/runs/45079217801
+**PASS — GitHub Actions run #167 (coordinate validation follow-up):** 108 backend tests, 40 frontend tests (8 regional summary, 11 saved-region, 9 saved-search, 12 saved-facility), and all JavaScript syntax checks passed. Provider and SQLite storage-boundary tests cover out-of-range coordinates, incomplete coordinate pairs, and the no-coordinate case. https://github.com/sharehousegirls/childcare-map/actions/runs/45112984412
 
 관심 지역 기능 상세: `docs/saved-regions-implementation-2026-11-22.md`
 
