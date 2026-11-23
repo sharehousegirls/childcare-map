@@ -3,6 +3,7 @@ import { readSavedRegions, saveSavedRegion, removeSavedRegion } from "./saved-re
 import { buildRegions } from "./regional-summary.mjs";
 import { readSavedFacilities, saveSavedFacility, removeSavedFacility } from "./saved-facilities.mjs";
 import { formatDataQualityDetails } from "./data-quality.mjs";
+import { formatDataFreshness } from "./data-freshness.mjs";
 
 // Live backend is preferred when configured; otherwise clearly labeled fictional demo.
 const DEMO_REGIONS=[
@@ -24,6 +25,7 @@ const DEMO_FACILITIES=[
 {facilityId:"demo-heungdeok-dream",name:"청주 꿈 어린이집",region:"청주시 흥덕구",type:"민간",address:"청주시 흥덕구 (예시 주소)",waiting:9,capacity:50,enrolled:46}];
 let regions=DEMO_REGIONS,facilities=DEMO_FACILITIES,liveData=false,liveError="",liveMeta=null;
 const regionSelect=document.querySelector("#regionSelect"),regionCards=document.querySelector("#regionCards"),facilityList=document.querySelector("#facilityList"),statusEl=document.querySelector("#dataStatus"),dataQualityDetails=document.querySelector("#dataQualityDetails");
+const dataFreshnessDetails=document.querySelector("#dataFreshnessDetails");
 const facilitySearch=document.querySelector("#facilitySearch"),typeFilter=document.querySelector("#typeFilter"),zeroFilter=document.querySelector("#zeroFilter");
 const savedSearchForm=document.querySelector("#savedSearchForm"),savedSearchName=document.querySelector("#savedSearchName"),savedSearchStatus=document.querySelector("#savedSearchStatus"),savedSearchList=document.querySelector("#savedSearchList");
 const saveRegionButton=document.querySelector("#saveRegionButton"),savedRegionStatus=document.querySelector("#savedRegionStatus"),savedRegionList=document.querySelector("#savedRegionList");
@@ -106,9 +108,11 @@ function renderFacilities(){
  if(liveData){
    statusEl.title=liveMeta?.collected_at?"API 수집 시각(UTC): "+liveMeta.collected_at:"";
    dataQualityDetails.textContent=formatDataQualityDetails(liveMeta,facilities.length);
+   dataFreshnessDetails.textContent=formatDataFreshness(liveMeta);
  }else{
    statusEl.title=liveError&&!liveData?"Backend 연결 오류: "+liveError:"";
    dataQualityDetails.textContent="가상 데모에는 실제 기준일 품질 진단이 없습니다.";
+   dataFreshnessDetails.textContent="가상 데모에는 실제 데이터 최신성 정보가 없습니다.";
  }
  renderSummary();renderRegions();renderFacilities();
 }

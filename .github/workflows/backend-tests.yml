@@ -21,6 +21,6 @@ jobs:
         with:
           node-version: "22"
       - name: Check frontend JavaScript syntax
-        run: node --check app.js && node --check saved-searches.mjs && node --check saved-regions.mjs && node --check regional-summary.mjs && node --check saved-facilities.mjs
+        run: node --check app.js && node --check saved-searches.mjs && node --check saved-regions.mjs && node --check regional-summary.mjs && node --check saved-facilities.mjs && node --check data-freshness.mjs
       - name: Run frontend tests
         run: node --test tests/*.test.mjs

@@ -238,3 +238,11 @@
 - **PASS — isolated Node tests:** 5/5 tests passed for valid metadata, all dates missing, empty facility response, inconsistent counts, and missing/invalid metadata; module and test syntax checks passed.
 - **PASS — GitHub Actions run #212:** Backend unit-test step, JavaScript syntax-check step, and frontend test step all completed successfully for commit `0723232c7c453b441b4e95b16ea807e44125f936`. The connector exposed step conclusions but not test-count output. https://github.com/sharehousegirls/childcare-map/actions/runs/45241050402
 - No dependencies, live API requests, credentials, geospatial data, or deployment were added. Ratios are response-row-based, not unique facility coverage or freshness guarantees.
+
+
+## 2026-11-24 incremental milestone — frontend source-date freshness display
+- Added a separate UI line showing the latest valid source-record date, date range/mixed-date status, and calendar-day difference measured at API collection time.
+- Invalid date strings are excluded from date calculations and counted in the display; future source dates and inconsistent metadata are flagged for review.
+- No stale threshold, SLA, or provider update cadence is inferred. Source-date meaning still requires official schema/sample verification.
+- Added 8 Node unit tests covering valid age, mixed-date range, invalid dates, future dates, missing collection timestamp, inconsistent latest-date metadata, mixed-flag mismatch, and invalid entries alongside valid dates.
+- CI result pending for this commit; no local repository checkout is available in this run.

@@ -164,3 +164,11 @@ Source-date coverage and parseability ratios are **record-level**, not unique-fa
 ## Frontend source-date quality details
 
 When live backend metadata is present, the status panel reports source-date coverage and parseability using row counts, including separate missing and unparseable counts. In demo mode it explicitly states that no real date diagnostics are available. Counts are per response row (not unique facilities), and these ratios do not establish freshness. See `docs/frontend-data-quality-display-2026-11-24.md`.
+
+
+## Frontend source-date freshness display
+
+When live API metadata is present, the frontend displays the newest valid source-record date, a date range when records have mixed dates, and the elapsed calendar days between the latest source date and the API collection timestamp. It flags invalid or inconsistent date metadata. This is descriptive only: it does not define a freshness threshold, SLA, or provider update cadence. Collection time is not the source-record date. In demo mode, the UI explicitly states that real freshness information is unavailable.
+
+
+See [frontend source-date freshness display](docs/frontend-data-freshness-display-2026-11-24.md).
