@@ -180,3 +180,6 @@
 - Corrected the test imports in follow-up commit `eae2687e05170edf9a21fb42bd85c56738803ff8`.
 - **PASS — GitHub Actions run #176:** 111 backend tests, 40 frontend tests and JavaScript syntax checks passed on the corrected test commit. https://github.com/sharehousegirls/childcare-map/actions/runs/45125220339
 - **NOT RUN:** local checkout tests, live API requests, official schema/CRS/reuse review, and manual browser/responsive/accessibility checks.
+
+## Latest bounded change (2026-11-23)
+- `API_FIELD_MAP` provider-field values are trimmed and duplicate source-field assignments are rejected before a live request, reducing accidental reuse of one XML tag for multiple normalized fields. This guard does not confirm that mapped tags exist in the official schema. Tests for this change are awaiting GitHub Actions completion.
