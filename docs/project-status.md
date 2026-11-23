@@ -182,4 +182,4 @@
 - **NOT RUN:** local checkout tests, live API requests, official schema/CRS/reuse review, and manual browser/responsive/accessibility checks.
 
 ## Latest bounded change (2026-11-23)
-- `API_FIELD_MAP` provider-field values are trimmed and duplicate source-field assignments are rejected before a live request, reducing accidental reuse of one XML tag for multiple normalized fields. This guard does not confirm that mapped tags exist in the official schema. Tests for this change are awaiting GitHub Actions completion.
+- `API_FIELD_MAP` provider-field values are trimmed and duplicate source-field assignments are rejected before a live request, reducing accidental reuse of one XML tag for multiple normalized fields. This guard does not confirm that mapped tags exist in the official schema. **PASS — GitHub Actions runs #179 and #183:** 113 backend tests, 40 frontend tests, and JavaScript syntax checks passed. Run #179 validates the code/test commit; #183 validates the final status-document commit. Local checkout tests remain NOT RUN.
