@@ -11,6 +11,7 @@
 - Live regional summaries keep missing wait counts unknown, show partial totals and known/missing facility coverage; zero-wait only counts explicit zero values.
 - Frontend는 backend /api/facilities 응답이 정상이고 source=official_api일 때 실제 데이터로 전환합니다. 연결 실패 시 가상 데이터로 돌아가며 화면 상단 상태 표시로 구분합니다.
 - Backend API errors are sanitized to avoid exposing service keys in request URLs; field mapping configuration is validated.
+- Provider and SQLite ingestion independently validate geographic coordinate ranges; a partial latitude/longitude pair is flagged and two missing coordinates remain unknown. These safeguards do not verify CRS or coordinate accuracy.
 - 15 backend unit tests passed in an isolated harness using the exact provider and test blobs from commit ec14fb6a938820cb1181ada6e3e26101fa3201e4 (Git blob SHAs matched); GitHub Actions also passed for that commit. Direct local checkout execution remains unconfirmed because GitHub DNS is unavailable in this environment; however, the repository's GitHub Actions run #48 passed all 26 tests for commit 396e30762bb3776eadeddd1715b0574bf0049ce4: https://github.com/sharehousegirls/childcare-map/actions/runs/44947857967. See the security review.
 
 ## Frontend 실행
