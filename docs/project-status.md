@@ -183,3 +183,14 @@
 
 ## Latest bounded change (2026-11-23)
 - `API_FIELD_MAP` provider-field values are trimmed and duplicate source-field assignments are rejected before a live request, reducing accidental reuse of one XML tag for multiple normalized fields. This guard does not confirm that mapped tags exist in the official schema. **PASS — GitHub Actions runs #179 and #183:** 113 backend tests, 40 frontend tests, and JavaScript syntax checks passed. Run #179 validates the code/test commit; #183 validates the final status-document commit. Local checkout tests remain NOT RUN.
+
+## 2026-11-23 bounded milestone — strict source-date parseability diagnostics
+
+- Added strict calendar-date diagnostics to `GET /api/facilities` metadata. Only valid `YYYY-MM-DD` values count as parseable; non-ISO and invalid calendar values remain in the raw date list and count as unparseable. Missing values remain separate.
+- Added parseable/unparseable counts and earliest/latest parseable dates. This is additive metadata and does not change facility rows or the frontend.
+- No stale/fresh label, SLA, or threshold is assigned because the official source-date format/meaning and update cadence remain unverified.
+- **PASS — GitHub Actions run #187:** Backend 114 test methods, Frontend 40 tests, and JavaScript syntax checks succeeded after code/test commits. Run: https://github.com/sharehousegirls/childcare-map/actions/runs/45158598207
+- **PASS — GitHub Actions runs #188 and #189:** freshness documentation and README commits succeeded. Run #188: https://github.com/sharehousegirls/childcare-map/actions/runs/45158630883; Run #189: https://github.com/sharehousegirls/childcare-map/actions/runs/45158643824
+- **NOT RUN:** local checkout tests, live API requests, manual browser/responsive/accessibility review.
+- Review: strict date parsing is bounded and non-destructive; raw values are retained, invalid dates are not silently repaired, and no new dependency or frontend behavior was introduced.
+- Next priorities remain official API approval/specification and redacted sample, terms/redistribution review, schema/date/CRS validation, then nationwide ingestion and map. No live data or deployment.
