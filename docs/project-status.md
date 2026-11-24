@@ -1,4 +1,4 @@
-# Project status — 2026-11-24
+# Project status — 2026-11-25
 
 ## Current phase
 **Data-source and geography validation, with frontend source-date freshness diagnostics.** Live API connection remains gated on verified official schema, credentials, quality, and service-specific reuse terms.
@@ -399,3 +399,15 @@ The documentation commits following the official catalog review were subsequentl
 - **PASS — GitHub Pages workflow #1:** build, deploy, and status-report jobs succeeded after Pages was enabled by the user. Expected URL is `https://sharehousegirls.github.io/childcare-map/`. The external web viewer returned an internal error; the published page has not been manually verified in a browser/device.
 - **NOT RUN:** direct local full-suite checkout, live API call, official archive import, manual browser/mobile/keyboard/screen-reader checks. No live-data mapping, credentials, or deployment was initiated by this automation.
 - **Next:** obtain the official technical document and redacted payload, verify schema/paging/date/ID/CRS/null semantics and service-specific reuse terms, then run a bounded offline mapping-validation batch.
+
+
+## 2026-11-25 incremental milestone — official API account and specification workflow recheck
+
+- Re-opened the public dataset 15101154 catalog and the official Childcare Portal Open API list, development guide, and use policy.
+- Confirmed the official portal workflow: signup/login, development-account application/review and key issuance, service-spec-based development/test, then separate operating-account application/review and key issuance. Development account results are limited to 50 rows; operating account requires expected-traffic entry, is valid for 12 months, and must be renewed for continued use.
+- The portal guide describes the service technical document as containing service URL, operations, request/response definitions, and examples. The exact portal operation-to-dataset-15101154 mapping and schema remain unverified; no API request or credentials were used.
+- Added `docs/official-api-account-and-spec-gate-2026-11-25.md` and a README link. Updated portal guide/policy links to the currently verified paths.
+- Existing user-action email about the API approval blocker is already in Sent; no duplicate email was sent.
+- **PASS (documentation/source review):** the public official pages opened and the workflow/limits were recorded with scope boundaries.
+- **NOT RUN:** local test suite (documentation-only change); live API request, schema verification, exact-service reuse clearance, and browser manual checks.
+- **Next:** obtain the exact service technical document and redacted response, confirm dataset/service correspondence and service-specific reuse terms, then perform bounded offline schema mapping validation. Live ingestion remains gated.
