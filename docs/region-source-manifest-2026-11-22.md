@@ -95,3 +95,10 @@ The new `evaluate_region_archive_preflight(manifest, archive_path)` helper combi
 This is deliberately still preflight—not an importer. It does not download the source, authenticate provenance, inspect ZIP contents, protect extraction paths, validate the official layout, or verify code/parent/crosswalk relationships. Human source and license review remains required.
 
 **Tests:** six new preflight cases cover pending reuse with a matching digest, verified permissions, digest mismatch, filename mismatch, missing archive, and commercial permission denied.
+
+
+## Hash verifier file-descriptor hardening — 2026-11-24
+
+The SHA-256 verifier now opens files with `O_NOFOLLOW` where supported and `O_NONBLOCK`, then uses `fstat` to require a regular file before hashing through the opened descriptor. On platforms without `O_NOFOLLOW`, it compares the pre-open `lstat` device/inode with the opened descriptor to detect path substitution. Unsafe file types or detected identity changes are rejected; preflight maps unsafe-file errors to `archive_file_unsafe`. Regression tests cover direct symlink and non-regular-file rejection.
+
+This reduces path-based symlink substitution risk but does not prevent in-place mutation of the opened file during hashing, nor does it ensure a future extractor uses the exact verified bytes. A production importer must hash and extract from an immutable staged artifact (or a securely controlled file descriptor/copy), enforce ZIP entry/path/size limits, and validate extracted layouts separately.
