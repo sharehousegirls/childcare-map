@@ -2,11 +2,18 @@
 
 지역별 어린이집 입소 대기 정보 비교 서비스.
 
-## Latest CI verification — 2026-11-24
+## Latest CI verification — 2026-11-25
 
-- **PASS — GitHub Actions run #249** for commit `6c54c44092c0faab788421f676df118dfd052b2f: 128 backend tests, 74 frontend tests, and all JavaScript syntax checks passed. Every workflow step concluded successfully.
-- Evidence: https://github.com/sharehousegirls/childcare-map/actions/runs/45376815885
-- This verifies the repository test workflow only; official API schema/terms, live ingestion, archive import, browser/manual accessibility checks, and deployment remain unverified.
+- **PASS — GitHub Actions run #258** (commit `3f649a3e231a789c96c0a84e990fb5bda2505f1f): 129 backend tests, 76 frontend tests, and all JavaScript syntax checks passed; every workflow step succeeded.
+- Evidence: https://github.com/sharehousegirls/childcare-map/actions/runs/45439607037
+- This verifies the repository test workflow only; official API schema/terms, live ingestion, archive import, and browser/manual accessibility checks remain unverified.
+
+## GitHub Pages publication status — 2026-11-25
+
+- Repository visibility is public and Pages source is saved from `main` / `/(root)` (user-confirmed settings screen).
+- **PASS — Pages workflow run #1:** build, deploy, and report-build-status jobs all completed successfully. This was GitHub's automatic publishing after the user saved the Pages setting; project automation did not initiate a deployment.
+- Expected site URL: https://sharehousegirls.github.io/childcare-map/
+- **NOT VERIFIED:** the external web viewer returned an internal error when opening the URL; a direct browser/device check of the published page is still required.
 
 ## 현재 상태
 - 반응형 정적 웹 프로토타입: 지역 카드, 시설 검색, 유형/대기 0 필터
@@ -200,7 +207,7 @@ See [frontend source-date freshness display](docs/frontend-data-freshness-displa
 
 ## Official data-source recheck — 2026-11-24
 
-The official catalog page for nationwide facility-level dataset 15101154 was rechecked. It lists XML/LINK delivery, free access, an unrestricted-reuse catalog label, real-time update metadata, and facility-level waitlist counts for ages 0–5, 6+, and total. These are catalog descriptions; the exact service schema, response, pagination, date semantics, and service-specific reuse conditions are not yet verified. See [data-source research](docs/data-source-research.md).
+The official catalog page for nationwide facility-level dataset 15101154 was rechecked. It lists XML/LINK delivery, free access, an unrestricted-reuse catalog label, real-time update metadata, and facility-level waitlist counts for ages 0–5, 6+, and total. These are catalog descriptions; the exact service schema, response, pagination, date semantics, and service-specific reuse conditions are not yet verified. See [data-source research](docs/data-source-research.md). See [secondary API field-name candidates](docs/secondary-api-field-candidates-2026-11-25.md); those tag names are unverified.
 
  
 ## Official-region archive preflight (not yet an importer)
