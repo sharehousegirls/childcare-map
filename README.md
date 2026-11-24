@@ -103,6 +103,10 @@ Review note and acceptance criteria: `docs/region-granularity-coordinate-review-
 
 ## Data sources and status
 
+### Official portal account workflow and schema gate (rechecked 2026-11-25)
+
+The official Childcare Portal confirms the account flow is signup/login → development account application/review → build/test against the service specification → separate operating-account application/review. Development responses are limited to 50 rows; operating access requires expected traffic and has a 12-month term with renewal. The portal guide says the service-detail technical document contains service URL, operations, request/response definitions and examples. The public pages do not establish the exact operation/schema mapping for dataset 15101154. See [official account and schema gate](docs/official-api-account-and-spec-gate-2026-11-25.md).
+
 **Official catalog rechecked 2026-11-24:** dataset 15101154 lists facility-level waitlist counts by age 0–5, age 6+, and total, plus facility metadata, as XML/LINK, free, real-time catalog metadata, and unrestricted reuse. Exact operation/request/response schema and service-specific commercial/redistribution conditions are still unverified; see `docs/official-api-catalog-recheck-2026-11-24.md`. The catalog-level field inventory and mapping acceptance gates are documented there; catalog field labels are not treated as verified XML element names.
 - **Nationwide waitlist candidate:** SSIS 한국사회보장정보원_어린이집별 기본정보 조회 (15101154). Official catalog lists age waitlist buckets 0–5, 6+ and total: https://www.data.go.kr/data/15101154/openapi.do. XML, real-time metadata, and unrestricted reuse are listed; request schema/sample and service-specific terms remain unverified.
 - **Existing Daegu application:** 한국사회보장정보원_대구광역시 어린이집 정보조회 (15101186), submitted for development account on 2026-11-21. Catalog lists facility metadata (name/code/address/contact/homepage/capacity), not waitlist counts: https://www.data.go.kr/data/15101186/openapi.do. Review/credentials pending.
@@ -119,8 +123,8 @@ Review note and acceptance criteria: `docs/region-granularity-coordinate-review-
 - Nationwide waitlist candidate: https://www.data.go.kr/data/15101154/openapi.do
 - Daegu facility metadata: https://www.data.go.kr/data/15101186/openapi.do
 - Incheon Namdong aggregate: https://www.data.go.kr/data/15119081/fileData.do
-- Childcare API policy: https://info.childcare.go.kr/info_html5/oais/introduction/Policy.jsp
-- Childcare API development guide: https://info.childcare.go.kr/info_html5/oais/guide/Development.jsp
+- Childcare API policy: https://info.childcare.go.kr/info/oais/introduction/Policy.jsp
+- Childcare API development guide: https://info.childcare.go.kr/info/oais/guide/Development.jsp
 - Childcare API overview: https://info.childcare.go.kr/info_html5/oais/introduction/Intro.jsp
 - Childcare FAQ (region granularity/coordinates): https://info.childcare.go.kr/info_html5/cera/community/faqboard/FaqBoardSlPL.jsp
 - MOIS administrative/legal-dong changes (current source starting point): https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000052&nttId=131063
