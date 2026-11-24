@@ -427,6 +427,7 @@ The documentation commits following the official catalog review were subsequentl
 - Extended the manifest text validator to reject embedded C1 controls (U+007F–U+009F), in addition to existing C0 controls (U+0000–U+001F), after outer whitespace normalization.
 - Added a regression test that replaces an interior character with U+0085 in each manifest text field without changing length, then asserts the field-specific control-character issue is raised.
 - Acceptance: all text metadata fields reject embedded C0/C1 controls; field-specific issue codes are preserved; no external dependency or live API behavior changes.
-- **CI: pending** on branch `dev/manifest-control-characters-2026-11-25`. **NOT RUN locally:** no repository checkout in this connector session.
+- **PASS — GitHub Actions run #273:** 132 backend tests, 76 frontend tests, and JavaScript syntax checks succeeded on commit `f9750e4c8efcbfb3e10cd47fdaeb718b2bf11251`. https://github.com/sharehousegirls/childcare-map/actions/runs/45503043091
+- Runs #270–#272 initially failed because inserting U+0085 increased the length of SHA/date fields and triggered earlier maximum-length checks. The test was corrected to replace an interior character without changing length; implementation was unchanged. **NOT RUN locally:** no repository checkout in this connector session.
 - No live data was requested, no official archive imported, no licensing gate changed, and no deployment performed.
 - **Next:** verify branch CI; then continue official region-source provenance, code archive layout, and code-to-parent validation.
