@@ -411,3 +411,13 @@ The documentation commits following the official catalog review were subsequentl
 - **PASS (documentation/source review):** the public official pages opened and the workflow/limits were recorded with scope boundaries.
 - **NOT RUN:** local test suite (documentation-only change); live API request, schema verification, exact-service reuse clearance, and browser manual checks.
 - **Next:** obtain the exact service technical document and redacted response, confirm dataset/service correspondence and service-specific reuse terms, then perform bounded offline schema mapping validation. Live ingestion remains gated.
+
+
+## 2026-11-25 — provider payload traversal hardening
+
+- Replaced recursive provider response flattening with an iterative depth-first traversal. Common response envelope keys retain priority; insertion order is retained within priority/fallback groups.
+- Added cycle detection for arbitrary in-memory payload structures and avoided recursion-depth failures on deeply nested envelopes.
+- Added tests for 1,500-level nesting and cyclic input.
+- Acceptance: existing JSON/XML envelope behavior and key priority preserved; deep payload returns a row without RecursionError; cyclic payload without records terminates with an empty list.
+- **NOT RUN locally:** this connector-only session cannot execute the repository checkout directly. GitHub Actions is the authoritative test run for this commit.
+- **Next:** verify CI; then continue official schema/source/license checks and region-code provenance. No live API call, deployment, or credential use was performed.
