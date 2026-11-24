@@ -366,5 +366,5 @@
 - Reconfirmed the coordinate risk: catalog labels latitude/longitude, while portal FAQ reports EPSG:5181 TM for its childcare map. Actual field values, units and axis order must be checked in a redacted response before mapping.
 - Official catalog page was re-opened on 2026-11-24. It lists the dataset as XML/LINK, free, real-time catalog metadata, and unrestricted reuse; this remains a catalog statement, not blanket commercial/cache/redistribution clearance. API access still requires a reviewed account; development results are limited to 50 rows and operating access is separately reviewed.
 - **PASS (documentation review):** catalog field inventory and mapping gates are grounded in the public catalog and official API policy/guide/FAQ pages.
-- **NOT RUN:** repository tests (docs-only change), direct checkout, browser, live API, archive import, and deployment. Verify CI if a workflow is triggered.
+- **NOT RUN:** repository tests (docs-only change), direct checkout, browser, live API, archive import, and deployment. The GitHub combined-status query returned no check entries for the docs commits; no CI execution is claimed.
 - **Next:** obtain service specification + redacted sample; verify operation/response envelope/paging/row limit/date/ID/CRS/terms, then run only a bounded offline mapping-validation batch before considering live access.
