@@ -37,6 +37,28 @@ def manifest(**overrides):
 
 
 class RegionManifestTests(unittest.TestCase):
+    def test_c1_control_characters_rejected_in_manifest_text_fields(self):
+        fields = {
+            "dataset_kind": "admin_legal_crosswalk",
+            "source_system": "MOIS",
+            "dataset_id": "KiKmix.20261111",
+            "source_url": "https://www.mois.go.kr/source.zip",
+            "terms_url": "https://www.mois.go.kr/terms",
+            "file_name": "KiKmix.20261111.zip",
+            "sha256": "a" * 64,
+            "effective_date": "2026-10-23",
+            "downloaded_at": "2026-11-22T08:00:00Z",
+            "attribution": "Source: MOIS",
+            "reuse_review_status": "pending",
+            "license_reviewed_at": "2026-11-22",
+        }
+        for field, value in fields.items():
+            with self.subTest(field=field):
+                contaminated = value[:1] + chr(133) + value[1:]
+                with self.assertRaises(RegionSourceManifestError) as ctx:
+                    validate_region_source_manifest(manifest(**{field: contaminated}))
+                self.assertIn(f"{field}_contains_control_character", ctx.exception.issues)
+
     def test_pending_review_valid_but_not_import_ready(self):
         result = validate_region_source_manifest(manifest())
         self.assertFalse(result["public_import_ready"])
