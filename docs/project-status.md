@@ -325,3 +325,11 @@
 - Backend test file now contains 125 test methods; the #229/#230 backend steps completed successfully. Frontend test files contain 73 tests; syntax and frontend test steps also completed successfully.
 - **NOT RUN:** direct local checkout, browser/manual responsive and accessibility tests. GitHub CI is the executed test environment.
 - No official region archive was downloaded or imported, no API/credentials were connected, and no deployment occurred.
+
+
+## 2026-11-24 incremental milestone — descriptor-based archive hashing
+- Hardened `verify_file_sha256`: opens with `O_NOFOLLOW` where available and non-blocking mode, checks the opened descriptor is a regular file with `fstat`, and on platforms without `O_NOFOLLOW` compares the pre-open `lstat` device/inode to the opened descriptor.
+- Added direct verifier regressions for symlink and non-regular paths; unsafe file errors are surfaced as `archive_file_unsafe` by preflight. The preflight remains fail-closed.
+- This narrows path-based symlink races but does not prevent in-place file mutation or guarantee that a future importer extracts the exact verified bytes. Safe immutable staging, ZIP entry/path/size limits, and extraction validation remain required.
+- **CI pending at this update:** backend/frontend workflow was triggered by code and test commits; final run status will be checked before closeout.
+- **NOT RUN:** direct local repository checkout, browser/manual responsive and accessibility tests. No official archive download/import, live API request, or deployment.
