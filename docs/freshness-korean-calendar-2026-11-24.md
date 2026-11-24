@@ -17,6 +17,8 @@ This prevents an off-by-one-day label near UTC midnight. For example, `2026-11-2
 - Missing/invalid collection timestamps do not produce an elapsed-day label.
 
 ## Validation
+
+- **FAIL — GitHub Actions #252 (intermediate code-only commit):** the old UTC-based future-date fixture failed after the code switched to Korea-local dates; the test fixture was corrected in #253 and the full test workflow passed. This was an expected compatibility break between the separate code and test commits, not left unresolved.
 - **PASS — GitHub Actions #253:** backend, JavaScript syntax, and frontend test steps completed successfully for commit `a38b2d7a09e9fb4cc59d50539998d98b486d58db`. Exact frontend test-count output was not available through the connector.
 - **PASS — isolated local harness:** 11 data-freshness tests passed using copied module/test content; this is not a direct repository checkout test.
 - **NOT RUN:** full local repository test suite, browser/manual review, live API or data import.
