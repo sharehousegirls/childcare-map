@@ -54,7 +54,7 @@ class RegionManifestTests(unittest.TestCase):
         }
         for field, value in fields.items():
             with self.subTest(field=field):
-                contaminated = value[:1] + chr(133) + value[1:]
+                contaminated = value[:1] + chr(133) + value[2:]
                 with self.assertRaises(RegionSourceManifestError) as ctx:
                     validate_region_source_manifest(manifest(**{field: contaminated}))
                 self.assertIn(f"{field}_contains_control_character", ctx.exception.issues)
