@@ -317,5 +317,5 @@
  
 ## 2026-11-24 archive preflight test-placement correction
 
-- A review of commit `49ece9d` found the six new test methods had been inserted inside the module import block rather than inside the test class. The correction reconstructs the test file from the prior verified version, imports the preflight helper correctly, and places the cases within `RegionManifestTests`.
-- **Verification status:** GitHub Actions for the correction commit is pending. The preceding commit's tests are not treated as valid evidence.
+- Review found the initial commit `49ece9d` placed the new tests inside the import block. The follow-up `ffbb436` was also malformed because it reused that file and duplicated the test methods. This correction rebuilds the test file from the pre-preflight commit `d384ce6`, adds the helper import, places exactly six new methods inside `RegionManifestTests`, and corrects a missing bracket.
+- **Verification status:** GitHub Actions for this correction commit is pending. The two preceding commits' tests are not treated as valid evidence.
