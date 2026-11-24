@@ -114,6 +114,22 @@ class ProviderNormalizationTests(unittest.TestCase):
         self.assertEqual(row["wait_total"], 7)
         self.assertIsNone(row["type"])
 
+    def test_secondary_schema_candidates_are_not_accepted_without_explicit_mapping(self):
+        # These names have appeared in secondary schema listings, but the official
+        # service-specific XML specification and a redacted payload are still unverified.
+        record = {
+            "stcode": "F1", "crname": "Candidate Name", "crtypename": "Candidate Type",
+            "crstatusname": "Candidate Status", "craddr": "Candidate Address",
+            "crcapat": "100", "Crchcnt": "80", "La": "37.5", "Lo": "127.0",
+            "datastdrdt": "2026-11-24", "ew_cnt_00": "1", "ew_cnt_01": "2",
+            "ew_cnt_02": "0", "ew_cnt_03": "0", "ew_cnt_04": "0",
+            "ew_cnt_05": "0", "ew_cnt_m6": "0", "ew_cnt_tot": "3",
+        }
+        row = _normalize_provider_record(record, {}, allow_aliases=False)
+        for field in ("facility_id", "name", "data_date", "wait_0", "wait_total"):
+            with self.subTest(field=field):
+                self.assertIsNone(row[field])
+
     def test_http_status_error_does_not_expose_key(self):
         request = httpx.Request("GET", "https://api.example.test/data?serviceKey=SECRET_KEY")
         response = httpx.Response(403, request=request)
