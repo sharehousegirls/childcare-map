@@ -206,6 +206,8 @@ def evaluate_region_archive_preflight(
 
     if path.name != validated["file_name"]:
         integrity_issue = "archive_filename_mismatch"
+    elif path.is_symlink():
+        integrity_issue = "archive_path_symlink"
     elif not path.is_file():
         integrity_issue = "archive_file_not_found"
     else:
