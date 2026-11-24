@@ -298,3 +298,10 @@
 - **PASS — isolated Node:** final helper/test files ran with 12/12 tests. `node --check` passed for helper and test.
 - **PASS — GitHub Actions #219:** full workflow success for the comparison implementation; **#220:** full workflow success for coverage wording; **#221:** full workflow success for invalid coverage metadata guard. Run-level conclusions were success; connector job step summaries confirm backend tests, frontend syntax checks, and frontend tests succeeded.
 - **NOT RUN:** browser interaction, mobile layout, keyboard-only, and screen-reader testing.
+
+
+## 2026-11-24 run closeout — verified code and documentation CI
+- Saved-region comparison implementation and two coverage-hardening follow-ups are on `main`; the final isolated Node helper/test harness ran **12/12 PASS**. Browser interaction testing remains NOT RUN.
+- **PASS — GitHub Actions #221:** final coverage-metadata guard code, backend tests, JavaScript syntax, and frontend tests all succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/45299222870
+- **PASS — GitHub Actions #222:** official API catalog/policy recheck documentation and README/status updates; full workflow succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/45299364256
+- Official source recheck confirmed catalog field descriptions and account policy only; exact service schema and service-specific reuse terms remain blocked by development access, technical document, sample, and approval.
