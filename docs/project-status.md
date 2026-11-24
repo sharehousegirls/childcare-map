@@ -368,3 +368,12 @@
 - **PASS (documentation review):** catalog field inventory and mapping gates are grounded in the public catalog and official API policy/guide/FAQ pages.
 - **NOT RUN:** repository tests (docs-only change), direct checkout, browser, live API, archive import, and deployment. The GitHub combined-status query returned no check entries for the docs commits; no CI execution is claimed.
 - **Next:** obtain service specification + redacted sample; verify operation/response envelope/paging/row limit/date/ID/CRS/terms, then run only a bounded offline mapping-validation batch before considering live access.
+## CI verification update — 2026-11-24
+
+The documentation commits following the official catalog review were subsequently verified by the full GitHub Actions workflow. The earlier catalog-review note's "NOT RUN" is historical and has been superseded for those commits.
+
+- **PASS — GitHub Actions #249** (commit `6c54c44092c0faab788421f676df118dfd052b2f`): backend **128 tests**, frontend **74 tests**, JavaScript syntax check all passed; job conclusion success.
+- Evidence: https://github.com/sharehousegirls/childcare-map/actions/runs/45376815885
+- **NOT RUN:** direct local checkout, browser/manual responsive and keyboard/screen-reader checks, live API, official-region archive import, and deployment.
+- This workflow result does not change the official API schema, credentials, reuse-term, or coordinate-system blockers.
+
