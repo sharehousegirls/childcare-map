@@ -79,13 +79,28 @@ export function formatDataFreshness(meta) {
 
   const collectedAt = parseCollectionTimestamp(meta.collected_at);
   if (Number.isFinite(collectedAt)) {
-    const collectedDate = new Date(collectedAt);
-    const collectionDay = Date.UTC(collectedDate.getUTCFullYear(), collectedDate.getUTCMonth(), collectedDate.getUTCDate());
-    const sourceDay = parseDateOnly(latest).getTime();
-    const days = Math.floor((collectionDay - sourceDay) / DAY_MS);
-    label += days >= 0
-      ? ` · 수집 당시 기준일 경과 ${days}일`
-      : ` · 수집 시점보다 ${Math.abs(days)}일 미래 날짜 (확인 필요)`;
+    // Source dates are Korean date-only records; compare against the collection's
+    // Asia/Seoul calendar day, not the UTC day of its timestamp.
+    const parts = new Intl.DateTimeFormat("en", {
+      timeZone: "Asia/Seoul",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(new Date(collectedAt));
+    const koreanDateParts = Object.fromEntries(parts
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value]));
+    const collectionDate = parseDateOnly(
+      `${koreanDateParts.year}-${koreanDateParts.month}-${koreanDateParts.day}`,
+    );
+    if (collectionDate) {
+      const collectionDay = collectionDate.getTime();
+      const sourceDay = parseDateOnly(latest).getTime();
+      const days = Math.floor((collectionDay - sourceDay) / DAY_MS);
+      label += days >= 0
+        ? ` · 수집 당시 기준일 경과 ${days}일`
+        : ` · 수집 시점보다 ${Math.abs(days)}일 미래 날짜 (확인 필요)`;
+    }
   }
 
   if (invalidDateCount) label += ` · 유효하지 않은 기준일 ${invalidDateCount}개 제외`;
