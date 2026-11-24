@@ -57,25 +57,41 @@ def _looks_like_record(payload: dict) -> bool:
     return bool(set(payload.keys()) & known)
 
 def _flatten_records(payload: Any) -> list[dict]:
-    if isinstance(payload, list):
-        if payload and all(isinstance(x, dict) for x in payload):
-            return payload
-        for x in payload:
-            found = _flatten_records(x)
-            if found:
-                return found
-    elif isinstance(payload, dict):
-        if _looks_like_record(payload):
-            return [payload]
-        for key in ("facilities", "items", "item", "rows", "data", "list"):
-            if key in payload:
-                found = _flatten_records(payload[key])
-                if found:
-                    return found
-        for value in payload.values():
-            found = _flatten_records(value)
-            if found:
-                return found
+    """Find provider rows without recursion; prioritize common response envelopes.
+
+    A deeply nested or cyclic test payload must not exhaust Python's call stack.
+    Parsed JSON/XML is acyclic, but this helper also safely handles arbitrary
+    in-memory structures passed by tests or future adapters.
+    """
+    stack = [payload]
+    visited_containers: set[int] = set()
+    priority_keys = ("facilities", "items", "item", "rows", "data", "list")
+
+    while stack:
+        current = stack.pop()
+        if isinstance(current, list):
+            identity = id(current)
+            if identity in visited_containers:
+                continue
+            visited_containers.add(identity)
+            if current and all(isinstance(item, dict) for item in current):
+                return current
+            stack.extend(reversed(current))
+        elif isinstance(current, dict):
+            identity = id(current)
+            if identity in visited_containers:
+                continue
+            visited_containers.add(identity)
+            if _looks_like_record(current):
+                return [current]
+
+            prioritized = [current[key] for key in priority_keys if key in current]
+            fallback = list(current.values())
+            # Push fallback first so prioritized response-envelope keys are
+            # visited first, while retaining insertion order within each group.
+            stack.extend(reversed(fallback))
+            stack.extend(reversed(prioritized))
+
     return []
 
 def _get_value(record: dict, field: str, field_map: dict, *, allow_aliases: bool = True) -> Any:
