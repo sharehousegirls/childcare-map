@@ -388,3 +388,14 @@ The documentation commits following the official catalog review were subsequentl
 - **PASS — isolated local harness:** 11 freshness tests passed from copied current module/test content; this is not a full local repository checkout.
 - **NOT RUN:** full local repository suite, browser/manual timezone display review, live API, official region archive import, deployment.
 - No live-data, API credentials, external dependencies, or deployment behavior changed.
+
+
+## 2026-11-25 incremental milestone — secondary API tag candidates and Pages evidence
+
+- Re-opened official catalog dataset 15101154. Catalog-level field groups remain verified, but the exact service-specific XML schema is still not confirmed.
+- Secondary index pages surfaced candidate tags (for example `stcode`, `crname`, `datastdrdt`, and `ew_cnt_00`…`ew_cnt_tot`). These are explicitly marked UNVERIFIED and recorded in `docs/secondary-api-field-candidates-2026-11-25.md`; no automatic alias or live field map was configured.
+- Added a fail-closed regression test that supplies those secondary candidates without an explicit map and verifies normalized identity/date/waitlist values remain unknown.
+- **PASS — GitHub Actions #258:** 129 backend tests, 76 frontend tests, and JavaScript syntax checks succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/45439607037
+- **PASS — GitHub Pages workflow #1:** build, deploy, and status-report jobs succeeded after Pages was enabled by the user. Expected URL is `https://sharehousegirls.github.io/childcare-map/`. The external web viewer returned an internal error; the published page has not been manually verified in a browser/device.
+- **NOT RUN:** direct local full-suite checkout, live API call, official archive import, manual browser/mobile/keyboard/screen-reader checks. No live-data mapping, credentials, or deployment was initiated by this automation.
+- **Next:** obtain the official technical document and redacted payload, verify schema/paging/date/ID/CRS/null semantics and service-specific reuse terms, then run a bounded offline mapping-validation batch.
