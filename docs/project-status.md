@@ -341,3 +341,12 @@
 - **PASS — GitHub Actions #237:** backend tests, JavaScript syntax and frontend tests all completed successfully. Backend test file: 128 tests; frontend: 73. **FAIL — #236:** a malformed test assertion caused the backend step to fail; corrected in #237 and not counted as passing.
 - **PASS — isolated verifier harness:** regular-file digest match/mismatch and directory/symlink rejection. This is not a direct repository checkout run.
 - **NOT RUN:** direct checkout tests in this environment, browser/manual responsive and accessibility checks. No archive download/import, live API, or deployment.
+
+
+## 2026-11-24 incremental milestone — keyboard focus visibility
+
+- Added a shared `:focus-visible` outline rule covering links, buttons, inputs, selects, and textareas; existing more-specific control styles remain intact.
+- Added a Node static CSS regression test checking selector coverage and the 3px outline / 2px offset declarations.
+- **CI PENDING:** CSS, test, and docs commits are pushed; verify the current workflow run before calling this PASS.
+- **NOT RUN:** manual keyboard-only browser review, mobile viewport, contrast audit, screen-reader checks.
+- No API, data, dependencies, or deployment behavior changed.
