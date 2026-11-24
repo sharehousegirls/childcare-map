@@ -3,6 +3,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.region_manifest import (
@@ -203,6 +204,19 @@ class RegionManifestTests(unittest.TestCase):
                 self.skipTest("symlinks are unavailable in this environment")
             with self.assertRaises((OSError, ValueError)):
                 verify_file_sha256(path, hashlib.sha256(b"test").hexdigest())
+
+    def test_preflight_maps_unsafe_hash_open_to_closed_gate(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "jscode20261111.zip"
+            payload = b"archive preflight test"
+            path.write_bytes(payload)
+            data = manifest(file_name=path.name, sha256=hashlib.sha256(payload).hexdigest())
+            with patch("app.region_manifest.verify_file_sha256", side_effect=ValueError("unsafe file")):
+                result = evaluate_region_archive_preflight(data, path)
+            self.assertFalse(result["archive_integrity_verified"])
+            self.assertEqual(result["archive_integrity_issue"], "archive_file_unsafe")
+            self.assertFalse(result["public_archive_import_ready"])
+            self.assertFalse(result["commercial_archive_import_ready")
 
 
 
