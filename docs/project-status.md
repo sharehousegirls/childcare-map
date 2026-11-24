@@ -350,3 +350,11 @@
 - **CI PENDING:** CSS, test, and docs commits are pushed; verify the current workflow run before calling this PASS.
 - **NOT RUN:** manual keyboard-only browser review, mobile viewport, contrast audit, screen-reader checks.
 - No API, data, dependencies, or deployment behavior changed.
+
+## 2026-11-24 incremental milestone — keyboard focus visibility (CI closeout)
+
+- Shared CSS `:focus-visible` rule covers links, buttons, inputs, selects, and textareas with a 3px outline and 2px offset.
+- Added `tests/accessibility-focus.test.mjs` static CSS regression check.
+- **PASS — GitHub Actions #243:** backend unit tests, JS syntax checks, and frontend tests succeeded. The new static focus test is part of the frontend suite. https://github.com/sharehousegirls/childcare-map/actions/runs/45357878490
+- **NOT RUN:** direct local repository checkout, manual keyboard-only browser review, mobile viewport, contrast audit, and screen-reader checks.
+- No API, data, dependency, or deployment changes.
