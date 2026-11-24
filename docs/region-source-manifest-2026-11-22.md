@@ -102,3 +102,8 @@ This is deliberately still preflight—not an importer. It does not download the
 The SHA-256 verifier now opens files with `O_NOFOLLOW` where supported and `O_NONBLOCK`, then uses `fstat` to require a regular file before hashing through the opened descriptor. On platforms without `O_NOFOLLOW`, it compares the pre-open `lstat` device/inode with the opened descriptor to detect path substitution. Unsafe file types or detected identity changes are rejected; preflight maps unsafe-file errors to `archive_file_unsafe`. Regression tests cover direct symlink and non-regular-file rejection.
 
 This reduces path-based symlink substitution risk but does not prevent in-place mutation of the opened file during hashing, nor does it ensure a future extractor uses the exact verified bytes. A production importer must hash and extract from an immutable staged artifact (or a securely controlled file descriptor/copy), enforce ZIP entry/path/size limits, and validate extracted layouts separately.
+
+
+## Additional verifier regression coverage — 2026-11-24
+
+Three follow-up tests now cover direct symlink rejection, non-regular files, and fail-closed mapping of an unsafe hash-open exception. A small isolated verifier harness also checked regular-file match/mismatch and rejection of directory/symlink paths. GitHub Actions run #237 passed the backend, frontend syntax, and frontend test steps. The malformed test assertion in intermediate run #236 failed the backend step and was corrected before #237; the failure is not counted as passing evidence.
