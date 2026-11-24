@@ -377,3 +377,11 @@ The documentation commits following the official catalog review were subsequentl
 - **NOT RUN:** direct local checkout, browser/manual responsive and keyboard/screen-reader checks, live API, official-region archive import, and deployment.
 - This workflow result does not change the official API schema, credentials, reuse-term, or coordinate-system blockers.
 
+## 2026-11-24 incremental milestone — Korean calendar freshness comparison
+
+- Corrected the freshness diagnostic to compare date-only source dates with the collection timestamp's **Asia/Seoul calendar date** rather than UTC. This avoids false future/staleness day labels around UTC midnight for Korean data.
+- Added two boundary regressions: collection timestamp crossing into Korea's next day, and a source date still future just before Korean midnight.
+- **PASS — GitHub Actions #253:** backend, JavaScript syntax and frontend test steps succeeded for the code/test commits. Exact frontend test-count output was not available via the connector. https://github.com/sharehousegirls/childcare-map/actions/runs/45416448050
+- **PASS — isolated local harness:** 11 freshness tests passed from copied current module/test content; this is not a full local repository checkout.
+- **NOT RUN:** full local repository suite, browser/manual timezone display review, live API, official region archive import, deployment.
+- No live-data, API credentials, external dependencies, or deployment behavior changed.
