@@ -159,7 +159,7 @@ function renderSavedRegionComparison(){
   if(!items.length){savedRegionComparisonHint.textContent="관심 지역을 저장하면 현재 데이터 기준으로 요약을 비교할 수 있습니다.";return;}
   const rows=buildSavedRegionComparison(regions,items,{liveData});
   savedRegionComparisonHint.textContent=items.length===1
-    ?"저장 지역 1곳입니다. 다른 지역을 저장하면 함께 비교할 수 있습니다."
+    ?"저장 지역 1곳입니다. 다른 지역을 저장하면 함께 비교할 수 있습니다. 대기 합계는 시설별 합이며 동일 아동이 여러 시설에 중복될 수 있습니다."
     :"저장된 지역의 현재 요약을 비교합니다. 대기 합계는 확인된 시설의 합이며 부분 합계일 수 있고, 동일 아동이 여러 시설에 대기할 수 있습니다.";
   rows.forEach(row=>{
     const card=document.createElement("article");card.className="saved-region-comparison-card";

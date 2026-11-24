@@ -282,3 +282,7 @@
 ## 2026-11-24 follow-up — saved-region comparison consistency guard
 - The comparison display now labels partial totals only when facility coverage metadata reconciles; otherwise it reports that coverage and the total require verification.
 - Added a regression case for inconsistent known/missing facility counts. **PASS — isolated Node: 11/11 saved-region comparison tests.** GitHub CI follow-up pending.
+
+
+## 2026-11-24 follow-up — coverage metadata hardening
+- Coverage validation now treats a present but invalid missing-facility count as invalid metadata, rather than silently treating it as absent. Added a regression test for negative counts. **PASS — isolated Node: 12/12 saved-region comparison tests.** GitHub CI follow-up pending.

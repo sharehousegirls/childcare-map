@@ -45,11 +45,12 @@ export function buildSavedRegionComparison(regions, savedRegions, { liveData = f
     const average = safeAverage(record.avg);
     const zeroWaitFacilities = safeCount(record.zero);
     const knownFacilities = safeCount(record.waitingFacilities);
+    const hasDeclaredMissing = record.missingWaitlistFacilities != null;
     const declaredMissing = safeCount(record.missingWaitlistFacilities);
     const coverageValid = facilities !== null
       && knownFacilities !== null
       && knownFacilities <= facilities
-      && (declaredMissing === null || declaredMissing === facilities - knownFacilities);
+      && (!hasDeclaredMissing || declaredMissing !== null && declaredMissing === facilities - knownFacilities);
     const coverage = coverageValid && facilities > 0 ? knownFacilities / facilities : null;
     const missingWaitlistFacilities = coverageValid ? facilities - knownFacilities : null;
     const totalComplete = liveData === true

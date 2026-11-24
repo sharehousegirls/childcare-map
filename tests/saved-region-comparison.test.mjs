@@ -103,3 +103,12 @@ test("rejects coverage metadata whose known and missing counts do not reconcile"
   assert.equal(row.totalComplete, false);
   assert.equal(row.partial, false);
 });
+
+
+test("rejects negative declared missing-facility counts", () => {
+  const [row] = buildSavedRegionComparison([
+    { name: "지역 A", facilities: 3, waiting: 5, avg: 2.5, zero: 0, waitingFacilities: 2, missingWaitlistFacilities: -1 },
+  ], [saved("지역 A")], { liveData: true });
+  assert.equal(row.coverage, null);
+  assert.equal(row.totalComplete, false);
+});
