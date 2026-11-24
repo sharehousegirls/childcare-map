@@ -307,15 +307,10 @@
 - Official source recheck confirmed catalog field descriptions and account policy only; exact service schema and service-specific reuse terms remain blocked by development access, technical document, sample, and approval.
 
  
-## 2026-11-24 archive preflight follow-up
+## 2026-11-24 archive preflight CI closeout
 
-- Added `evaluate_region_archive_preflight` to combine existing reuse gates with local archive filename, regular-file, and SHA-256 checks.
-- New public/commercial archive gates remain closed unless reuse review is explicitly verified, redistribution is allowed, and the local archive digest matches; commercial gate additionally requires explicit commercial permission.
-- This helper does not fetch/extract ZIPs, authenticate source provenance, validate archive layout or records, or import official region data.
-- **Verification status: pending GitHub Actions for this commit.** Six new backend tests added; no live archive downloaded or imported.
-
- 
-## 2026-11-24 archive preflight test-placement correction
-
-- Review found the initial commit `49ece9d` placed the new tests inside the import block. The follow-up `ffbb436` was also malformed because it reused that file and duplicated the test methods. This correction rebuilds the test file from the pre-preflight commit `d384ce6`, adds the helper import, places exactly six new methods inside `RegionManifestTests`, and corrects a missing bracket.
-- **Verification status:** GitHub Actions for this correction commit is pending. The two preceding commits' tests are not treated as valid evidence.
+- Added `evaluate_region_archive_preflight` to combine reuse gates with local archive basename, regular-file, and SHA-256 checks. Public and commercial archive gates require integrity verification; the commercial gate additionally requires explicit commercial-use permission.
+- Review caught two failed commits (`49ece9d`, `ffbb436`) where test placement/syntax was malformed. The final correction `8618fb6` rebuilds the test file from the previously verified baseline and places six preflight tests correctly inside `RegionManifestTests`. These intermediate failures are retained as development history and are not counted as passing evidence.
+- **PASS — GitHub Actions #226:** 124 backend tests, frontend syntax checks, and 73 frontend tests all passed.
+- **NOT RUN:** local checkout/test execution and browser/manual accessibility testing. GitHub CI is the verified execution environment.
+- No official region archive was downloaded or imported. The helper does not authenticate provenance, safely extract ZIP contents, validate official layouts, or replace human reuse review.
