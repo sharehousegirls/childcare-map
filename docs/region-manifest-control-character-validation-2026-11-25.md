@@ -21,6 +21,7 @@ A bounded hardening change to the source metadata manifest validator. The shared
 
 ## Test status
 
-- CI: pending for this branch.
+- **PASS — GitHub Actions run #273:** 132 backend tests, 76 frontend tests and JavaScript syntax checks succeeded after the test-fixture correction. https://github.com/sharehousegirls/childcare-map/actions/runs/45503043091
+- Runs #270–#272 initially failed because inserting a C1 control into maximum-length digest/date fields increased their length and triggered the earlier max-length validator. The test was corrected to replace an interior character without changing length; the implementation was unchanged.
 - Local checkout tests: NOT RUN; connector-only work session has no repository checkout.
 - Live API, archive parsing, reuse/licensing and geospatial mapping: BLOCKED/PENDING independently of this change.
