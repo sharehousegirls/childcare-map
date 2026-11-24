@@ -421,3 +421,12 @@ The documentation commits following the official catalog review were subsequentl
 - Acceptance: existing JSON/XML envelope behavior and key priority preserved; deep payload returns a row without RecursionError; cyclic payload without records terminates with an empty list.
 - **NOT RUN locally:** this connector-only session cannot execute the repository checkout directly. GitHub Actions is the authoritative test run for this commit.
 - **Next:** verify CI; then continue official schema/source/license checks and region-code provenance. No live API call, deployment, or credential use was performed.
+
+
+## 2026-11-25 — Region manifest C1-control hardening
+- Extended the manifest text validator to reject embedded C1 controls (U+007F–U+009F), in addition to existing C0 controls (U+0000–U+001F), after outer whitespace normalization.
+- Added a regression test that inserts U+0085 inside each manifest text field and asserts the field-specific control-character issue is raised.
+- Acceptance: all text metadata fields reject embedded C0/C1 controls; field-specific issue codes are preserved; no external dependency or live API behavior changes.
+- **CI: pending** on branch `dev/manifest-control-characters-2026-11-25`. **NOT RUN locally:** no repository checkout in this connector session.
+- No live data was requested, no official archive imported, no licensing gate changed, and no deployment performed.
+- **Next:** verify branch CI; then continue official region-source provenance, code archive layout, and code-to-parent validation.
