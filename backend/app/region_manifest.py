@@ -46,7 +46,7 @@ def _text(
     if len(normalized) > max_length:
         issues.append(f"{field}_too_long")
         return None
-    if any(ord(char) < 32 for char in normalized):
+    if any(ord(char) < 32 or 127 <= ord(char) <= 159 for char in normalized):
         issues.append(f"{field}_contains_control_character")
         return None
     return normalized or None
