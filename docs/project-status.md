@@ -313,3 +313,9 @@
 - New public/commercial archive gates remain closed unless reuse review is explicitly verified, redistribution is allowed, and the local archive digest matches; commercial gate additionally requires explicit commercial permission.
 - This helper does not fetch/extract ZIPs, authenticate source provenance, validate archive layout or records, or import official region data.
 - **Verification status: pending GitHub Actions for this commit.** Six new backend tests added; no live archive downloaded or imported.
+
+ 
+## 2026-11-24 archive preflight test-placement correction
+
+- A review of commit `49ece9d` found the six new test methods had been inserted inside the module import block rather than inside the test class. The correction reconstructs the test file from the prior verified version, imports the preflight helper correctly, and places the cases within `RegionManifestTests`.
+- **Verification status:** GitHub Actions for the correction commit is pending. The preceding commit's tests are not treated as valid evidence.
