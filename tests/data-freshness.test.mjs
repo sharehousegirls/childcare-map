@@ -33,12 +33,32 @@ test("rejects invalid calendar dates and avoids false age values", () => {
   assert.equal(result, "최신 기준일 확인 불가 · 유효한 날짜 없음");
 });
 
-test("flags a source date later than collection date", () => {
+test("flags a source date later than the Korean collection calendar date", () => {
   const result = formatDataFreshness({
     source_data_dates: ["2026-11-25"],
     source_data_date_latest: "2026-11-25",
     mixed_source_data_dates: false,
-    collected_at: "2026-11-24T23:00:00Z",
+    collected_at: "2026-11-24T14:00:00Z",
+  });
+  assert.match(result, /수집 시점보다 1일 미래 날짜 \(확인 필요\)/);
+});
+
+test("uses the Korean calendar date when UTC timestamp crosses midnight", () => {
+  const result = formatDataFreshness({
+    source_data_dates: ["2026-11-24"],
+    source_data_date_latest: "2026-11-24",
+    mixed_source_data_dates: false,
+    collected_at: "2026-11-23T15:00:00Z",
+  });
+  assert.equal(result, "최신 기준일 2026-11-24 · 수집 당시 기준일 경과 0일");
+});
+
+test("source date remains future just before Korean midnight", () => {
+  const result = formatDataFreshness({
+    source_data_dates: ["2026-11-24"],
+    source_data_date_latest: "2026-11-24",
+    mixed_source_data_dates: false,
+    collected_at: "2026-11-23T14:59:59Z",
   });
   assert.match(result, /수집 시점보다 1일 미래 날짜 \(확인 필요\)/);
 });
