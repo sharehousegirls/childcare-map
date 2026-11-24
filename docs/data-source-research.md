@@ -1,5 +1,14 @@
 # Data Source Research — Verified Catalog Findings
 
+## Official catalog and API policy recheck — 2026-11-24
+
+The nationwide dataset 15101154 catalog was opened directly on 2026-11-24. Its current catalog text lists facility identifiers/location and waitlist buckets for ages 0–5, age 6+, and total; it still describes XML/LINK, free access, real-time update metadata, and `이용허락범위 제한 없음`. This recheck confirms catalog-level description only, not a tested response payload or row-level freshness guarantee.
+
+
+The official development guide says the service specification is available from the API detail page's Technical Documents section and includes service overview, operations, request/response message specifications, and examples. The official policy page reconfirms the development-account 50-row limit and no expiration; operating access requires a separate application/review, a traffic estimate, and an account-specific approved key, with 12-month validity. Policy also allows restrictions for commercial use of APIs whose commercial-use permission is not granted. Therefore, the catalog's unrestricted-reuse field is positive evidence but not blanket commercial or redistribution clearance for this service.
+
+Evidence and URLs are recorded in `docs/official-api-catalog-recheck-2026-11-24.md`.
+
 **Research date:** 2026-11-22  
 **Status:** Facility-level waitlist data is documented in an official catalog candidate; schema/sample and service-specific terms remain unverified. No live API request has been made.
 

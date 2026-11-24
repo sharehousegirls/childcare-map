@@ -54,6 +54,7 @@
     node --check regional-summary.mjs
     node --check saved-facilities.mjs
     node --check region-selector.mjs
+    node --check saved-region-comparison.mjs
     node --test tests/*.test.mjs
 
 **PASS — GitHub Actions run #167 (coordinate validation follow-up):** 108 backend tests, 40 frontend tests (8 regional summary, 11 saved-region, 9 saved-search, 12 saved-facility), and all JavaScript syntax checks passed. Provider and SQLite storage-boundary tests cover out-of-range coordinates, incomplete coordinate pairs, and the no-coordinate case. https://github.com/sharehousegirls/childcare-map/actions/runs/45112984412
@@ -88,6 +89,8 @@ Official FAQ: https://info.childcare.go.kr/info_html5/cera/community/faqboard/Fa
 Review note and acceptance criteria: `docs/region-granularity-coordinate-review-2026-11-22.md`
 
 ## Data sources and status
+
+**Official catalog rechecked 2026-11-24:** dataset 15101154 lists facility-level waitlist counts by age 0–5, age 6+, and total, plus facility metadata, as XML/LINK, free, real-time catalog metadata, and unrestricted reuse. Exact operation/request/response schema and service-specific commercial/redistribution conditions are still unverified; see `docs/official-api-catalog-recheck-2026-11-24.md`.
 - **Nationwide waitlist candidate:** SSIS 한국사회보장정보원_어린이집별 기본정보 조회 (15101154). Official catalog lists age waitlist buckets 0–5, 6+ and total: https://www.data.go.kr/data/15101154/openapi.do. XML, real-time metadata, and unrestricted reuse are listed; request schema/sample and service-specific terms remain unverified.
 - **Existing Daegu application:** 한국사회보장정보원_대구광역시 어린이집 정보조회 (15101186), submitted for development account on 2026-11-21. Catalog lists facility metadata (name/code/address/contact/homepage/capacity), not waitlist counts: https://www.data.go.kr/data/15101186/openapi.do. Review/credentials pending.
 - **Administrative region codes:** As checked 2026-11-23, the MOIS notice posted 2026-11-18 lists `jscode20261111.zip` and its layout for the 2026-10-23 effective changes. The archive's filename suffix is not the effective date. The attachment notice does not show a reuse license; do not assume terms from the separate legal-dong API catalog apply to this ZIP. Reuse review remains pending. See `docs/region-code-validation-2026-11-22.md`.

@@ -22,8 +22,8 @@
 - Region source manifest validator in `backend/app/region_manifest.py` records source/version/date/digest/attribution and reuse review; it provides separate public-redistribution and commercial-use gates. SHA-256 verification streams local files in 1 MiB chunks. The gate is not yet wired to an importer.
 
 - Regional aggregation is extracted into `regional-summary.mjs`: missing wait counts stay null, partial totals/coverage are explicit, zero-wait counts only explicit zero, and live region labels are province-first.
-- Region selector options are grouped by the existing parent display label with native optgroups and Korean sorting; child display labels may omit a repeated parent prefix while the selected value remains the full region name. This is not an official code-backed hierarchy and does not add dong navigation
-- Saved-region comparison cards show current facility count, wait total, average per known facility, explicit zero-wait facility count and live-data coverage when valid. Demo metrics are labeled fictional; partial totals and ambiguous/stale region-name matches are not presented as complete comparisons..
+- Region selector options are grouped by the existing parent display label with native optgroups and Korean sorting; child display labels may omit a repeated parent prefix while the selected value remains the full region name. This is not an official code-backed hierarchy and does not add dong navigation.
+- Saved-region comparison cards show current facility count, wait total, average per known facility, explicit zero-wait facility count and live-data coverage when valid. Demo metrics are labeled fictional; partial totals and ambiguous/stale region-name matches are not presented as complete comparisons.
 
 ## Blockers / not yet verified
 - Daegu facility-metadata development API application is pending; it does not itself provide the waitlist fields.
@@ -286,3 +286,15 @@
 
 ## 2026-11-24 follow-up — coverage metadata hardening
 - Coverage validation now treats a present but invalid missing-facility count as invalid metadata, rather than silently treating it as absent. Added a regression test for negative counts. **PASS — isolated Node: 12/12 saved-region comparison tests.** GitHub CI follow-up pending.
+
+
+## 2026-11-24 official catalog/API-policy recheck
+- Directly re-opened the nationwide waitlist dataset 15101154 catalog. Its description lists facility identity/location and waitlist fields for ages 0–5, 6+, and total; catalog metadata remains XML/LINK, free, real-time, and unrestricted reuse.
+- Reconfirmed the official API guide points to a downloadable service specification with operations, request/response schemas, and examples. The public page still does not expose enough to verify the exact endpoint, field mapping, pagination, coordinate encoding, or null semantics.
+- Reconfirmed development access is capped at 50 rows, has no expiration, and keys are issued after approval. Operating access is separately reviewed, requires traffic estimates, and is valid for 12 months. Commercial-use restrictions can apply by API; catalog-level unrestricted reuse is not treated as blanket redistribution/commercial clearance.
+- Evidence is documented in `docs/official-api-catalog-recheck-2026-11-24.md`; no credentials or live calls were used.
+
+## 2026-11-24 saved-region comparison verification
+- **PASS — isolated Node:** final helper/test files ran with 12/12 tests. `node --check` passed for helper and test.
+- **PASS — GitHub Actions #219:** full workflow success for the comparison implementation; **#220:** full workflow success for coverage wording; **#221:** full workflow success for invalid coverage metadata guard. Run-level conclusions were success; connector job step summaries confirm backend tests, frontend syntax checks, and frontend tests succeeded.
+- **NOT RUN:** browser interaction, mobile layout, keyboard-only, and screen-reader testing.
