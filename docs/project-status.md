@@ -425,7 +425,7 @@ The documentation commits following the official catalog review were subsequentl
 
 ## 2026-11-25 — Region manifest C1-control hardening
 - Extended the manifest text validator to reject embedded C1 controls (U+007F–U+009F), in addition to existing C0 controls (U+0000–U+001F), after outer whitespace normalization.
-- Added a regression test that inserts U+0085 inside each manifest text field and asserts the field-specific control-character issue is raised.
+- Added a regression test that replaces an interior character with U+0085 in each manifest text field without changing length, then asserts the field-specific control-character issue is raised.
 - Acceptance: all text metadata fields reject embedded C0/C1 controls; field-specific issue codes are preserved; no external dependency or live API behavior changes.
 - **CI: pending** on branch `dev/manifest-control-characters-2026-11-25`. **NOT RUN locally:** no repository checkout in this connector session.
 - No live data was requested, no official archive imported, no licensing gate changed, and no deployment performed.
