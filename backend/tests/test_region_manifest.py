@@ -216,7 +216,7 @@ class RegionManifestTests(unittest.TestCase):
             self.assertFalse(result["archive_integrity_verified"])
             self.assertEqual(result["archive_integrity_issue"], "archive_file_unsafe")
             self.assertFalse(result["public_archive_import_ready"])
-            self.assertFalse(result["commercial_archive_import_ready")
+            self.assertFalse(result["commercial_archive_import_ready"])
 
 
 
