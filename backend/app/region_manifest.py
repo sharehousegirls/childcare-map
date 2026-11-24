@@ -4,7 +4,9 @@ from __future__ import annotations
 from datetime import date, datetime
 import hashlib
 import hmac
+import os
 import re
+import stat
 from pathlib import Path
 from urllib.parse import urlparse
 from typing import Any
@@ -181,14 +183,41 @@ def validate_region_source_manifest(manifest: Any) -> dict[str, Any]:
 
 
 def verify_file_sha256(file_path: str | Path, expected_sha256: str) -> bool:
-    """Compare a file digest with a manifest value using bounded-memory reads."""
+    """Hash a regular file without following symlinks where the OS supports it."""
     if not isinstance(expected_sha256, str) or not SHA256_RE.fullmatch(expected_sha256):
         raise ValueError("expected_sha256 must be a 64-character hexadecimal digest")
-    digest = hashlib.sha256()
-    with Path(file_path).open("rb") as source:
-        for chunk in iter(lambda: source.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return hmac.compare_digest(digest.hexdigest(), expected_sha256.lower())
+
+    path = Path(file_path)
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NONBLOCK", 0)
+    no_follow = getattr(os, "O_NOFOLLOW", 0)
+    fallback_stat = None
+    if not no_follow:
+        # On platforms without O_NOFOLLOW, compare lstat and opened-file identity.
+        fallback_stat = path.lstat()
+        if not stat.S_ISREG(fallback_stat.st_mode):
+            raise ValueError("file must be a regular non-symlink file")
+
+    fd = os.open(path, flags | no_follow)
+    try:
+        opened_stat = os.fstat(fd)
+        if not stat.S_ISREG(opened_stat.st_mode):
+            raise ValueError("file must be a regular non-symlink file")
+        if fallback_stat is not None and (
+            opened_stat.st_dev != fallback_stat.st_dev
+            or opened_stat.st_ino != fallback_stat.st_ino
+        ):
+            raise ValueError("file changed between path and descriptor checks")
+
+        source = os.fdopen(fd, "rb")
+        fd = None
+        digest = hashlib.sha256()
+        with source:
+            for chunk in iter(lambda: source.read(1024 * 1024), b""):
+                digest.update(chunk)
+        return hmac.compare_digest(digest.hexdigest(), expected_sha256.lower())
+    finally:
+        if fd is not None:
+            os.close(fd)
 
 
 def evaluate_region_archive_preflight(
@@ -215,6 +244,8 @@ def evaluate_region_archive_preflight(
             integrity_verified = verify_file_sha256(path, validated["sha256"])
             if not integrity_verified:
                 integrity_issue = "archive_sha256_mismatch"
+        except ValueError:
+            integrity_issue = "archive_file_unsafe"
         except OSError:
             integrity_issue = "archive_file_unreadable"
 
