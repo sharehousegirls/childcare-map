@@ -185,6 +185,25 @@ class RegionManifestTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 verify_file_sha256(path, "bad")
 
+    def test_sha256_verifier_rejects_non_regular_file(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            directory = Path(temp_dir) / "archive-dir"
+            directory.mkdir()
+            with self.assertRaises((OSError, ValueError)):
+                verify_file_sha256(directory, "a" * 64)
+
+    def test_sha256_verifier_rejects_symlink(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            target = Path(temp_dir) / "target.bin"
+            path = Path(temp_dir) / "archive.bin"
+            target.write_bytes(b"test")
+            try:
+                path.symlink_to(target)
+            except (OSError, NotImplementedError):
+                self.skipTest("symlinks are unavailable in this environment")
+            with self.assertRaises((OSError, ValueError)):
+                verify_file_sha256(path, hashlib.sha256(b"test").hexdigest())
+
 
 
 
