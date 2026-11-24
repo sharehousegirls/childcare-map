@@ -314,3 +314,14 @@
 - **PASS — GitHub Actions #226:** 124 backend tests, frontend syntax checks, and 73 frontend tests all passed.
 - **NOT RUN:** local checkout/test execution and browser/manual accessibility testing. GitHub CI is the verified execution environment.
 - No official region archive was downloaded or imported. The helper does not authenticate provenance, safely extract ZIP contents, validate official layouts, or replace human reuse review.
+
+
+## 2026-11-24 incremental milestone — reject symlinked region archives
+
+- Archive preflight now rejects a path that is a symbolic link, even if its basename and target digest match the manifest. This avoids accepting unexpected path indirection before a future importer.
+- Added one regression test using a matching-content symlink; unsupported symlink creation is skipped explicitly by the test rather than treated as a pass.
+- Updated the archive preflight notes to state the restriction and the remaining time-of-check/time-of-use risk. The importer must stage the file safely and keep the verified archive immutable through extraction; this preflight alone is not race-proof.
+- **PASS — GitHub Actions #228:** code-only commit passed backend tests, JavaScript syntax and frontend tests. **PASS — #229:** regression-test commit passed the same full workflow. **PASS — #230:** documentation commit passed the same full workflow. Run-level and all step conclusions were successful.
+- Backend test file now contains 125 test methods; the #229/#230 backend steps completed successfully. Frontend test files contain 73 tests; syntax and frontend test steps also completed successfully.
+- **NOT RUN:** direct local checkout, browser/manual responsive and accessibility tests. GitHub CI is the executed test environment.
+- No official region archive was downloaded or imported, no API/credentials were connected, and no deployment occurred.
