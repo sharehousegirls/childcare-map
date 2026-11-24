@@ -379,6 +379,9 @@ The documentation commits following the official catalog review were subsequentl
 
 ## 2026-11-24 incremental milestone — Korean calendar freshness comparison
 
+- **FAIL — GitHub Actions #252 (intermediate code-only commit):** the old UTC-based future-date fixture failed after the code switched to Korea-local dates; the test fixture was corrected in #253 and the full test workflow passed. This was an expected compatibility break between the separate code and test commits, not left unresolved.
+- **PASS — GitHub Actions #254:** documentation update workflow completed successfully. https://github.com/sharehousegirls/childcare-map/actions/runs/45416727857
+
 - Corrected the freshness diagnostic to compare date-only source dates with the collection timestamp's **Asia/Seoul calendar date** rather than UTC. This avoids false future/staleness day labels around UTC midnight for Korean data.
 - Added two boundary regressions: collection timestamp crossing into Korea's next day, and a source date still future just before Korean midnight.
 - **PASS — GitHub Actions #253:** backend, JavaScript syntax and frontend test steps succeeded for the code/test commits. Exact frontend test-count output was not available via the connector. https://github.com/sharehousegirls/childcare-map/actions/runs/45416448050
