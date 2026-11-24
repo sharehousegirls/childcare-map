@@ -20,7 +20,7 @@ A small accessibility improvement for keyboard navigation in the static demo. A 
 
 ## Tests
 
-- **PENDING CI:** `tests/accessibility-focus.test.mjs` is added; the GitHub workflow runs `node --test tests/*.test.mjs`.
+- **PASS — GitHub Actions #243:** Backend tests, JavaScript syntax checks, and frontend tests all completed successfully for commit `859e00c2`. The frontend suite includes this static focus-rule regression test. https://github.com/sharehousegirls/childcare-map/actions/runs/45357878490
 - **NOT RUN:** local checkout tests, manual keyboard/browser review, mobile and assistive-technology testing.
 
 This is a CSS-level acceptance check, not a substitute for a manual accessibility review.
