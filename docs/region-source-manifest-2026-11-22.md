@@ -85,7 +85,8 @@ The manifest gate must be connected to a future archive importer before any offi
 The new `evaluate_region_archive_preflight(manifest, archive_path)` helper combines the manifest's reuse-review state with a local archive check:
 
 - The local basename must exactly match the manifest `file_name`.
-- The path must resolve to a regular file.
+- The path must be a regular file and must not be a symbolic link (to avoid unexpected path indirection).
+- The check is not atomic with a later read or extraction; the future importer must stage the file safely and keep the verified archive immutable to avoid a time-of-check/time-of-use (TOCTOU) race.
 - Its SHA-256 must match the manifest digest.
 - Missing, unreadable, mismatched, or wrong-name files keep the combined import gates closed.
 - `public_archive_import_ready` requires verified redistribution permission plus a verified local digest.
