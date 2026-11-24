@@ -30,3 +30,16 @@
 .facility-card{scroll-margin-top:86px}
 @media(max-width:800px){.saved-facility-heading{align-items:stretch;flex-direction:column}}
 @media(max-width:520px){.saved-facility-item{align-items:flex-start;flex-direction:column}.saved-facility-actions{width:100%}.saved-facility-actions button{flex:1}.saved-facility-save{width:100%}}
+
+.saved-region-comparison{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.saved-region-comparison h4{margin:0 0 6px;font-size:14px}
+.saved-region-comparison-hint{margin:0 0 10px;color:var(--muted);font-size:11px;line-height:1.55}
+.saved-region-comparison-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.saved-region-comparison-card{min-width:0;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.saved-region-comparison-card h4{margin:0 0 10px;font-size:14px;overflow-wrap:anywhere}
+.saved-region-comparison-unavailable{margin:0;color:var(--muted);font-size:12px;line-height:1.5}
+.saved-region-comparison-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.saved-region-comparison-metric{min-width:0;padding:9px;background:#f6f8fc;border-radius:8px}
+.saved-region-comparison-metric span,.saved-region-comparison-metric small{display:block;color:var(--muted);font-size:10px;line-height:1.4;overflow-wrap:anywhere}
+.saved-region-comparison-metric strong{display:block;margin:4px 0;font-size:14px;line-height:1.4;overflow-wrap:anywhere}
+@media(max-width:520px){.saved-region-comparison-grid{grid-template-columns:1fr}.saved-region-comparison-metric strong{font-size:13px}}

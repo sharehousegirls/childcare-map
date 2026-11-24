@@ -5,6 +5,7 @@ import { buildRegions } from "./regional-summary.mjs";
 import { readSavedFacilities, saveSavedFacility, removeSavedFacility } from "./saved-facilities.mjs";
 import { formatDataQualityDetails } from "./data-quality.mjs";
 import { formatDataFreshness } from "./data-freshness.mjs";
+import { buildSavedRegionComparison } from "./saved-region-comparison.mjs";
 
 // Live backend is preferred when configured; otherwise clearly labeled fictional demo.
 const DEMO_REGIONS=[
@@ -27,6 +28,7 @@ const DEMO_FACILITIES=[
 let regions=DEMO_REGIONS,facilities=DEMO_FACILITIES,liveData=false,liveError="",liveMeta=null;
 const regionSelect=document.querySelector("#regionSelect"),regionCards=document.querySelector("#regionCards"),facilityList=document.querySelector("#facilityList"),statusEl=document.querySelector("#dataStatus"),dataQualityDetails=document.querySelector("#dataQualityDetails");
 const dataFreshnessDetails=document.querySelector("#dataFreshnessDetails");
+const savedRegionComparison=document.querySelector("#savedRegionComparison"),savedRegionComparisonHint=document.querySelector("#savedRegionComparisonHint");
 const facilitySearch=document.querySelector("#facilitySearch"),typeFilter=document.querySelector("#typeFilter"),zeroFilter=document.querySelector("#zeroFilter");
 const savedSearchForm=document.querySelector("#savedSearchForm"),savedSearchName=document.querySelector("#savedSearchName"),savedSearchStatus=document.querySelector("#savedSearchStatus"),savedSearchList=document.querySelector("#savedSearchList");
 const saveRegionButton=document.querySelector("#saveRegionButton"),savedRegionStatus=document.querySelector("#savedRegionStatus"),savedRegionList=document.querySelector("#savedRegionList");
@@ -132,7 +134,7 @@ function renderFacilities(){
    dataQualityDetails.textContent="가상 데모에는 실제 기준일 품질 진단이 없습니다.";
    dataFreshnessDetails.textContent="가상 데모에는 실제 데이터 최신성 정보가 없습니다.";
  }
- renderSummary();renderRegions();renderFacilities();
+ renderSummary();renderRegions();renderFacilities();renderSavedRegionComparison();
 }
 async function tryLoadLive(){try{const res=await fetch("http://127.0.0.1:8000/api/facilities");if(!res.ok)throw Error("Backend HTTP "+res.status);const data=await res.json();if(data.source!=="official_api"||!Array.isArray(data.facilities))throw Error("Unexpected API payload");if(!Number.isInteger(data.count)||data.count!==data.facilities.length)throw Error("API record count does not match facilities");const mapped=mapApiRows(data.facilities);if(!mapped.length)throw Error("No usable facility records");facilities=mapped;regions=buildRegions(mapped);liveMeta=data.meta&&typeof data.meta==="object"?data.meta:null;liveData=true;liveError="";}catch(e){liveData=false;liveError=e.message||String(e);liveMeta=null;facilities=DEMO_FACILITIES;regions=DEMO_REGIONS;}populateRegions();render();}
 function showSavedSearchStatus(message,isError=false){savedSearchStatus.textContent=message;savedSearchStatus.className="saved-search-status"+(isError?" error":"");}
@@ -144,7 +146,64 @@ savedSearchForm.addEventListener("submit",event=>{event.preventDefault();const r
 savedSearchList.addEventListener("click",event=>{const loadButton=event.target.closest("button[data-load-saved-search]");if(loadButton){const item=readSavedSearches().find(entry=>entry.id===loadButton.dataset.loadSavedSearch);if(item)applySavedSearch(item);return;}const deleteButton=event.target.closest("button[data-delete-saved-search]");if(deleteButton){const result=removeSavedSearch(deleteButton.dataset.deleteSavedSearch);renderSavedSearches();showSavedSearchStatus(result.ok?"검색 조건을 삭제했습니다.":"검색 조건을 삭제하지 못했습니다.",!result.ok);}});
 function showSavedRegionStatus(message,isError=false){savedRegionStatus.textContent=message;savedRegionStatus.className="saved-region-status"+(isError?" error":"");}
 function createSavedRegionId(){try{if(typeof crypto!=="undefined"&&crypto.randomUUID)return crypto.randomUUID();}catch{}return Date.now()+"-"+Math.random().toString(36).slice(2,10);}
-function renderSavedRegions(){savedRegionList.replaceChildren();const items=readSavedRegions();if(!items.length){const empty=document.createElement("p");empty.className="saved-region-empty";empty.textContent="저장된 관심 지역이 없습니다.";savedRegionList.append(empty);return;}items.forEach(item=>{const row=document.createElement("article");row.className="saved-region-item";const info=document.createElement("div");info.className="saved-region-info";const name=document.createElement("strong");name.textContent=item.region;const meta=document.createElement("small");const date=new Date(item.savedAt);meta.textContent="저장일 "+(Number.isNaN(date.getTime())||date.getTime()===0?"날짜 미확인":date.toLocaleDateString("ko-KR"));info.append(name,meta);const actions=document.createElement("div");actions.className="saved-region-actions";const load=document.createElement("button");load.type="button";load.className="saved-region-load";load.textContent="지역 보기";load.dataset.loadSavedRegion=item.id;load.setAttribute("aria-label",item.region+" 선택");const remove=document.createElement("button");remove.type="button";remove.className="saved-region-delete";remove.textContent="삭제";remove.dataset.deleteSavedRegion=item.id;remove.setAttribute("aria-label",item.region+" 관심 지역 삭제");actions.append(load,remove);row.append(info,actions);savedRegionList.append(row);});}
+function comparisonMetric(card,label,value,detail){
+  const metric=document.createElement("div");metric.className="saved-region-comparison-metric";
+  const title=document.createElement("span");title.textContent=label;
+  const strong=document.createElement("strong");strong.textContent=value;
+  const note=document.createElement("small");note.textContent=detail;
+  metric.append(title,strong,note);card.append(metric);
+}
+function renderSavedRegionComparison(){
+  savedRegionComparison.replaceChildren();
+  const items=readSavedRegions();
+  if(!items.length){savedRegionComparisonHint.textContent="관심 지역을 저장하면 현재 데이터 기준으로 요약을 비교할 수 있습니다.";return;}
+  const rows=buildSavedRegionComparison(regions,items,{liveData});
+  savedRegionComparisonHint.textContent=items.length===1
+    ?"저장 지역 1곳입니다. 다른 지역을 저장하면 함께 비교할 수 있습니다."
+    :"저장된 지역의 현재 요약을 비교합니다. 대기 합계는 확인된 시설의 합이며 부분 합계일 수 있고, 동일 아동이 여러 시설에 대기할 수 있습니다.";
+  rows.forEach(row=>{
+    const card=document.createElement("article");card.className="saved-region-comparison-card";
+    const heading=document.createElement("h4");heading.textContent=row.region;card.append(heading);
+    if(!row.available){
+      const unavailable=document.createElement("p");unavailable.className="saved-region-comparison-unavailable";unavailable.textContent=row.reason;card.append(unavailable);savedRegionComparison.append(card);return;
+    }
+    const facilityValue=row.facilities===null?"확인 불가":row.facilities.toLocaleString()+"개";
+    const waitingValue=row.waiting===null?"확인 불가":liveData
+      ?row.waiting.toLocaleString()+"건"+(row.totalComplete?"":"*")
+      :row.waiting.toLocaleString()+"명 (예시)";
+    const waitingDetail=liveData
+      ?row.totalComplete?"모든 시설 대기 정보 확인":"확인된 시설 기준 · 부분 합계"
+      :"가상 집계 · 실제 데이터 아님";
+    const averageValue=row.average===null?"확인 불가":liveData
+      ?row.average.toFixed(1)+"건"
+      :row.average.toFixed(1)+"명 (예시)";
+    const averageDetail=liveData?"대기 확인 시설당 평균":"가상 평균 · 실제 데이터 아님";
+    const zeroValue=row.zeroWaitFacilities===null?"확인 불가":liveData
+      ?row.zeroWaitFacilities.toLocaleString()+"개"
+      :row.zeroWaitFacilities.toLocaleString()+"개 (예시)";
+    const zeroDetail=liveData?"대기 0건 시설":"가상 시설 수 · 실제 데이터 아님";
+    let coverageValue="확인 불가",coverageDetail="시설별 대기 원자료가 없습니다.";
+    if(liveData&&row.coverage!==null){
+      coverageValue=row.knownFacilities.toLocaleString()+"/"+row.facilities.toLocaleString()+"개 · "+(row.coverage*100).toFixed(1)+"%";
+      coverageDetail="대기 정보 미확인 "+row.missingWaitlistFacilities.toLocaleString()+"개";
+    }else if(liveData){
+      coverageDetail="시설 수 또는 대기 확인 수를 검증할 수 없습니다.";
+    }
+    const metrics=document.createElement("div");metrics.className="saved-region-comparison-metrics";
+    comparisonMetric(metrics,"시설 수",facilityValue,"현재 데이터 기준");
+    comparisonMetric(metrics,"대기 합계",waitingValue,waitingDetail);
+    comparisonMetric(metrics,"시설당 평균",averageValue,averageDetail);
+    comparisonMetric(metrics,"대기 0건 시설",zeroValue,zeroDetail);
+    comparisonMetric(metrics,"대기 확인률",coverageValue,coverageDetail);
+    card.append(metrics);savedRegionComparison.append(card);
+  });
+}
+function renderSavedRegions(){
+  savedRegionList.replaceChildren();const items=readSavedRegions();
+  if(!items.length){const empty=document.createElement("p");empty.className="saved-region-empty";empty.textContent="저장된 관심 지역이 없습니다.";savedRegionList.append(empty);renderSavedRegionComparison();return;}
+  items.forEach(item=>{const row=document.createElement("article");row.className="saved-region-item";const info=document.createElement("div");info.className="saved-region-info";const name=document.createElement("strong");name.textContent=item.region;const meta=document.createElement("small");const date=new Date(item.savedAt);meta.textContent="저장일 "+(Number.isNaN(date.getTime())||date.getTime()===0?"날짜 미확인":date.toLocaleDateString("ko-KR"));info.append(name,meta);const actions=document.createElement("div");actions.className="saved-region-actions";const load=document.createElement("button");load.type="button";load.className="saved-region-load";load.textContent="지역 보기";load.dataset.loadSavedRegion=item.id;load.setAttribute("aria-label",item.region+" 선택");const remove=document.createElement("button");remove.type="button";remove.className="saved-region-delete";remove.textContent="삭제";remove.dataset.deleteSavedRegion=item.id;remove.setAttribute("aria-label",item.region+" 관심 지역 삭제");actions.append(load,remove);row.append(info,actions);savedRegionList.append(row);});
+  renderSavedRegionComparison();
+}
 function applySavedRegion(item){const exists=[...regionSelect.options].some(option=>option.value===item.region);if(!exists){showSavedRegionStatus("저장된 지역을 현재 데이터에서 찾을 수 없습니다.",true);return;}regionSelect.value=item.region;render();showSavedRegionStatus("저장된 관심 지역을 선택했습니다.");}
 saveRegionButton.addEventListener("click",()=>{const region=selectedRegion();if(region==="all"){showSavedRegionStatus("전체 지역은 저장할 수 없습니다. 개별 지역을 선택하세요.",true);return;}const result=saveSavedRegion({id:createSavedRegionId(),region,savedAt:new Date().toISOString()});if(result.ok){renderSavedRegions();showSavedRegionStatus("관심 지역을 저장했습니다.");}else{const messages={duplicate:"이미 저장된 관심 지역입니다.","duplicate-id":"저장 식별자가 중복되었습니다. 다시 시도하세요.",limit:"저장 한도(20개)에 도달했습니다. 기존 지역을 삭제한 후 저장하세요.","storage-unavailable":"브라우저 저장 기능을 사용할 수 없습니다.","storage-error":"브라우저 저장 공간에 기록하지 못했습니다.",invalid:"지역 정보를 확인해주세요."};showSavedRegionStatus(messages[result.reason]||"저장하지 못했습니다.",true);}});
 savedRegionList.addEventListener("click",event=>{const loadButton=event.target.closest("button[data-load-saved-region]");if(loadButton){const item=readSavedRegions().find(entry=>entry.id===loadButton.dataset.loadSavedRegion);if(item)applySavedRegion(item);return;}const deleteButton=event.target.closest("button[data-delete-saved-region]");if(deleteButton){const result=removeSavedRegion(deleteButton.dataset.deleteSavedRegion);renderSavedRegions();showSavedRegionStatus(result.ok?"관심 지역을 삭제했습니다.":"관심 지역을 삭제하지 못했습니다.",!result.ok);}});

@@ -22,7 +22,8 @@
 - Region source manifest validator in `backend/app/region_manifest.py` records source/version/date/digest/attribution and reuse review; it provides separate public-redistribution and commercial-use gates. SHA-256 verification streams local files in 1 MiB chunks. The gate is not yet wired to an importer.
 
 - Regional aggregation is extracted into `regional-summary.mjs`: missing wait counts stay null, partial totals/coverage are explicit, zero-wait counts only explicit zero, and live region labels are province-first.
-- Region selector options are grouped by the existing parent display label with native optgroups and Korean sorting; child display labels may omit a repeated parent prefix while the selected value remains the full region name. This is not an official code-backed hierarchy and does not add dong navigation.
+- Region selector options are grouped by the existing parent display label with native optgroups and Korean sorting; child display labels may omit a repeated parent prefix while the selected value remains the full region name. This is not an official code-backed hierarchy and does not add dong navigation
+- Saved-region comparison cards show current facility count, wait total, average per known facility, explicit zero-wait facility count and live-data coverage when valid. Demo metrics are labeled fictional; partial totals and ambiguous/stale region-name matches are not presented as complete comparisons..
 
 ## Blockers / not yet verified
 - Daegu facility-metadata development API application is pending; it does not itself provide the waitlist fields.
@@ -42,7 +43,7 @@
 - No official canonical region hierarchy imported or dong-level mapping implemented. Dong-level waitlist statistics must be derived only from uniquely identified facility rows and verified spatial mapping; the portal FAQ does not document a direct dong-level query for its regional facility-type/count query. Region and crosswalk validators are not wired into API/UI. Crosswalk validation does not prove geographic relationships.
 - SQLite snapshot storage exists as an isolated scaffold, but it is not integrated with API ingestion or exposed through routes; no region hierarchy, real map, facility detail page, persistent saved facilities, server-backed comparisons or trend UI yet.
 - Saved searches are browser-local only; up to 20. They do not sync across devices/accounts, and browser storage can be cleared or unavailable.
-- Saved regions are also browser-local and currently store region-name strings from the current option list; they are not canonical official IDs and may become stale after region-code/name changes. No migration or cross-device sync yet.
+- Saved regions are also browser-local and currently store region-name strings from the current option list; they are not canonical official IDs and may become stale after region-code/name changes. No migration or cross-device sync yet. Saved-region comparison is also name-based and reflects the current dataset only; it is not a historical snapshot or server-backed comparison.
 - Saved facilities are browser-local, capped at 50 and matched by exact ID; source-ID changes can make bookmarks stale. No account or device sync.
 - Storage schema has no versioned migrations, failed-run/retry recording, retention/backup policy or production concurrency/load review.
 - Automated data refresh, SEO, production hardening and deployment are not ready.
@@ -267,3 +268,12 @@
 - **PASS — GitHub Actions run #217:** backend unit-test, JavaScript syntax-check, and frontend test steps completed successfully; run-level conclusion is success. Exact test-count output was not exposed by the connector. https://github.com/sharehousegirls/childcare-map/actions/runs/45281684930
 - **NOT RUN:** browser interaction, mobile viewport, and screen-reader checks.
 - No official region codes, live API data, mapping, external dependency, or deployment were added. Grouping is presentation-only; canonical code-based hierarchy and dong navigation remain blocked on official source review/import.
+
+
+## 2026-11-24 incremental milestone — saved-region comparison
+- Added a comparison helper and UI cards for regions already saved in browser-local storage. Cards show facility count, wait total, average per known facility, explicit zero-wait facility count, and live-data coverage when valid.
+- Demo values retain example labels; facility-level coverage remains unknown in demo mode. Live totals are marked partial unless completeness metadata and full known-facility coverage confirm every facility; missing values remain unknown rather than zero.
+- Stale or ambiguous name matches are reported as unavailable instead of selecting an arbitrary region. Comparison rendering uses DOM text nodes and does not interpolate saved names into HTML.
+- **PASS — isolated Node tests:** 10/10 tests passed for demo ordering/labels, complete and partial live coverage, unknown totals, missing/ambiguous regions, malformed/duplicate saved entries, invalid metrics, empty regions, and input validation. Module and test syntax checks passed.
+- GitHub CI verification pending after implementation commit; browser/manual mobile and accessibility testing remains **NOT RUN**.
+- No official data, map coordinates, API credentials, dependencies, or deployment were added. Comparison is current-data only; historical snapshots and canonical region IDs remain future work.
