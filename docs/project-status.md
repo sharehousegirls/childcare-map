@@ -331,5 +331,13 @@
 - Hardened `verify_file_sha256`: opens with `O_NOFOLLOW` where available and non-blocking mode, checks the opened descriptor is a regular file with `fstat`, and on platforms without `O_NOFOLLOW` compares the pre-open `lstat` device/inode to the opened descriptor.
 - Added direct verifier regressions for symlink and non-regular paths; unsafe file errors are surfaced as `archive_file_unsafe` by preflight. The preflight remains fail-closed.
 - This narrows path-based symlink races but does not prevent in-place file mutation or guarantee that a future importer extracts the exact verified bytes. Safe immutable staging, ZIP entry/path/size limits, and extraction validation remain required.
-- **CI pending at this update:** backend/frontend workflow was triggered by code and test commits; final run status will be checked before closeout.
+- **PASS — isolated verifier harness:** regular-file digest match/mismatch and rejection of directory/symlink paths.
+- **PASS — GitHub Actions #237:** backend unit tests, JavaScript syntax checks, and frontend tests succeeded; the backend test file now contains 128 tests (125 baseline + 3 regressions), and frontend tests remain 73. **#236 failed** because a newly added test had a malformed assertion; it was corrected in #237 before counting the run as passing. https://github.com/sharehousegirls/childcare-map/actions/runs/45342054704
 - **NOT RUN:** direct local repository checkout, browser/manual responsive and accessibility tests. No official archive download/import, live API request, or deployment.
+
+
+## 2026-11-24 follow-up — archive verifier regression closure
+- Added regression tests for direct symlink rejection, non-regular files, and fail-closed handling of unsafe hash-open errors.
+- **PASS — GitHub Actions #237:** backend tests, JavaScript syntax and frontend tests all completed successfully. Backend test file: 128 tests; frontend: 73. **FAIL — #236:** a malformed test assertion caused the backend step to fail; corrected in #237 and not counted as passing.
+- **PASS — isolated verifier harness:** regular-file digest match/mismatch and directory/symlink rejection. This is not a direct repository checkout run.
+- **NOT RUN:** direct checkout tests in this environment, browser/manual responsive and accessibility checks. No archive download/import, live API, or deployment.
