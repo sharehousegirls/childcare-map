@@ -288,5 +288,29 @@ class RegionManifestTests(unittest.TestCase):
             self.assertFalse(result["commercial_archive_import_ready"])
 
 
+    def test_preflight_rejects_archive_symlink(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            target = Path(temp_dir) / "source.bin"
+            path = Path(temp_dir) / "jscode20261111.zip"
+            payload = b"archive preflight test"
+            target.write_bytes(payload)
+            try:
+                path.symlink_to(target)
+            except OSError:
+                self.skipTest("symlinks are unavailable in this environment")
+            data = manifest(
+                file_name=path.name,
+                sha256=hashlib.sha256(payload).hexdigest(),
+                reuse_review_status="verified",
+                license_reviewed_at="2026-11-24",
+                redistribution_allowed=True,
+                commercial_use_allowed=True,
+            )
+            result = evaluate_region_archive_preflight(data, path)
+            self.assertFalse(result["archive_integrity_verified"])
+            self.assertEqual(result["archive_integrity_issue"], "archive_path_symlink")
+            self.assertFalse(result["public_archive_import_ready"])
+            self.assertFalse(result["commercial_archive_import_ready"])
+
 if __name__ == "__main__":
     unittest.main()
