@@ -7,6 +7,7 @@ A bounded hardening change to the source metadata manifest validator. The shared
 ## Behavior
 
 - Keeps the existing field-specific validation issue suffix: `*_contains_control_character`.
+- The regression test replaces an interior character with U+0085 without changing field length, avoiding unrelated maximum-length failures.
 - Applies consistently to dataset kind, source system, dataset ID, URLs, filename, SHA-256 text, dates/timestamps, attribution, review status and optional license-review date.
 - Validation still fails closed; contaminated fields are not normalized or accepted.
 - No source archive is downloaded, imported, or re-published; no legal reuse decision is made.
