@@ -2,6 +2,12 @@
 
 지역별 어린이집 입소 대기 정보 비교 서비스.
 
+## Latest CI verification — 2026-11-24
+
+- **PASS — GitHub Actions run #249** for commit `6c54c44092c0faab788421f676df118dfd052b2f: 128 backend tests, 74 frontend tests, and all JavaScript syntax checks passed. Every workflow step concluded successfully.
+- Evidence: https://github.com/sharehousegirls/childcare-map/actions/runs/45376815885
+- This verifies the repository test workflow only; official API schema/terms, live ingestion, archive import, browser/manual accessibility checks, and deployment remain unverified.
+
 ## 현재 상태
 - 반응형 정적 웹 프로토타입: 지역 카드, 시설 검색, 유형/대기 0 필터
 - 기존 화면은 **가상 데모 데이터**를 사용합니다. 실제 데이터 연결 성공 전에는 실제 현황으로 간주하지 마세요.
@@ -168,7 +174,7 @@ The official API guide says the service specification is available from the API 
 See [schema verification and integration acceptance gate](docs/api-schema-verification-2026-11-23.md) before configuring live integration.
 
 
-**Latest verification — GitHub Actions run #201:** 116 backend tests, 40 frontend tests, and all JavaScript syntax checks passed, including the record-level source-date ratio regression test. Earlier provider-quality safeguards are documented in [provider data-quality notes](docs/provider-data-quality-2026-11-23.md). https://github.com/sharehousegirls/childcare-map/actions/runs/45196215022
+**Historical verification — GitHub Actions run #201:** 116 backend tests, 40 frontend tests, and all JavaScript syntax checks passed, including the record-level source-date ratio regression test. Earlier provider-quality safeguards are documented in [provider data-quality notes](docs/provider-data-quality-2026-11-23.md). https://github.com/sharehousegirls/childcare-map/actions/runs/45196215022
 
 ## Source-date parseability diagnostics (2026-11-23)
 
