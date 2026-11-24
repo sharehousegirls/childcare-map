@@ -43,3 +43,6 @@
 .saved-region-comparison-metric span,.saved-region-comparison-metric small{display:block;color:var(--muted);font-size:10px;line-height:1.4;overflow-wrap:anywhere}
 .saved-region-comparison-metric strong{display:block;margin:4px 0;font-size:14px;line-height:1.4;overflow-wrap:anywhere}
 @media(max-width:520px){.saved-region-comparison-grid{grid-template-columns:1fr}.saved-region-comparison-metric strong{font-size:13px}}
+
+/* Consistent keyboard-only focus visibility for interactive controls. */
+:where(a,button,input,select,textarea):focus-visible{outline:3px solid #2563eb;outline-offset:2px;border-radius:4px}
