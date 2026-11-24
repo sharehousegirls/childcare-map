@@ -24,6 +24,19 @@ class ProviderNormalizationTests(unittest.TestCase):
         record = {"CRCODE": "A1", "CRNAME": "Facility 1"}
         self.assertEqual(_flatten_records(record), [record])
 
+    def test_flatten_records_handles_deep_nesting(self):
+        record = {"CRCODE": "A1", "CRNAME": "Facility 1"}
+        payload = record
+        for _ in range(1500):
+            payload = {"item": payload}
+        self.assertEqual(_flatten_records(payload), [record])
+
+    def test_flatten_records_handles_cyclic_payload(self):
+        payload = {}
+        payload["self"] = payload
+        self.assertEqual(_flatten_records(payload), [])
+
+
     def test_alias_mapping(self):
         record = {"CRNAME": "Facility 1"}
         self.assertEqual(_get_value(record, "name", {}), "Facility 1")
