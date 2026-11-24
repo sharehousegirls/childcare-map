@@ -358,3 +358,13 @@
 - **PASS — GitHub Actions #243:** backend unit tests, JS syntax checks, and frontend tests succeeded. The new static focus test is part of the frontend suite. https://github.com/sharehousegirls/childcare-map/actions/runs/45357878490
 - **NOT RUN:** direct local repository checkout, manual keyboard-only browser review, mobile viewport, contrast audit, and screen-reader checks.
 - No API, data, dependency, or deployment changes.
+
+
+## 2026-11-24 incremental milestone — verified catalog field inventory
+- Re-opened the public dataset 15101154 catalog and documented field groups, normalized mapping candidates, and pre-ingestion acceptance criteria in `docs/official-api-catalog-recheck-2026-11-24.md`. Catalog-level names are explicitly marked unverified as XML element names; no `API_FIELD_MAP`, API request, or live ingestion was configured.
+- Clarified the data-minimization scope (representative/staff details are not needed for the waitlist map), and added whole-pagination facility-ID deduplication, source-date coverage, waitlist total-vs-age-bucket checks, and CRS/axis-order validation gates.
+- Reconfirmed the coordinate risk: catalog labels latitude/longitude, while portal FAQ reports EPSG:5181 TM for its childcare map. Actual field values, units and axis order must be checked in a redacted response before mapping.
+- Official catalog page was re-opened on 2026-11-24. It lists the dataset as XML/LINK, free, real-time catalog metadata, and unrestricted reuse; this remains a catalog statement, not blanket commercial/cache/redistribution clearance. API access still requires a reviewed account; development results are limited to 50 rows and operating access is separately reviewed.
+- **PASS (documentation review):** catalog field inventory and mapping gates are grounded in the public catalog and official API policy/guide/FAQ pages.
+- **NOT RUN:** repository tests (docs-only change), direct checkout, browser, live API, archive import, and deployment. Verify CI if a workflow is triggered.
+- **Next:** obtain service specification + redacted sample; verify operation/response envelope/paging/row limit/date/ID/CRS/terms, then run only a bounded offline mapping-validation batch before considering live access.
