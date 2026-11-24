@@ -78,3 +78,19 @@ The unit tests cover:
 - Permission field types
 
 The manifest gate must be connected to a future archive importer before any official region file is loaded into public-facing data. Archive parsing, extraction safety, actual MOIS file layout, code/parent relationships, row counts, and administrative/legal-dong crosswalk validation remain separate tasks.
+
+ 
+## Archive preflight — 2026-11-24
+
+The new `evaluate_region_archive_preflight(manifest, archive_path)` helper combines the manifest's reuse-review state with a local archive check:
+
+- The local basename must exactly match the manifest `file_name`.
+- The path must resolve to a regular file.
+- Its SHA-256 must match the manifest digest.
+- Missing, unreadable, mismatched, or wrong-name files keep the combined import gates closed.
+- `public_archive_import_ready` requires verified redistribution permission plus a verified local digest.
+- `commercial_archive_import_ready` additionally requires explicit commercial-use permission.
+
+This is deliberately still preflight—not an importer. It does not download the source, authenticate provenance, inspect ZIP contents, protect extraction paths, validate the official layout, or verify code/parent/crosswalk relationships. Human source and license review remains required.
+
+**Tests:** six new preflight cases cover pending reuse with a matching digest, verified permissions, digest mismatch, filename mismatch, missing archive, and commercial permission denied.

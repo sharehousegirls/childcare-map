@@ -305,3 +305,11 @@
 - **PASS — GitHub Actions #221:** final coverage-metadata guard code, backend tests, JavaScript syntax, and frontend tests all succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/45299222870
 - **PASS — GitHub Actions #222:** official API catalog/policy recheck documentation and README/status updates; full workflow succeeded. https://github.com/sharehousegirls/childcare-map/actions/runs/45299364256
 - Official source recheck confirmed catalog field descriptions and account policy only; exact service schema and service-specific reuse terms remain blocked by development access, technical document, sample, and approval.
+
+ 
+## 2026-11-24 archive preflight follow-up
+
+- Added `evaluate_region_archive_preflight` to combine existing reuse gates with local archive filename, regular-file, and SHA-256 checks.
+- New public/commercial archive gates remain closed unless reuse review is explicitly verified, redistribution is allowed, and the local archive digest matches; commercial gate additionally requires explicit commercial permission.
+- This helper does not fetch/extract ZIPs, authenticate source provenance, validate archive layout or records, or import official region data.
+- **Verification status: pending GitHub Actions for this commit.** Six new backend tests added; no live archive downloaded or imported.

@@ -93,3 +93,11 @@ The tests cover XML/JSON record flattening, alias mapping, numeric/null handling
 
 
 `GET /api/facilities` freshness metadata also exposes `source_data_date_coverage_ratio` (non-empty dates / facility rows) and `source_data_date_parseability_ratio` (valid strict ISO dates / non-empty date strings). Both are rounded to four decimals and null when their denominator is unavailable. These are diagnostics only; do not infer freshness or an update SLA from them. A non-empty facility batch with no source dates reports coverage `0.0` and parseability `null`; an empty batch reports both `null`.
+
+ 
+## Region archive preflight
+
+Before a future official-region archive importer is enabled, use
+`evaluate_region_archive_preflight(manifest, archive_path)` to combine the manifest reuse gates with a local file check. It requires the local basename to match the manifest filename, a regular file, and an exact SHA-256 match before either archive-import gate can open. A matching digest alone never clears a pending reuse review; commercial readiness also requires explicit commercial-use permission.
+
+This preflight does not download, extract, or authenticate the archive. Archive source authenticity, safe ZIP extraction, file layout, row validation, and official reuse terms must still be independently verified. No importer is connected.

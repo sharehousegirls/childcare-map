@@ -9,7 +9,108 @@ from app.region_manifest import (
     RegionSourceManifestError,
     validate_region_source_manifest,
     verify_file_sha256,
+    evaluate_region_archive_preflight,
 )
+
+    def test_preflight_hash_match_does_not_bypass_pending_reuse_review(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "jscode20261111.zip"
+            payload = b"archive preflight test"
+            path.write_bytes(payload)
+            data = manifest(file_name=path.name, sha256=hashlib.sha256(payload).hexdigest())
+            result = evaluate_region_archive_preflight(data, path)
+            self.assertTrue(result["archive_integrity_verified"])
+            self.assertIsNone(result["archive_integrity_issue"])
+            self.assertFalse(result["public_archive_import_ready"])
+            self.assertFalse(result["commercial_archive_import_ready"])
+
+    def test_preflight_requires_reuse_review_and_integrity_for_public_gate(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "jscode20261111.zip"
+            payload = b"archive preflight test"
+            path.write_bytes(payload)
+            data = manifest(
+                file_name=path.name,
+                sha256=hashlib.sha256(payload).hexdigest(),
+                reuse_review_status="verified",
+                license_reviewed_at="2026-11-24",
+                redistribution_allowed=True,
+                commercial_use_allowed=True,
+            )
+            result = evaluate_region_archive_preflight(data, path)
+            self.assertTrue(result["public_archive_import_ready"])
+            self.assertTrue(result["commercial_archive_import_ready"])
+
+    def test_preflight_digest_mismatch_blocks_both_import_gates(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "jscode20261111.zip"
+            path.write_bytes(b"actual archive")
+            data = manifest(
+                file_name=path.name,
+                sha256=hashlib.sha256(b"expected archive").hexdigest(),
+                reuse_review_status="verified",
+                license_reviewed_at="2026-11-24",
+                redistribution_allowed=True,
+                commercial_use_allowed=True,
+            )
+            result = evaluate_region_archive_preflight(data, path)
+            self.assertFalse(result["archive_integrity_verified"])
+            self.assertEqual(result["archive_integrity_issue"], "archive_sha256_mismatch")
+            self.assertFalse(result["public_archive_import_ready"])
+            self.assertFalse(result["commercial_archive_import_ready"])
+
+    def test_preflight_filename_mismatch_blocks_integrity_check(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "actual.zip"
+            payload = b"archive preflight test"
+            path.write_bytes(payload)
+            data = manifest(
+                file_name="expected.zip",
+                sha256=hashlib.sha256(payload).hexdigest(),
+                reuse_review_status="verified",
+                license_reviewed_at="2026-11-24",
+                redistribution_allowed=True,
+                commercial_use_allowed=True,
+            )
+            result = evaluate_region_archive_preflight(data, path)
+            self.assertFalse(result["archive_integrity_verified"])
+            self.assertEqual(result["archive_integrity_issue"], "archive_filename_mismatch")
+            self.assertFalse(result["public_archive_import_ready"])
+
+    def test_preflight_missing_archive_fails_closed(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "jscode20261111.zip"
+            data = manifest(
+                file_name=path.name,
+                reuse_review_status="verified",
+                license_reviewed_at="2026-11-24",
+                redistribution_allowed=True,
+                commercial_use_allowed=True,
+            )
+            result = evaluate_region_archive_preflight(data, path)
+            self.assertFalse(result["archive_integrity_verified"])
+            self.assertEqual(result["archive_integrity_issue"], "archive_file_not_found")
+            self.assertFalse(result["public_archive_import_ready"])
+            self.assertFalse(result["commercial_archive_import_ready"])
+
+    def test_preflight_keeps_commercial_gate_closed_when_permission_denied(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "jscode20261111.zip"
+            payload = b"archive preflight test"
+            path.write_bytes(payload)
+            data = manifest(
+                file_name=path.name,
+                sha256=hashlib.sha256(payload).hexdigest(),
+                reuse_review_status="verified",
+                license_reviewed_at="2026-11-24",
+                redistribution_allowed=True,
+                commercial_use_allowed=False,
+            )
+            result = evaluate_region_archive_preflight(data, path)
+            self.assertTrue(result["archive_integrity_verified"])
+            self.assertTrue(result["public_archive_import_ready"])
+            self.assertFalse(result["commercial_archive_import_ready"])
+            
 
 
 def manifest(**overrides):

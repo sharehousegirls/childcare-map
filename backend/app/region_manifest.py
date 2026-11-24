@@ -189,3 +189,38 @@ def verify_file_sha256(file_path: str | Path, expected_sha256: str) -> bool:
         for chunk in iter(lambda: source.read(1024 * 1024), b""):
             digest.update(chunk)
     return hmac.compare_digest(digest.hexdigest(), expected_sha256.lower())
+
+
+def evaluate_region_archive_preflight(
+    manifest: Any, archive_path: str | Path
+) -> dict[str, Any]:
+    """Combine reuse gates with a local filename and SHA-256 archive check.
+
+    This is a preflight only: it neither downloads nor extracts the archive and
+    cannot authenticate the source or validate the archive's internal contents.
+    """
+    validated = validate_region_source_manifest(manifest)
+    path = Path(archive_path)
+    integrity_verified = False
+    integrity_issue: str | None = None
+
+    if path.name != validated["file_name"]:
+        integrity_issue = "archive_filename_mismatch"
+    elif not path.is_file():
+        integrity_issue = "archive_file_not_found"
+    else:
+        try:
+            integrity_verified = verify_file_sha256(path, validated["sha256"])
+            if not integrity_verified:
+                integrity_issue = "archive_sha256_mismatch"
+        except OSError:
+            integrity_issue = "archive_file_unreadable"
+
+    result = dict(validated)
+    result.update({
+        "archive_integrity_verified": integrity_verified,
+        "archive_integrity_issue": integrity_issue,
+        "public_archive_import_ready": validated["public_import_ready"] and integrity_verified,
+        "commercial_archive_import_ready": validated["commercial_use_ready"] and integrity_verified,
+    })
+    return result

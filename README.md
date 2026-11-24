@@ -195,3 +195,8 @@ See [frontend source-date freshness display](docs/frontend-data-freshness-displa
 ## Official data-source recheck — 2026-11-24
 
 The official catalog page for nationwide facility-level dataset 15101154 was rechecked. It lists XML/LINK delivery, free access, an unrestricted-reuse catalog label, real-time update metadata, and facility-level waitlist counts for ages 0–5, 6+, and total. These are catalog descriptions; the exact service schema, response, pagination, date semantics, and service-specific reuse conditions are not yet verified. See [data-source research](docs/data-source-research.md).
+
+ 
+## Official-region archive preflight (not yet an importer)
+
+Backend helper `evaluate_region_archive_preflight` checks a local archive's exact filename and SHA-256 alongside the recorded reuse permissions. A hash match does not prove official provenance or grant reuse permission; archive parsing, safe extraction, code validation and license review remain separate gates. Official region files have not been imported.
