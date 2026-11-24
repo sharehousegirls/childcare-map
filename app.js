@@ -172,7 +172,7 @@ function renderSavedRegionComparison(){
       ?row.waiting.toLocaleString()+"건"+(row.totalComplete?"":"*")
       :row.waiting.toLocaleString()+"명 (예시)";
     const waitingDetail=liveData
-      ?row.totalComplete?"모든 시설 대기 정보 확인":"확인된 시설 기준 · 부분 합계"
+      ?row.totalComplete?"모든 시설 대기 정보 확인":row.coverageValid&&row.facilities>0?"확인된 시설 기준 · 부분 합계":"대기 정보 확인 범위 불명 · 합계 검증 필요"
       :"가상 집계 · 실제 데이터 아님";
     const averageValue=row.average===null?"확인 불가":liveData
       ?row.average.toFixed(1)+"건"

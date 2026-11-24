@@ -91,3 +91,15 @@ test("zero-facility regions do not show a coverage percentage", () => {
   assert.equal(row.coverage, null);
   assert.equal(row.totalComplete, false);
 });
+
+
+test("rejects coverage metadata whose known and missing counts do not reconcile", () => {
+  const [row] = buildSavedRegionComparison([
+    { name: "지역 A", facilities: 4, waiting: 7, avg: 3.5, zero: 1, waitingFacilities: 2, missingWaitlistFacilities: 1, waitTotalComplete: false },
+  ], [saved("지역 A")], { liveData: true });
+  assert.equal(row.coverage, null);
+  assert.equal(row.knownFacilities, null);
+  assert.equal(row.missingWaitlistFacilities, null);
+  assert.equal(row.totalComplete, false);
+  assert.equal(row.partial, false);
+});

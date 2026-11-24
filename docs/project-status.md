@@ -277,3 +277,8 @@
 - **PASS — isolated Node tests:** 10/10 tests passed for demo ordering/labels, complete and partial live coverage, unknown totals, missing/ambiguous regions, malformed/duplicate saved entries, invalid metrics, empty regions, and input validation. Module and test syntax checks passed.
 - GitHub CI verification pending after implementation commit; browser/manual mobile and accessibility testing remains **NOT RUN**.
 - No official data, map coordinates, API credentials, dependencies, or deployment were added. Comparison is current-data only; historical snapshots and canonical region IDs remain future work.
+
+
+## 2026-11-24 follow-up — saved-region comparison consistency guard
+- The comparison display now labels partial totals only when facility coverage metadata reconciles; otherwise it reports that coverage and the total require verification.
+- Added a regression case for inconsistent known/missing facility counts. **PASS — isolated Node: 11/11 saved-region comparison tests.** GitHub CI follow-up pending.

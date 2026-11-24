@@ -29,8 +29,9 @@ Added a current-data comparison panel for regions users have already saved in br
 - [x] No API, dependency, coordinate, or deployment changes.
 
 ## Tests
-- **PASS (isolated Node):** 10/10 unit tests; module/test syntax checks passed.
-- **CI:** Pending for the implementation commit.
+- **PASS (isolated Node):** 11/11 unit tests; module/test syntax checks passed. A follow-up regression case rejects inconsistent known/missing coverage counts.
+- **PASS — GitHub Actions run #219:** backend unit-test, JavaScript syntax-check, and frontend test steps succeeded for commit `142c1005c83fd1068d2a17f06c1e12e5a749a255`. https://github.com/sharehousegirls/childcare-map/actions/runs/45299016823
+- Follow-up UI wording now distinguishes a valid partial total from unverified coverage.
 - **NOT RUN:** Browser, mobile viewport, keyboard, and screen-reader interaction tests.
 
 ## Limitations
