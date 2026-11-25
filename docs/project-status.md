@@ -472,3 +472,14 @@ The documentation commits following the official catalog review were subsequentl
 - Fresh official-source recheck: catalog 15101154 still lists nationwide facility/waitlist fields, XML/LINK, free, real-time metadata, and unrestricted-reuse metadata; this remains catalog-level evidence, not tested schema or service-specific clearance. See `docs/official-source-recheck-2026-11-25.md`.
 - Latest MOIS notice found: 2026-10-23 effective, posted 2026-11-18; attachment labels `jscode20261111.zip`, abolished-code ZIP, and layout. No archive downloaded or parsed; exact attachment reuse gate remains pending.
 - No official archive import, live API, merge to `main`, or deployment performed.
+
+
+## 2026-11-25 incremental milestone — manifest text controls checked before normalization
+
+- Hardened `backend/app/region_manifest.py`: reject raw C0/C1 control characters before `strip()`, preventing leading/trailing TAB and NEL from being silently normalized away in provenance, URLs, dates, digest, filename, attribution, and review fields.
+- Added boundary regression tests for 12 text fields × leading/trailing × C0 TAB/C1 NEL = 48 probes.
+- **FAIL — CI #309 and #310:** the test fixture initially encoded the backslash-plus-`t` instead of a runtime TAB. The implementation was not the cause; the fixture was corrected.
+- **PASS — GitHub Actions #311:** 139 backend tests, 76 frontend tests, and JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45561635420
+- Local execution **NOT RUN** in this connector session.
+- No official region archive was imported, no live API request was made, and no merge to `main` or deployment occurred.
+- Detailed change/test notes: `docs/manifest-boundary-control-validation-2026-11-25.md`.
