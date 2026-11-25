@@ -40,14 +40,20 @@ class RegionCrosswalkTests(unittest.TestCase):
             "source_reference": "https://www.mois.go.kr/region-codes",
         }
         for field, value in fields.items():
-            with self.subTest(field=field):
-                row = crosswalk_row()
-                contaminated = value[:1] + chr(133) + value[2:]
-                row[field] = contaminated
-                with self.assertRaises(RegionCrosswalkValidationError) as ctx:
-                    validate_region_crosswalk([row], fixture_regions())
-                codes = {issue["code"] for issue in ctx.exception.issues}
-                self.assertIn(f"{field}_contains_control_character", codes)
+            for position in ("interior", "leading", "trailing"):
+                with self.subTest(field=field, position=position):
+                    row = crosswalk_row()
+                    if position == "interior":
+                        contaminated = value[:1] + chr(133) + value[2:]
+                    elif position == "leading":
+                        contaminated = chr(133) + value
+                    else:
+                        contaminated = value + chr(133)
+                    row[field] = contaminated
+                    with self.assertRaises(RegionCrosswalkValidationError) as ctx:
+                        validate_region_crosswalk([row], fixture_regions())
+                    codes = {issue["code"] for issue in ctx.exception.issues}
+                    self.assertIn(f"{field}_contains_control_character", codes)
 
     def test_c1_control_characters_rejected_in_crosswalk_date_fields(self):
         fields = {
@@ -55,14 +61,20 @@ class RegionCrosswalkTests(unittest.TestCase):
             "valid_to": "2026-12-31",
         }
         for field, value in fields.items():
-            with self.subTest(field=field):
-                row = crosswalk_row()
-                contaminated = value[:5] + chr(133) + value[6:]
-                row[field] = contaminated
-                with self.assertRaises(RegionCrosswalkValidationError) as ctx:
-                    validate_region_crosswalk([row], fixture_regions())
-                codes = {issue["code"] for issue in ctx.exception.issues}
-                self.assertIn(f"{field}_contains_control_character", codes)
+            for position in ("interior", "leading", "trailing"):
+                with self.subTest(field=field, position=position):
+                    row = crosswalk_row()
+                    if position == "interior":
+                        contaminated = value[:5] + chr(133) + value[6:]
+                    elif position == "leading":
+                        contaminated = chr(133) + value
+                    else:
+                        contaminated = value + chr(133)
+                    row[field] = contaminated
+                    with self.assertRaises(RegionCrosswalkValidationError) as ctx:
+                        validate_region_crosswalk([row], fixture_regions())
+                    codes = {issue["code"] for issue in ctx.exception.issues}
+                    self.assertIn(f"{field}_contains_control_character", codes)
 
     def test_many_to_many_relationships_are_allowed(self):
         rows = [
