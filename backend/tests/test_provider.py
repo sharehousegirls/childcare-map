@@ -2,6 +2,7 @@ import unittest
 import sys
 from pathlib import Path
 import httpx
+import xml.etree.ElementTree as ET
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.provider import (
     _number, _flatten_records, _parse_xml, _get_value, _sum_age_waits,
