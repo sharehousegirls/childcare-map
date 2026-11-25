@@ -39,15 +39,16 @@ def _text(
     if not isinstance(value, str):
         issues.append(f"{field}_must_be_string")
         return None
+    # Reject raw controls before strip() can remove boundary TAB/newlines.
+    if any(ord(char) < 32 or 127 <= ord(char) <= 159 for char in value):
+        issues.append(f"{field}_contains_control_character")
+        return None
     normalized = value.strip()
     if required and not normalized:
         issues.append(f"{field}_required")
         return None
     if len(normalized) > max_length:
         issues.append(f"{field}_too_long")
-        return None
-    if any(ord(char) < 32 for char in normalized):
-        issues.append(f"{field}_contains_control_character")
         return None
     return normalized or None
 
