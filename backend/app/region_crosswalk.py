@@ -47,7 +47,7 @@ def _text(
     if len(normalized) > max_length:
         issues.append(_issue(f"{field}_too_long", row_index, f"{field} exceeds {max_length} characters."))
         return None
-    if any(ord(char) < 32 for char in normalized):
+    if any(ord(char) < 32 or 127 <= ord(char) <= 159 for char in normalized):
         issues.append(_issue(f"{field}_contains_control_character", row_index, f"{field} contains a control character."))
         return None
     return normalized
@@ -69,6 +69,9 @@ def _date(
         issues.append(_issue(f"{field}_must_be_string", row_index, f"{field} must be a string."))
         return None
     normalized = value.strip()
+    if any(ord(char) < 32 or 127 <= ord(char) <= 159 for char in normalized):
+        issues.append(_issue(f"{field}_contains_control_character", row_index, f"{field} contains a control character."))
+        return None
     try:
         parsed = date.fromisoformat(normalized)
     except ValueError:
