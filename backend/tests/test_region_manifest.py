@@ -55,7 +55,7 @@ class RegionManifestTests(unittest.TestCase):
         for field, value in fields.items():
             for position in ("leading", "trailing"):
                 with self.subTest(field=field, position=position):
-                    contaminated = "\\t" + value if position == "leading" else value + "\\t"
+                    contaminated = "\t" + value if position == "leading" else value + "\t"
                     with self.assertRaises(RegionSourceManifestError) as ctx:
                         validate_region_source_manifest(manifest(**{field: contaminated}))
                     self.assertIn(f"{field}_contains_control_character", ctx.exception.issues)
