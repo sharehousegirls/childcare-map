@@ -38,19 +38,33 @@ FIELD_ALIASES = {
 NUMERIC_FIELDS = {"capacity", "enrolled", "latitude", "longitude", "wait_0", "wait_1", "wait_2", "wait_3", "wait_4", "wait_5", "wait_6_plus", "wait_total"}
 
 def _parse_xml(node: ET.Element) -> Any:
-    children = list(node)
-    if not children:
-        return node.text
-    result = {}
-    for child in children:
-        val = _parse_xml(child)
-        if child.tag in result:
-            if not isinstance(result[child.tag], list):
-                result[child.tag] = [result[child.tag]]
-            result[child.tag].append(val)
-        else:
-            result[child.tag] = val
-    return result
+    """Convert XML to nested dictionaries/lists without recursive calls."""
+    stack: list[tuple[ET.Element, bool]] = [(node, False)]
+    parsed: dict[int, Any] = {}
+
+    while stack:
+        current, expanded = stack.pop()
+        children = list(current)
+        if not expanded:
+            if not children:
+                parsed[id(current)] = current.text
+                continue
+            stack.append((current, True))
+            stack.extend((child, False) for child in reversed(children))
+            continue
+
+        result = {}
+        for child in children:
+            value = parsed[id(child)]
+            if child.tag in result:
+                if not isinstance(result[child.tag], list):
+                    result[child.tag] = [result[child.tag]]
+                result[child.tag].append(value)
+            else:
+                result[child.tag] = value
+        parsed[id(current)] = result
+
+    return parsed[id(node)]
 
 def _looks_like_record(payload: dict) -> bool:
     known = set(sum(FIELD_ALIASES.values(), []))

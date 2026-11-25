@@ -4,7 +4,7 @@ from pathlib import Path
 import httpx
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.provider import (
-    _number, _flatten_records, _get_value, _sum_age_waits,
+    _number, _flatten_records, _parse_xml, _get_value, _sum_age_waits,
     _validate_field_map, _validate_live_field_map, LIVE_WAIT_FIELDS,
     _safe_http_error, _wait_total_consistent, _mark_facility_id_quality,
     _normalize_provider_record, ProviderError,
@@ -35,6 +35,23 @@ class ProviderNormalizationTests(unittest.TestCase):
         payload = {}
         payload["self"] = payload
         self.assertEqual(_flatten_records(payload), [])
+
+
+    def test_parse_xml_preserves_repeated_child_tags(self):
+        root = ET.fromstring("<response><item><id>1</id></item><item><id>2</id></item></response>")
+        self.assertEqual(_parse_xml(root), {"item": [{"id": "1"}, {"id": "2"}]})
+
+    def test_parse_xml_handles_deep_nesting_iteratively(self):
+        root = ET.Element("root")
+        current = root
+        for _ in range(1500):
+            current = ET.SubElement(current, "item")
+        current.text = "deep"
+
+        converted = _parse_xml(root)
+        for _ in range(1500):
+            converted = converted["item"]
+        self.assertEqual(converted, "deep")
 
 
     def test_alias_mapping(self):
