@@ -425,8 +425,9 @@ The documentation commits following the official catalog review were subsequentl
 
 ## 2026-11-25 crosswalk metadata validation follow-up
 - Extended legal-dong/admin-dong crosswalk text and date validation to reject embedded C1 controls (U+007F–U+009F), alongside C0 controls (U+0000–U+001F). Text fields and `valid_from`/`valid_to` retain field-specific issue codes.
-- Added two regression tests: five text fields and two effective-date fields are probed with U+0085 (NEL) at an interior position, preserving input length.
+- Added two regression tests: five text fields and both effective-date fields are probed with U+0085 (NEL) at interior, leading, and trailing positions. C1 checks occur before whitespace trimming so boundary NEL is not silently removed.
 - **PASS — GitHub Actions run #283:** 133 backend tests, 76 frontend tests, and JavaScript syntax checks succeeded on commit `f81caa9bcf627daa7447f0368ec817374c5d0e64`. https://github.com/sharehousegirls/childcare-map/actions/runs/45519664581
+- **PASS — GitHub Actions run #287:** the boundary-probe code/test commit passed with 133 backend tests, 76 frontend tests, and JavaScript syntax checks. https://github.com/sharehousegirls/childcare-map/actions/runs/45519924178
 - **PASS — run #281:** the code/test commit also passed CI (133 backend tests, 76 frontend tests). https://github.com/sharehousegirls/childcare-map/actions/runs/45519621808
 - **Initial test FAIL — run #280:** three subcases failed because U+0085 was placed at the end of short values and Python `strip()` removed it; the probes were corrected to keep the character interior. The implementation was not changed for this test-fixture correction. https://github.com/sharehousegirls/childcare-map/actions/runs/45519593914
 - Local execution is **NOT RUN**: a shallow clone attempt failed because the container could not resolve `github.com`. CI is the actual source-checkout test evidence.
