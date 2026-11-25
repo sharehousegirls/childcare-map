@@ -137,7 +137,7 @@ class RegionValidationTests(unittest.TestCase):
                 with self.subTest(field=field, position=position):
                     records = fixture_regions()
                     value = records[1][field]
-                    records[1][field] = "\\t" + value if position == "leading" else value + "\\t"
+                    records[1][field] = "\t" + value if position == "leading" else value + "\t"
                     with self.assertRaises(RegionValidationError) as context:
                         validate_region_records(records)
                     codes = {issue["code"] for issue in context.exception.issues}
