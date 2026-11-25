@@ -31,11 +31,13 @@ def _optional_text(value: Any, field: str, region_id: str | None, issues: list[d
     if not isinstance(value, str):
         issues.append(_issue(f"invalid_{field}", region_id, f"{field} must be a string."))
         return None
-    value = value.strip()
-    if not value:
-        return None
+    # Reject controls against the raw value before strip() can remove boundary
+    # tabs, newlines, NEL, or other C0/C1 characters.
     if any(ord(char) < 32 or 127 <= ord(char) <= 159 for char in value):
         issues.append(_issue(f"{field}_contains_control_character", region_id, f"{field} must not contain control characters."))
+        return None
+    value = value.strip()
+    if not value:
         return None
     if len(value) > 100:
         issues.append(_issue(f"{field}_too_long", region_id, f"{field} exceeds 100 characters."))
