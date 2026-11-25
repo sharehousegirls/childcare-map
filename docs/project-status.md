@@ -421,3 +421,11 @@ The documentation commits following the official catalog review were subsequentl
 - Acceptance: existing JSON/XML envelope behavior and key priority preserved; deep payload returns a row without RecursionError; cyclic payload without records terminates with an empty list.
 - **NOT RUN locally:** this connector-only session cannot execute the repository checkout directly. GitHub Actions is the authoritative test run for this commit.
 - **Next:** verify CI; then continue official schema/source/license checks and region-code provenance. No live API call, deployment, or credential use was performed.
+
+
+## 2026-11-25 crosswalk metadata validation follow-up
+- Extended legal-dong/admin-dong crosswalk text and date validation to reject embedded C1 controls (U+007F–U+009F), alongside C0 controls (U+0000–U+001F). Text fields and `valid_from`/`valid_to` retain field-specific issue codes.
+- Added two regression tests: five text fields and two effective-date fields are probed with U+0085 (NEL) at an interior position, preserving input length.
+- Local execution is **NOT RUN**: a shallow clone attempt failed because the container could not resolve `github.com`. GitHub Actions verification is pending for the latest branch commit.
+- This remains structural input validation only. No official code archive, API payload, or live data was imported. No merge to `main` or deployment was performed.
+- Details: `docs/crosswalk-control-character-validation-2026-11-25.md`.
