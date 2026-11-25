@@ -15,5 +15,7 @@ Two tests inject U+0085 (NEL) into interior positions, keeping string lengths un
 
 ## Verification
 - Local test execution: **NOT RUN**. A local checkout attempt failed because the container could not resolve `github.com`.
-- GitHub Actions: **pending** for the latest branch commit.
+- **PASS — GitHub Actions run #283:** 133 backend tests, 76 frontend tests, and JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45519664581
+- **PASS — run #281:** code/test commit also passed with 133 backend and 76 frontend tests. https://github.com/sharehousegirls/childcare-map/actions/runs/45519621808
+- Initial run #280 failed three text-field probes because U+0085 was appended at the end of short values and removed by Python `strip()`; probes were corrected to keep the character interior. The code implementation was unchanged for this fixture correction. https://github.com/sharehousegirls/childcare-map/actions/runs/45519593914
 - No official region files were imported, no live API was called, and no deployment or merge to `main` was performed.
