@@ -461,3 +461,14 @@ The documentation commits following the official catalog review were subsequentl
 - **CI PENDING** on branch `dev/region-validator-boundary-controls-2026-11-25`; local execution **NOT RUN** because this connector session cannot run a repository checkout.
 - No official region files imported, no live API call, no merge to `main`, and no deployment.
 - Next: continue official region-code provenance/layout review and hierarchy validation, without assuming legal-dong/admin-dong equivalence.
+
+
+## 2026-11-25 region-record boundary controls and official-source recheck
+
+- Hardened `backend/app/regions.py`: reject C0/C1 controls on raw values before trimming; this prevents leading/trailing TAB and NEL from being stripped before validation.
+- Added leading/trailing TAB and NEL probes for six normalized region text fields (24 boundary probes); existing interior-control tests remain.
+- **PASS — GitHub Actions run #303:** 137 backend tests, 76 frontend tests, JavaScript syntax checks all passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45548657224
+- Fixture runs #299–#302 failed because the test used a literal \\t instead of a runtime TAB; corrected test source and run #303 passed. Code implementation unchanged for fixture correction. Local execution **NOT RUN**.
+- Fresh official-source recheck: catalog 15101154 still lists nationwide facility/waitlist fields, XML/LINK, free, real-time metadata, and unrestricted-reuse metadata; this remains catalog-level evidence, not tested schema or service-specific clearance. See `docs/official-source-recheck-2026-11-25.md`.
+- Latest MOIS notice found: 2026-10-23 effective, posted 2026-11-18; attachment labels `jscode20261111.zip`, abolished-code ZIP, and layout. No archive downloaded or parsed; exact attachment reuse gate remains pending.
+- No official archive import, live API, merge to `main`, or deployment performed.
