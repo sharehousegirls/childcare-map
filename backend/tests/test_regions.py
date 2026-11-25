@@ -130,6 +130,32 @@ class RegionValidationTests(unittest.TestCase):
                 with self.assertRaises(RegionValidationError) as context:
                     validate_region_records(records)
                 self.assertIn(f"{field}_contains_control_character", {issue["code"] for issue in context.exception.issues})
+    def test_c0_control_characters_rejected_at_region_text_boundaries(self):
+        fields = ("region_id", "name", "region_type", "parent_region_id", "source_system", "source_code")
+        for field in fields:
+            for position in ("leading", "trailing"):
+                with self.subTest(field=field, position=position):
+                    records = fixture_regions()
+                    value = records[1][field]
+                    records[1][field] = "\\t" + value if position == "leading" else value + "\\t"
+                    with self.assertRaises(RegionValidationError) as context:
+                        validate_region_records(records)
+                    codes = {issue["code"] for issue in context.exception.issues}
+                    self.assertIn(f"{field}_contains_control_character", codes)
+
+    def test_c1_control_characters_rejected_at_region_text_boundaries(self):
+        fields = ("region_id", "name", "region_type", "parent_region_id", "source_system", "source_code")
+        for field in fields:
+            for position in ("leading", "trailing"):
+                with self.subTest(field=field, position=position):
+                    records = fixture_regions()
+                    value = records[1][field]
+                    records[1][field] = chr(133) + value if position == "leading" else value + chr(133)
+                    with self.assertRaises(RegionValidationError) as context:
+                        validate_region_records(records)
+                    codes = {issue["code"] for issue in context.exception.issues}
+                    self.assertIn(f"{field}_contains_control_character", codes)
+
     def test_records_are_not_mutated(self):
         records = fixture_regions()
         before = copy.deepcopy(records)
