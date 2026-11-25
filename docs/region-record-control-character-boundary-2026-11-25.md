@@ -28,6 +28,7 @@ This is structural validation only. It does not establish official code provenan
 
 ## Test status
 
-- GitHub Actions: **PENDING** for this code/test change.
+- **PASS — GitHub Actions run #303:** 137 backend tests, 76 frontend tests, and JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45548657224
+- Runs #299–#302 failed because the test fixture used a literal backslash-plus-t instead of TAB; the fixture was corrected to Python `\\t` source (a runtime TAB) and run #303 passed. The validator code did not change for this fixture correction.
 - Local test execution: **NOT RUN**; this connector session cannot execute a repository checkout.
 - No merge to `main` or deployment performed.
