@@ -4,8 +4,9 @@
 
 ## Latest CI verification — 2026-11-25
 
-- **PASS — GitHub Actions run #258** (commit `3f649a3e231a789c96c0a84e990fb5bda2505f1f): 129 backend tests, 76 frontend tests, and all JavaScript syntax checks passed; every workflow step succeeded.
-- Evidence: https://github.com/sharehousegirls/childcare-map/actions/runs/45439607037
+- **PASS — GitHub Actions run #315** (commit `62c128686a14864613b623656bf98f20d4fa9572`): 141 backend tests, 76 frontend tests, and all JavaScript syntax checks passed; every workflow step succeeded.
+- Evidence: https://github.com/sharehousegirls/childcare-map/actions/runs/45577477992
+- Added iterative XML conversion and regressions for repeated child tags and 1,500-level nesting. Run #314 initially failed because the new test omitted its XML module import; that import was corrected before #315 passed.
 - This verifies the repository test workflow only; official API schema/terms, live ingestion, archive import, and browser/manual accessibility checks remain unverified.
 
 ## GitHub Pages publication status — 2026-11-25

@@ -483,3 +483,16 @@ The documentation commits following the official catalog review were subsequentl
 - Local execution **NOT RUN** in this connector session.
 - No official region archive was imported, no live API request was made, and no merge to `main` or deployment occurred.
 - Detailed change/test notes: `docs/manifest-boundary-control-validation-2026-11-25.md`.
+
+
+## 2026-11-25 incremental milestone — iterative XML response conversion
+
+- Replaced recursive `backend/app/provider.py::_parse_xml` with iterative post-order traversal; repeated child tags still produce ordered lists, and leaf text is retained.
+- Added two regression tests: repeated sibling tags and 1,500-level nested XML element trees.
+- **FAIL — GitHub Actions #314:** test file initially omitted `xml.etree.ElementTree`; corrected the import before the next run.
+- **PASS — GitHub Actions #315:** 141 backend tests, 76 frontend tests, JavaScript syntax checks all passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45577477992
+- **PASS (isolated Python harness):** repeated tags and 1,500-level conversion passed; this is not a repository checkout run. Full local checkout tests **NOT RUN**.
+- Fresh catalog recheck on 2026-11-25: nationwide dataset 15101154 still lists facility metadata and waitlist counts for ages 0–6+ and total; XML/LINK, free, and unrestricted reuse are catalog labels. Exact API operation/schema, service-specific terms, caching, redistribution and commercial-use clearance remain unverified. Catalog last modified 2025-08-20: https://www.data.go.kr/data/15101154/openapi.do
+- **Known limitation:** provider response size is not currently capped; bounded streaming/size checks are a future prerequisite to live ingestion.
+- No API request, official archive import, merge to `main`, or deployment occurred.
+- Details: `docs/provider-xml-iterative-parse-2026-11-25.md`
