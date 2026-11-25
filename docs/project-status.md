@@ -433,3 +433,12 @@ The documentation commits following the official catalog review were subsequentl
 - Local execution is **NOT RUN**: a shallow clone attempt failed because the container could not resolve `github.com`. CI is the actual source-checkout test evidence.
 - This remains structural input validation only. No official code archive, API payload, or live data was imported. No merge to `main` or deployment was performed.
 - Details: `docs/crosswalk-control-character-validation-2026-11-25.md`.
+
+
+## 2026-11-25 incremental milestone — C0 control characters at crosswalk boundaries
+
+- Fixed a normalization gap in the legal-dong/admin-dong crosswalk validator: leading/trailing C0 controls (e.g., TAB) were stripped before the previous post-normalization check and could pass. Text and date fields now reject C0 and C1 controls against the original input before trimming.
+- Added two regression tests covering TAB at both boundaries across five text fields and two effective-date fields (14 subcases). Existing C1 boundary coverage is retained.
+- Acceptance: field-specific control-character errors are returned for every boundary case; valid whitespace-free input and existing C1 cases remain unchanged.
+- **CI pending** on branch `dev/crosswalk-c0-boundary-2026-11-25`. Local execution **NOT RUN** because this connector session cannot run a repository checkout directly.
+- No live API, official region archive, merge to main, or deployment was performed.

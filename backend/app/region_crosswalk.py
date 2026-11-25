@@ -40,7 +40,7 @@ def _text(
     if not isinstance(value, str):
         issues.append(_issue(f"{field}_must_be_string", row_index, f"{field} must be a string."))
         return None
-    if any(127 <= ord(char) <= 159 for char in value):
+    if any(ord(char) < 32 or 127 <= ord(char) <= 159 for char in value):
         issues.append(_issue(f"{field}_contains_control_character", row_index, f"{field} contains a control character."))
         return None
     normalized = value.strip()
@@ -71,13 +71,10 @@ def _date(
     if not isinstance(value, str):
         issues.append(_issue(f"{field}_must_be_string", row_index, f"{field} must be a string."))
         return None
-    if any(127 <= ord(char) <= 159 for char in value):
+    if any(ord(char) < 32 or 127 <= ord(char) <= 159 for char in value):
         issues.append(_issue(f"{field}_contains_control_character", row_index, f"{field} contains a control character."))
         return None
     normalized = value.strip()
-    if any(ord(char) < 32 for char in normalized):
-        issues.append(_issue(f"{field}_contains_control_character", row_index, f"{field} contains a control character."))
-        return None
     try:
         parsed = date.fromisoformat(normalized)
     except ValueError:

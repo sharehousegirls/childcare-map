@@ -221,5 +221,42 @@ class RegionCrosswalkTests(unittest.TestCase):
         self.assertIn("crosswalk_period_overlap", {issue["code"] for issue in ctx.exception.issues})
 
 
+    def test_c0_control_characters_rejected_at_text_field_boundaries(self):
+        fields = {
+            "legal_region_id": "L1-code",
+            "admin_region_id": "D1-code",
+            "crosswalk_version": "v1-version",
+            "source_system": "MOIS",
+            "source_reference": "https://www.mois.go.kr/region-codes",
+        }
+        for field, value in fields.items():
+            for position in ("leading", "trailing"):
+                with self.subTest(field=field, position=position):
+                    contaminated = "\\t" + value if position == "leading" else value + "\\t"
+                    row = crosswalk_row()
+                    row[field] = contaminated
+                    with self.assertRaises(RegionCrosswalkValidationError) as ctx:
+                        validate_region_crosswalk([row], fixture_regions())
+                    codes = {issue["code"] for issue in ctx.exception.issues}
+                    self.assertIn(f"{field}_contains_control_character", codes)
+
+    def test_c0_control_characters_rejected_at_date_field_boundaries(self):
+        fields = {
+            "valid_from": "2026-01-01",
+            "valid_to": "2026-12-31",
+        }
+        for field, value in fields.items():
+            for position in ("leading", "trailing"):
+                with self.subTest(field=field, position=position):
+                    contaminated = "\\t" + value if position == "leading" else value + "\\t"
+                    row = crosswalk_row()
+                    row[field] = contaminated
+                    with self.assertRaises(RegionCrosswalkValidationError) as ctx:
+                        validate_region_crosswalk([row], fixture_regions())
+                    codes = {issue["code"] for issue in ctx.exception.issues}
+                    self.assertIn(f"{field}_contains_control_character", codes)
+
+
+
 if __name__ == "__main__":
     unittest.main()
