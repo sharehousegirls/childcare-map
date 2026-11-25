@@ -31,6 +31,39 @@ def crosswalk_row(legal="L1", admin="D1", start="2026-01-01", end=None, version=
 
 
 class RegionCrosswalkTests(unittest.TestCase):
+    def test_c1_control_characters_rejected_in_crosswalk_text_fields(self):
+        fields = {
+            "legal_region_id": "L1",
+            "admin_region_id": "D1",
+            "crosswalk_version": "v1",
+            "source_system": "MOIS",
+            "source_reference": "https://www.mois.go.kr/region-codes",
+        }
+        for field, value in fields.items():
+            with self.subTest(field=field):
+                row = crosswalk_row()
+                contaminated = value[:1] + chr(133) + value[2:]
+                row[field] = contaminated
+                with self.assertRaises(RegionCrosswalkValidationError) as ctx:
+                    validate_region_crosswalk([row], fixture_regions())
+                codes = {issue["code"] for issue in ctx.exception.issues}
+                self.assertIn(f"{field}_contains_control_character", codes)
+
+    def test_c1_control_characters_rejected_in_crosswalk_date_fields(self):
+        fields = {
+            "valid_from": "2026-01-01",
+            "valid_to": "2026-12-31",
+        }
+        for field, value in fields.items():
+            with self.subTest(field=field):
+                row = crosswalk_row()
+                contaminated = value[:5] + chr(133) + value[6:]
+                row[field] = contaminated
+                with self.assertRaises(RegionCrosswalkValidationError) as ctx:
+                    validate_region_crosswalk([row], fixture_regions())
+                codes = {issue["code"] for issue in ctx.exception.issues}
+                self.assertIn(f"{field}_contains_control_character", codes)
+
     def test_many_to_many_relationships_are_allowed(self):
         rows = [
             crosswalk_row("L1", "D1"),
