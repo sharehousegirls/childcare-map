@@ -33,9 +33,9 @@ def crosswalk_row(legal="L1", admin="D1", start="2026-01-01", end=None, version=
 class RegionCrosswalkTests(unittest.TestCase):
     def test_c1_control_characters_rejected_in_crosswalk_text_fields(self):
         fields = {
-            "legal_region_id": "L1",
-            "admin_region_id": "D1",
-            "crosswalk_version": "v1",
+            "legal_region_id": "L1-code",
+            "admin_region_id": "D1-code",
+            "crosswalk_version": "v1-version",
             "source_system": "MOIS",
             "source_reference": "https://www.mois.go.kr/region-codes",
         }
