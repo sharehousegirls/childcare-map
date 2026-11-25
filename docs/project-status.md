@@ -447,6 +447,7 @@ The documentation commits following the official catalog review were subsequentl
 ### C0 boundary regression fixture correction
 - **FAIL — GitHub Actions #291:** 14 subcases failed because fixtures used the literal backslash-plus-`t` instead of an actual tab. The implementation change remains unchanged.
 - Corrected both regression tests to use Python's `\\t` escape, producing TAB characters at runtime.
-- **CI pending** after fixture correction. Local execution NOT RUN.
+- **PASS — GitHub Actions run #292:** 135 backend tests, 76 frontend tests, and all JavaScript syntax checks passed after the fixture correction. https://github.com/sharehousegirls/childcare-map/actions/runs/45534742982
+- Local execution **NOT RUN** in this connector session.
 
 - Fixture-correction commit `2f9a7a9` replaces the literal `\\t` test strings with actual TAB-generating Python escapes; the corrected source was checked before pushing. GitHub Actions run is pending.
