@@ -440,7 +440,7 @@ The documentation commits following the official catalog review were subsequentl
 - Fixed a normalization gap in the legal-dong/admin-dong crosswalk validator: leading/trailing C0 controls (e.g., TAB) were stripped before the previous post-normalization check and could pass. Text and date fields now reject C0 and C1 controls against the original input before trimming.
 - Added two regression tests covering TAB at both boundaries across five text fields and two effective-date fields (14 subcases). Existing C1 boundary coverage is retained.
 - Acceptance: field-specific control-character errors are returned for every boundary case; valid whitespace-free input and existing C1 cases remain unchanged.
-- **CI pending** on branch `dev/crosswalk-c0-boundary-2026-11-25`. Local execution **NOT RUN** because this connector session cannot run a repository checkout directly.
+- CI evidence for the C0 boundary correction is recorded below: run #291 failed on fixture escaping; corrected fixture run #292 passed. Local execution **NOT RUN** because this connector session cannot run a repository checkout directly.
 - No live API, official region archive, merge to main, or deployment was performed.
 
 
