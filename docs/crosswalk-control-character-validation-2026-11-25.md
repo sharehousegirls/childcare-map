@@ -30,5 +30,6 @@ Two additional tests inject U+0009 (TAB) at leading and trailing boundaries:
 - The previous checks caught C0 controls only after `strip()` for text fields and date fields. Leading/trailing tabs could therefore be removed before validation.
 - Both validators now reject C0 and C1 controls on the original input string before trimming.
 - Added two tests covering leading/trailing TAB across five text fields and two date fields (14 boundary cases).
-- **CI pending** on `dev/crosswalk-c0-boundary-2026-11-25`; local suite not run in this connector session.
+- Initial **FAIL — GitHub Actions run #291:** 14 boundary subcases failed because the test fixtures encoded literal backslash-plus-`t`, not actual TAB characters; the code change was not implicated by those failures. https://github.com/sharehousegirls/childcare-map/actions/runs/45534571406
+- Corrected the fixtures to use Python's `\\t` escape (TAB at runtime). **CI pending** on `dev/crosswalk-c0-boundary-2026-11-25`; local suite not run in this connector session.
 - No official region archive, live API, deployment, or main-branch merge was performed.

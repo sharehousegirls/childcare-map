@@ -232,7 +232,7 @@ class RegionCrosswalkTests(unittest.TestCase):
         for field, value in fields.items():
             for position in ("leading", "trailing"):
                 with self.subTest(field=field, position=position):
-                    contaminated = "\\t" + value if position == "leading" else value + "\\t"
+                    contaminated = "\t" + value if position == "leading" else value + "\t"
                     row = crosswalk_row()
                     row[field] = contaminated
                     with self.assertRaises(RegionCrosswalkValidationError) as ctx:
@@ -248,7 +248,7 @@ class RegionCrosswalkTests(unittest.TestCase):
         for field, value in fields.items():
             for position in ("leading", "trailing"):
                 with self.subTest(field=field, position=position):
-                    contaminated = "\\t" + value if position == "leading" else value + "\\t"
+                    contaminated = "\t" + value if position == "leading" else value + "\t"
                     row = crosswalk_row()
                     row[field] = contaminated
                     with self.assertRaises(RegionCrosswalkValidationError) as ctx:

@@ -442,3 +442,9 @@ The documentation commits following the official catalog review were subsequentl
 - Acceptance: field-specific control-character errors are returned for every boundary case; valid whitespace-free input and existing C1 cases remain unchanged.
 - **CI pending** on branch `dev/crosswalk-c0-boundary-2026-11-25`. Local execution **NOT RUN** because this connector session cannot run a repository checkout directly.
 - No live API, official region archive, merge to main, or deployment was performed.
+
+
+### C0 boundary regression fixture correction
+- **FAIL — GitHub Actions #291:** 14 subcases failed because fixtures used the literal backslash-plus-`t` instead of an actual tab. The implementation change remains unchanged.
+- Corrected both regression tests to use Python's `\\t` escape, producing TAB characters at runtime.
+- **CI pending** after fixture correction. Local execution NOT RUN.
