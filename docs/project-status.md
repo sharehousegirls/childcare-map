@@ -458,7 +458,7 @@ The documentation commits following the official catalog review were subsequentl
 
 - Updated `backend/app/regions.py` to reject C0/C1 controls on original input before `strip()` can remove leading/trailing TAB, NEL, or other controls.
 - Added regression tests for leading/trailing TAB and NEL across six region text fields (24 boundary probes total); existing interior C0/C1 coverage remains.
-- **CI PENDING** on branch `dev/region-validator-boundary-controls-2026-11-25`; local execution **NOT RUN** because this connector session cannot run a repository checkout.
+- Initial runs #299–#302 **FAIL** because the TAB fixture used a literal backslash-plus-t; corrected in #303. **PASS — GitHub Actions #303:** 137 backend tests, 76 frontend tests, and JavaScript syntax checks passed. https://github.com/sharehousegirls/childcare-map/actions/runs/45548657224. Local execution **NOT RUN** because this connector session cannot run a repository checkout.
 - No official region files imported, no live API call, no merge to `main`, and no deployment.
 - Next: continue official region-code provenance/layout review and hierarchy validation, without assuming legal-dong/admin-dong equivalence.
 
